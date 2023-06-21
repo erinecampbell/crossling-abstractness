@@ -133,6 +133,12 @@ mega_perceptual <- left_join(english_perceptual, french_perceptual,
 
 visual_corrs <- cor(mega_perceptual[,c(7,47,72,88,145)], use="pairwise.complete.obs")
 corrplot(visual_corrs, "shade", addCoef.col = "white", "upper")
+ggplot(mega_perceptual, aes(x=english_visual_rating,y=french_visual_rating,color=(english_visual_rating - french_visual_rating))) +
+  geom_abline(intercept =c(0,0), slope = 1) +
+  coord_cartesian(ylim=c(0,5))+
+  geom_point() +
+  geom_label_repel(aes(label=english_word)) +
+  theme_classic()
 
 auditory_corrs <- cor(mega_perceptual[,c(2,49,68,89,147)], use="pairwise.complete.obs")
 corrplot(auditory_corrs, "shade", addCoef.col = "white", "upper")
