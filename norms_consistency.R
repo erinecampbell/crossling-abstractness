@@ -49,7 +49,8 @@ dutch_perceptual <- read_xlsx("norms/dutch/SpeedBrysbaert_Norms.xlsx") %>%
                 dutch_interoceptive_rating = Sensaties,
                 dutch_dominant_perceptual_rating = Modality,
                 dutch_exclusivity_rating = ModalityExclusivity,
-                dutch_maxperceptual_rating = MaxPercStrength) 
+                dutch_maxperceptual_rating = MaxPercStrength,
+                dutch_imageability_rating = Imageability) 
 ## english
 english_perceptual <- read_csv("norms/english/Lancaster_sensorimotor_norms_for_39707_words.csv") %>%
   dplyr::rename(english_word = Word, 
@@ -110,14 +111,16 @@ russian_perceptual <- read_excel("norms/russian/miklashevsky2018.xlsx") %>%
                 russian_visual_rating = Vis_Mean,
                 russian_olfactory_rating = Olf_Mean,
                 russian_gustatory_rating = Gus_Mean,
-                russian_haptic_rating = Hap_Mean) %>%
+                russian_haptic_rating = Hap_Mean,
+                russian_imageability_rating = Img_Mean) %>%
   mutate(english_gloss = tolower(english_gloss))
 ## spanish
 spanish_perceptual <- read_excel("norms/spanish/europeanspanish/sensoryexperienceratings_diezalamo2019.xlsx") %>%
   dplyr::rename(spanish_word = word, 
                 english_gloss = `translation into English`,
                 spanish_maxperceptual_rating = SER_m) %>%
-  mutate(english_gloss = tolower(english_gloss))
+  mutate(english_gloss = tolower(english_gloss),
+         spanish_word = tolower(spanish_word))
 
 ## mega perceptual
 mega_perceptual <- left_join(english_perceptual, french_perceptual, 
@@ -129,7 +132,9 @@ mega_perceptual <- left_join(english_perceptual, french_perceptual,
   left_join(russian_perceptual, 
             by = c("english_word" = "english_gloss")) %>%
   left_join(spanish_perceptual, 
-            by = c("english_word" = "english_gloss"))
+            by = c("english_word" = "english_gloss")) %>%
+  left_join(dutch_perceptual,
+            by = c())
 
 visual_corrs <- cor(mega_perceptual[,c(7,47,72,88,145)], use="pairwise.complete.obs")
 corrplot(visual_corrs, "shade", addCoef.col = "white", "upper")
@@ -155,3 +160,38 @@ corrplot(gustatory_corrs, "shade", addCoef.col = "white", "upper")
 interoceptive_corrs <- cor(mega_perceptual[,c(5,93)], use="pairwise.complete.obs")
 corrplot(interoceptive_corrs, "shade", addCoef.col = "white", "upper")
 
+
+# concreteness
+
+english_concreteness <- read.csv("norms/english/brysbaert_concreteness.csv") %>%
+  rename(english_word = Word,
+         english_concreteness_rating = Conc.M)
+dutch_concreteness <- read.csv("norms/dutch/verheyen_concreteness2019.csv") %>%
+  rename(dutch_word = Words,
+         dutch_concreteness_rating = mean)
+french_concreteness <- read_excel("norms/french/europeanfrench/concreteness_bonin2018.xlsx") %>%
+  rename(french_word = items,
+         french_concreteness_rating = Concreteness_mean)
+# chinese_concreteness <-  read_excel("norms/chinese/yao_2017.pdf") %>%
+portuguese_concreteness <- soares_norms <- read_csv("norms/portuguese/european/soares_norms.csv") %>%
+  rename(portuguese_word = `Word (Portuguese)`,
+         portuguese_concreteness_rating = Conc_M,
+         portuguese_imageability_rating = Imag_M)
+italian_ratings <- read_csv("norms/italian/italian_ratings.csv", 
+                            skip = 1) %>%
+  rename(italian_word = Ita_Word,
+         italian_concreteness_rating = M_Con,
+         italian_imageability_rating = M_Ima)
+
+# imageability
+french_imageability <- read_excel("norms/french/europeanfrench/Desrochers-BRM-2009/Desrochers-Thompson_2009_Ratings.xls") %>%
+  rename(french_word = NOUN,
+         french_imageability_rating = IMAGE_Mean)
+croatian_ratings <- read_excel("norms/croatian/Pretraga-22.3.2023.xlsx") %>%
+  mutate(KONKRETNOST = as.numeric(KONKRETNOST),
+         PREDOČIVOST = as.numeric(PREDOČIVOST),
+         RIJEČ = tolower(RIJEČ)) %>%
+  group_by(RIJEČ) %>%
+    summarise(croatian_concreteness_rating = mean(KONKRETNOST, na.rm=TRUE),
+              croatian_imageability_rating = mean(PREDOČIVOST, na.rm=TRUE)) %>%
+  rename(croatian_word = RIJEČ) 
