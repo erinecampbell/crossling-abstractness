@@ -30,6 +30,7 @@ american_english_data <-
   left_join(american_english_aoas, english_iconicity, by=c("item_definition"="english_word")) %>%
   left_join(english_perceptual, by=c("item_definition"="english_word")) %>%
   left_join(english_concreteness, by=c("item_definition"="english_word")) %>%
+  left_join(english_bois, by=c("item_definition"="english_word")) %>%
   distinct(item_definition,.keep_all = TRUE)
 
 australian_english_instrument_data <- get_instrument_data("English (Australian)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
@@ -46,7 +47,13 @@ australian_english_data <-
   left_join(australian_english_aoas, english_iconicity, by=c("item_definition"="english_word")) %>%
   left_join(english_perceptual, by=c("item_definition"="english_word")) %>%
   left_join(english_concreteness, by=c("item_definition"="english_word")) %>%
+  left_join(english_bois, by=c("item_definition"="english_word")) %>%
   distinct(item_definition,.keep_all = TRUE)
+
+
+english_dict <- american_english_data %>%
+  mutate(english_word = item_definition) %>%
+  select(uni_lemma, english_word, matches("^english_.*_rating$"))
 
 # asl
 asl_instrument_data <- get_instrument_data("American Sign Language", form = "CDITwo", administration_info = TRUE,item_info = TRUE) %>%
@@ -65,6 +72,10 @@ asl_data <-
   left_join(english_perceptual, by=c("english_gloss"="english_word")) %>%
   distinct(item_definition,.keep_all = TRUE)
 
+asl_dict <- asl_data %>%
+  mutate(asl_word = item_definition) %>%
+  select(uni_lemma, asl_word, matches("^asl_.*_rating$"))
+
 # croatian
 croatian_instrument_data <- get_instrument_data("Croatian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
@@ -79,6 +90,10 @@ croatian_aoas <- fit_aoa(
   mutate(item_definition = tolower(item_definition))
 croatian_data <-
   left_join(croatian_aoas, croatian_ratings, by=c("item_definition"="croatian_word"))
+
+croatian_dict <- croatian_data %>%
+  mutate(croatian_word = item_definition) %>%
+  select(uni_lemma, croatian_word, matches("^croatian_.*_rating$"))
 
 # dutch
 dutch_instrument_data <- get_instrument_data("Dutch", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
@@ -98,6 +113,31 @@ dutch_data <-
   left_join(dutch_concreteness, by=c("item_definition"="dutch_word")) %>%
   distinct(item_definition,.keep_all = TRUE)
 
+dutch_dict <- dutch_data %>%
+  mutate(dutch_word = item_definition) %>%
+  select(uni_lemma, dutch_word, matches("^dutch_.*_rating$"))
+
+# norwegian
+norwegian_instrument_data <- get_instrument_data("Norwegian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+norwegian_aoas <- fit_aoa(
+  instrument_data = norwegian_instrument_data,
+  measure = "produces",
+  method = "glm",
+  proportion = 0.5,
+  age_min = 8,
+  age_max = max(norwegian_instrument_data$age, na.rm = TRUE)
+) %>% 
+  mutate(item_definition = tolower(item_definition))
+norwegian_data <-
+  left_join(norwegian_aoas, norwegian_imageability, by=c("item_definition"="norwegian_word")) %>%
+  distinct(item_definition,.keep_all = TRUE)
+
+norwegian_dict <- norwegian_data %>%
+  mutate(norwegian_word = item_definition) %>%
+  select(uni_lemma, norwegian_word, matches("^norwegian_.*_rating$"))
+
+
 # portuguese
 portuguese_instrument_data <- get_instrument_data("Portuguese (European)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
@@ -113,6 +153,10 @@ portuguese_aoas <- fit_aoa(
 portuguese_data <-
   left_join(portuguese_aoas, portuguese_concreteness, by=c("item_definition"="portuguese_word")) %>%
   distinct(item_definition,.keep_all = TRUE)
+
+portuguese_dict <- portuguese_data %>%
+  mutate(portuguese_word = item_definition) %>%
+  select(uni_lemma, portuguese_word, matches("^portuguese_.*_rating$"))
 
 
 #spanish
@@ -130,6 +174,8 @@ peruvian_spanish_aoas <- fit_aoa(
 peruvian_spanish_data <-
   left_join(peruvian_spanish_aoas, spanish_iconicity, by=c("item_definition"="spanish_word")) %>%
   left_join(spanish_perceptual, by=c("item_definition"="spanish_word")) %>%
+  left_join(spanish_emotions, by=c("item_definition"="spanish_word")) %>%
+  left_join(spanish_imageability, by=c("item_definition"="spanish_word")) %>%
   distinct(item_definition,.keep_all = TRUE)
 
 mexican_spanish_instrument_data <- get_instrument_data("Spanish (Mexican)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
@@ -146,6 +192,8 @@ mexican_spanish_aoas <- fit_aoa(
 mexican_spanish_data <-
   left_join(mexican_spanish_aoas, spanish_iconicity, by=c("item_definition"="spanish_word")) %>%
   left_join(spanish_perceptual, by=c("item_definition"="spanish_word")) %>%
+  left_join(spanish_emotions, by=c("item_definition"="spanish_word")) %>%
+  left_join(spanish_imageability, by=c("item_definition"="spanish_word")) %>%
   distinct(item_definition,.keep_all = TRUE)
 
 european_spanish_instrument_data <- get_instrument_data("Spanish (European)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
@@ -162,6 +210,8 @@ european_spanish_aoas <- fit_aoa(
 european_spanish_data <-
   left_join(european_spanish_aoas, spanish_iconicity, by=c("item_definition"="spanish_word")) %>%
   left_join(spanish_perceptual, by=c("item_definition"="spanish_word")) %>%
+  left_join(spanish_emotions, by=c("item_definition"="spanish_word")) %>%
+  left_join(spanish_imageability, by=c("item_definition"="spanish_word")) %>%
   distinct(item_definition,.keep_all = TRUE)
 
 argentinian_spanish_instrument_data <- get_instrument_data("Spanish (Argentinian)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
@@ -178,7 +228,14 @@ argentinian_spanish_aoas <- fit_aoa(
 argentinian_spanish_data <-
   left_join(argentinian_spanish_aoas, spanish_iconicity, by=c("item_definition"="spanish_word")) %>%
   left_join(spanish_perceptual, by=c("item_definition"="spanish_word")) %>%
+  left_join(spanish_imageability, by=c("item_definition"="spanish_word")) %>%
   distinct(item_definition,.keep_all = TRUE)
+
+spanish_dict <- bind_rows(argentinian_spanish_data, peruvian_spanish_data, european_spanish_data, mexican_spanish_data) %>%
+  mutate(spanish_word = item_definition) %>%
+  select(uni_lemma, spanish_word, matches("^spanish_.*_rating$")) %>%
+  distinct(spanish_word, .keep_all = TRUE)
+  
 
 # italian
 italian_instrument_data <- get_instrument_data("Italian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
@@ -197,6 +254,10 @@ italian_data <-
   left_join(italian_ratings, by=c("item_definition"="italian_word")) %>%
   distinct(item_definition,.keep_all = TRUE)
 
+italian_dict <- italian_data %>%
+  mutate(italian_word = item_definition) %>%
+  select(uni_lemma, italian_word, matches("^italian_.*_rating$"))
+
 # french
 quebec_french_instrument_data <- get_instrument_data("French (Quebecois)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
@@ -212,6 +273,7 @@ quebec_french_aoas <- fit_aoa(
 quebec_french_data <-
   left_join(quebec_french_aoas, french_perceptual, by=c("item_definition"="french_word")) %>%
   left_join(french_imageability, by=c("item_definition"="french_word")) %>%
+  left_join(french_bois, by=c("item_definition"="french_word")) %>%
   distinct(item_definition,.keep_all = TRUE)
 
 french_instrument_data <- get_instrument_data("French (French)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
@@ -228,8 +290,13 @@ french_aoas <- fit_aoa(
 french_data <-
   left_join(french_aoas, french_perceptual, by=c("item_definition"="french_word")) %>%
   left_join(french_imageability, by=c("item_definition"="french_word")) %>%
+  left_join(french_bois, by=c("item_definition"="french_word")) %>%
   distinct(item_definition,.keep_all = TRUE)
 
+french_dict <- bind_rows(french_data, quebec_french_data) %>%
+  mutate(french_word = item_definition) %>%
+  select(uni_lemma, french_word, matches("^french_.*_rating$")) %>%
+  distinct(french_word, .keep_all = TRUE)
 
 # russian
 
@@ -248,6 +315,9 @@ russian_data <-
   left_join(russian_aoas, russian_perceptual, by=c("item_definition"="WORD")) %>%
   distinct(item_definition,.keep_all = TRUE)
 
+russian_dict <- russian_data %>%
+  mutate(russian_word = item_definition) %>%
+  select(uni_lemma, russian_word, matches("^russian_.*_rating$")) 
 
 # chinese
 
@@ -281,6 +351,11 @@ taiwanese_data <-
   left_join(taiwanese_aoas, chinese_perceptual, by=c("item_definition"="traditional")) %>%
   distinct(item_definition,.keep_all = TRUE)
 
+chinese_dict <- bind_rows(beijing_data, taiwanese_data) %>%
+  mutate(chinese_word = item_definition) %>%
+  select(uni_lemma, chinese_word, matches("^chinese_.*_rating$")) %>%
+  distinct(chinese_word, .keep_all = TRUE)
+
 
 turkish_instrument_data <- get_instrument_data("Turkish", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
@@ -294,6 +369,11 @@ turkish_aoas <- fit_aoa(
 ) %>% 
   mutate(item_definition = tolower(item_definition))
 turkish_data <- read_csv("norms/turkish/aoas_and_concreteness.csv")
+
+turkish_dict <- turkish_data %>%
+  mutate(turkish_word = item_definition) %>%
+  select(uni_lemma, turkish_word, matches("^turkish_.*_rating$")) %>%
+  distinct(turkish_word, .keep_all = TRUE)
 
 iconicity_corrs <- bind_rows(cor_test_info(american_english_data$aoa,american_english_data$english_iconicity_rating, "American English"),
 cor_test_info(australian_english_data$aoa,australian_english_data$english_iconicity_rating, "Australian English"),
@@ -335,7 +415,10 @@ auditory_corrs <- bind_rows(cor_test_info(american_english_data$aoa,american_eng
                           cor_test_info(dutch_data$aoa,dutch_data$dutch_auditory_rating.x, "Dutch"),
                           cor_test_info(beijing_data$aoa,beijing_data$chinese_auditory_rating, "Mandarin (Beijing)"),
                           cor_test_info(taiwanese_data$aoa,taiwanese_data$chinese_auditory_rating, "Mandarin (Taiwanese)"),
-                          cor_test_info(russian_data$aoa,russian_data$russian_auditory_rating, "Russian")
+                          cor_test_info(russian_data$aoa,russian_data$russian_auditory_rating, "Russian"),
+                          cor_test_info(peruvian_spanish_data$aoa,peruvian_spanish_data$spanish_auditory_rating, "Peruvian Spanish"),
+                          cor_test_info(mexican_spanish_data$aoa,mexican_spanish_data$spanish_auditory_rating, "Mexican Spanish"),
+                          cor_test_info(european_spanish_data$aoa,european_spanish_data$spanish_auditory_rating, "European Spanish")
                           
 )
 
@@ -372,7 +455,10 @@ olfactory_corrs <- bind_rows(cor_test_info(american_english_data$aoa,american_en
                            cor_test_info(dutch_data$aoa,dutch_data$dutch_olfactory_rating.x, "Dutch"),
                            cor_test_info(beijing_data$aoa,beijing_data$chinese_olfactory_rating, "Mandarin (Beijing)"),
                            cor_test_info(taiwanese_data$aoa,taiwanese_data$chinese_olfactory_rating, "Mandarin (Taiwanese)"),
-                           cor_test_info(russian_data$aoa,russian_data$russian_olfactory_rating, "Russian")
+                           cor_test_info(russian_data$aoa,russian_data$russian_olfactory_rating, "Russian"),
+                           cor_test_info(peruvian_spanish_data$aoa,peruvian_spanish_data$spanish_olfactory_rating, "Peruvian Spanish"),
+                           cor_test_info(mexican_spanish_data$aoa,mexican_spanish_data$spanish_olfactory_rating, "Mexican Spanish"),
+                           cor_test_info(european_spanish_data$aoa,european_spanish_data$spanish_olfactory_rating, "European Spanish")
                            
 )
 
@@ -390,7 +476,10 @@ gustatory_corrs <- bind_rows(cor_test_info(american_english_data$aoa,american_en
                              cor_test_info(italian_data$aoa,italian_data$italian_gustatory_rating, "Italian"),
                              cor_test_info(beijing_data$aoa,beijing_data$chinese_gustatory_rating, "Mandarin (Beijing)"),
                              cor_test_info(taiwanese_data$aoa,taiwanese_data$chinese_gustatory_rating, "Mandarin (Taiwanese)"),
-                             cor_test_info(russian_data$aoa,russian_data$russian_gustatory_rating, "Russian")
+                             cor_test_info(russian_data$aoa,russian_data$russian_gustatory_rating, "Russian"),
+                             cor_test_info(peruvian_spanish_data$aoa,peruvian_spanish_data$spanish_gustatory_rating, "Peruvian Spanish"),
+                             cor_test_info(mexican_spanish_data$aoa,mexican_spanish_data$spanish_gustatory_rating, "Mexican Spanish"),
+                             cor_test_info(european_spanish_data$aoa,european_spanish_data$spanish_gustatory_rating, "European Spanish")
                              
 )
 
@@ -408,7 +497,10 @@ concreteness_corrs <- bind_rows(cor_test_info(american_english_data$aoa,american
                              cor_test_info(dutch_data$aoa,dutch_data$dutch_concreteness_rating, "Dutch"),
                              cor_test_info(turkish_data$aoa,turkish_data$turkish_concreteness_rating, "Turkish"),
                              cor_test_info(croatian_data$aoa,croatian_data$croatian_concreteness_rating, "Croatian"),
-                             cor_test_info(italian_data$aoa,italian_data$italian_concreteness_rating, "Italian")
+                             cor_test_info(italian_data$aoa,italian_data$italian_concreteness_rating, "Italian"),
+                             cor_test_info(peruvian_spanish_data$aoa,peruvian_spanish_data$spanish_concreteness_rating, "Peruvian Spanish"),
+                             cor_test_info(mexican_spanish_data$aoa,mexican_spanish_data$spanish_concreteness_rating, "Mexican Spanish"),
+                             cor_test_info(european_spanish_data$aoa,european_spanish_data$spanish_concreteness_rating, "European Spanish")
                              
                              # ,
                              # cor_test_info(italian_data$aoa,italian_data$italian_gustatory_rating, "Italian"),
@@ -438,10 +530,12 @@ imageability_corrs <- bind_rows(
   cor_test_info(french_data$aoa,french_data$french_imageability_rating, "European French"),
   cor_test_info(quebec_french_data$aoa,quebec_french_data$french_imageability_rating, "Quebecois French"),
   cor_test_info(croatian_data$aoa,croatian_data$croatian_imageability_rating, "Croatian"),
-  cor_test_info(italian_data$aoa,italian_data$italian_imagery_rating, "Italian"),
-  cor_test_info(russian_data$aoa,russian_data$russian_imageability_rating, "Russian")
-  
-  
+  cor_test_info(italian_data$aoa,italian_data$italian_imageability_rating, "Italian"),
+  cor_test_info(russian_data$aoa,russian_data$russian_imageability_rating, "Russian"),
+  cor_test_info(norwegian_data$aoa,norwegian_data$norwegian_imageability_rating, "Norwegian"),
+  cor_test_info(peruvian_spanish_data$aoa,peruvian_spanish_data$spanish_imageability_rating, "Peruvian Spanish"),
+  cor_test_info(mexican_spanish_data$aoa,mexican_spanish_data$spanish_imageability_rating, "Mexican Spanish"),
+  cor_test_info(european_spanish_data$aoa,european_spanish_data$spanish_imageability_rating, "European Spanish")
 )
 
 ggplot(imageability_corrs, aes(x=R,y=language,color=language)) +
@@ -451,3 +545,66 @@ ggplot(imageability_corrs, aes(x=R,y=language,color=language)) +
   theme_minimal()+
   theme(legend.position = "none") +
   ggtitle("Imageability effects on AoA")
+
+
+
+boi_corrs <- bind_rows(  
+  cor_test_info(american_english_data$aoa,american_english_data$english_boi_rating, "American English"),
+  cor_test_info(australian_english_data$aoa,australian_english_data$english_boi_rating, "Australian English"),
+  cor_test_info(french_data$aoa,french_data$french_boi_rating, "European French"),
+  cor_test_info(quebec_french_data$aoa,quebec_french_data$french_boi_rating, "Quebecois French"),
+  cor_test_info(russian_data$aoa,russian_data$russian_boi_rating, "Russian"),
+  cor_test_info(argentinian_spanish_data$aoa,argentinian_spanish_data$spanish_boi_rating, "Argentinian Spanish"),
+  cor_test_info(peruvian_spanish_data$aoa,peruvian_spanish_data$spanish_boi_rating, "Peruvian Spanish"),
+  cor_test_info(mexican_spanish_data$aoa,mexican_spanish_data$spanish_boi_rating, "Mexican Spanish"),
+  cor_test_info(european_spanish_data$aoa,european_spanish_data$spanish_boi_rating, "European Spanish")
+)
+
+ggplot(boi_corrs, aes(x=R,y=language,color=language)) +
+  geom_vline(xintercept=0)+
+  geom_point()+
+  geom_linerange(aes(xmin=conf_int_lower,xmax=conf_int_upper))+
+  theme_minimal()+
+  theme(legend.position = "none") +
+  ggtitle("Body-Object Interaction effects on AoA")
+
+
+
+
+
+
+master_dictionary <- full_join(english_dict, asl_dict) %>%
+  distinct(uni_lemma,  asl_word, .keep_all = TRUE) %>%
+  full_join(chinese_dict) %>%
+  distinct(uni_lemma, chinese_word, .keep_all = TRUE) %>%
+  full_join(croatian_dict) %>%
+  distinct(uni_lemma,  croatian_word, .keep_all = TRUE) %>%
+  full_join(dutch_dict) %>%
+  distinct(uni_lemma,  dutch_word, .keep_all = TRUE) %>%
+  full_join(french_dict) %>%
+  distinct(uni_lemma,  french_word,.keep_all = TRUE) %>%
+  full_join(italian_dict) %>%
+  distinct(uni_lemma,  italian_word, .keep_all = TRUE) %>%
+  full_join(norwegian_dict) %>%
+  distinct(uni_lemma,  norwegian_word, .keep_all = TRUE) %>%
+  full_join(portuguese_dict) %>%
+  distinct(uni_lemma,  portuguese_word, .keep_all = TRUE) %>%
+  full_join(russian_dict) %>%
+  distinct(uni_lemma,  russian_word, .keep_all = TRUE) %>%  
+  full_join(spanish_dict) %>%
+  distinct(uni_lemma,  spanish_word, .keep_all = TRUE) %>%  
+  full_join(turkish_dict) %>%
+  distinct(uni_lemma, turkish_word, .keep_all = TRUE) %>%
+rowwise() %>%
+  mutate(average_imageability_rating = mean(c_across(matches("^.*_imageability_rating$")), na.rm = TRUE),
+         average_visual_rating = mean(c_across(matches("^.*_visual_rating$")), na.rm = TRUE),
+         average_auditory_rating = mean(c_across(matches("^.*_auditory_rating$")), na.rm = TRUE),
+         average_gustatory_rating = mean(c_across(matches("^.*_gustatory_rating$")), na.rm = TRUE),
+         average_olfactory_rating = mean(c_across(matches("^.*_olfactory_rating$")), na.rm = TRUE),
+         average_interoceptive_rating = mean(c_across(matches("^.*_interoceptive_rating$")), na.rm = TRUE),
+         average_haptic_rating = mean(c_across(matches("^.*_haptic_rating$")), na.rm = TRUE),
+         average_concreteness_rating = mean(c_across(matches("^.*_concreteness_rating$")), na.rm = TRUE),
+         average_maxperceptual_rating = mean(c_across(matches("^.*_maxperceptual_rating$")), na.rm = TRUE),
+         average_boi_rating = mean(c_across(matches("^.*_boi_rating$")), na.rm = TRUE)) %>%
+  ungroup() 
+  

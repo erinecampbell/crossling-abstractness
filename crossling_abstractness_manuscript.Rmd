@@ -1,0 +1,80 @@
+---
+title: "Untitled"
+author: "Erin Campbell, Charles Davis"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+## Abstractness in Acquisition
+
+children learn abstract words later [@bergelson2013]
+
+## Different Constructions of Abstractness
+
+### Word Meaning Abstract from Perceptual Experience
+
+Perceptual Experience
+Imageability
+BOI
+Social (is this harder for young children to learn?)
+
+### Word Form Abstract from Word Meaning
+
+Iconicity
+Systematicity
+where the word form 
+
+Arbitrariness to be a requisite property of language. Language is language because words are abstract symbols of their meaning. Words with an iconic of motivated mapping between form and meaning have originally been relegated to the fringes of linguistic discussion. Work on onomatopoeias, ideophones, and systematicity show that iconicity is a more prevalent phenomenon than previously recognized. 
+
+### Word Meaning Abstract from Specific Circumstance
+
+Specificity
+
+## The Present Study
+
+# Methods
+
+## CDI
+Data from Wordbank [@frank2017], a large database of 
+
+We will take the full set of participants from Wordbank, then filter to only monolingual, typically-developing participants (~84,000 children). In addition, we will exclude participants who are not yet producing any words.
+
+
+## Lexical Properties
+
+Norms will be scaled within languages (or for zipfian-distributed norms, logged then scaled) for comparability across languages.
+For norms pertaining to the underlying concept (e.g., concreteness, perceptual strength, emotional valence):
+If norms are available for a specific word in a specific language, the scaled value will be used.
+If norms are not available for a specific word or not available in a specific language, then the mean rating for the words’ translation equivalent from all available languages will be used.
+
+For norms pertaining to the wordform (e.g., frequency, iconicity, phonological properties):
+If norms are available for a specific word in a specific language, the scaled value will be used.
+If norms are not available for a specific word but are for other words in that language, then any words without norms will be excluded from the analysis.
+If there are no norms at all for a language along one of these scales, then any set of analyses using that norming scale will exclude that language.
+
+https://docs.google.com/spreadsheets/d/1fivS85qayBJtp_nXjVmAvwZn7u6F517RFur0UPTJcAw/edit#gid=0
+
+### Perceptual properties
+
+### Iconicity
+
+only available for English [@winter2023], ASL, BSL, and Spanish [@hinojosa2021].
+
+systematicity: https://journals.sagepub.com/doi/full/10.1177/17470218211053472#bibr4-17470218211053472
+
+### 
+
+```{r ratings-table}
+# language by property, with citation in cell
+```
+
+# Results
+
+# Discussion
+

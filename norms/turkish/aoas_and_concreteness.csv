@@ -1,0 +1,712 @@
+,aoa,item_id,item_kind,item_definition,category,lexical_category,uni_lemma,turkish_concreteness_rating
+1,NA,item_1,word,cee,sounds,other,peekaboo,NA
+2,NA,item_2,word,cıss,sounds,other,don't,NA
+3,23,item_3,word,çufçuf,sounds,other,choo choo,NA
+4,10,item_4,word,düt,sounds,other,vroom,NA
+5,NA,item_5,word,ham,sounds,other,yum yum,NA
+6,NA,item_6,word,havhav,sounds,other,woof woof,NA
+7,11,item_7,word,hop/hoppa,sounds,other,up,NA
+8,14,item_8,word,mee,sounds,other,baa baa,NA
+9,12,item_9,word,pisi-pisi,sounds,other,meow,NA
+10,13,item_10,word,şişt,sounds,other,shh,NA
+11,NA,item_11,word,uf,sounds,other,ouch,NA
+12,24,item_12,word,vak vak,sounds,other,quack quack,NA
+13,20,item_13,word,vınn,sounds,other,vroom,NA
+14,26,item_14,word,arı,animals,nouns,bee,NA
+15,28,item_15,word,aslan,animals,nouns,lion,NA
+16,22,item_16,word,at (animal),animals,nouns,horse,NA
+17,24,item_17,word,ayı,animals,nouns,bear,NA
+18,23,item_18,word,balık (animal),animals,nouns,fish (animal),6.79
+19,34,item_19,word,baykuş,animals,nouns,owl,NA
+20,24,item_20,word,böcek,animals,nouns,bug,NA
+21,31,item_21,word,deve,animals,nouns,camel,NA
+22,34,item_22,word,domuz,animals,nouns,pig,NA
+23,25,item_23,word,eşek,animals,nouns,donkey,6.8
+24,28,item_24,word,fare,animals,nouns,mouse,NA
+25,28,item_25,word,fil,animals,nouns,elephant,NA
+26,33,item_26,word,geyik,animals,nouns,deer,NA
+27,28,item_27,word,hayvan,animals,nouns,animal,6.49
+28,28,item_28,word,horoz,animals,nouns,rooster,NA
+29,24,item_29,word,inek,animals,nouns,cow,NA
+30,33,item_30,word,kaplan,animals,nouns,tiger,NA
+31,32,item_31,word,karga,animals,nouns,crow,NA
+32,28,item_32,word,karınca,animals,nouns,ant,6.88
+33,34,item_33,word,kartal,animals,nouns,eagle,NA
+34,29,item_34,word,keçi,animals,nouns,goat,6.04
+35,19,item_35,word,kedi,animals,nouns,cat,NA
+36,27,item_36,word,koyun,animals,nouns,sheep,NA
+37,21,item_37,word,köpek,animals,nouns,dog,NA
+38,30,item_38,word,kurbağa,animals,nouns,frog,NA
+39,19,item_39,word,kuş,animals,nouns,bird,6.81
+40,32,item_40,word,kurt,animals,nouns,wolf,NA
+41,32,item_41,word,leylek,animals,nouns,stork,NA
+42,26,item_42,word,maymun,animals,nouns,monkey,NA
+43,28,item_43,word,ördek,animals,nouns,duck,NA
+44,31,item_44,word,örümcek,animals,nouns,spider,NA
+45,32,item_45,word,papağan,animals,nouns,parrot,NA
+46,33,item_46,word,sincap,animals,nouns,squirrel,NA
+47,26,item_47,word,sinek,animals,nouns,fly (animal),NA
+48,26,item_48,word,tavşan,animals,nouns,bunny,NA
+49,25,item_49,word,tavuk,animals,nouns,chicken (animal),6.88
+50,33,item_50,word,timsah,animals,nouns,crocodile,NA
+51,31,item_51,word,yavru,animals,nouns,NA,NA
+52,35,item_52,word,zebra,animals,nouns,zebra,NA
+53,33,item_53,word,zürafa,animals,nouns,giraffe,NA
+54,25,item_54,word,kuzu,animals,nouns,lamb,6.79
+55,33,item_55,word,ambulans,vehicles,nouns,ambulance,NA
+56,18,item_56,word,araba,vehicles,nouns,car,6.87
+57,25,item_57,word,bisiklet,vehicles,nouns,bicycle,6.86
+58,29,item_58,word,gemi/vapur,vehicles,nouns,boat,6.84
+59,32,item_59,word,helikopter,vehicles,nouns,helicopter,NA
+60,33,item_60,word,itfaiye,vehicles,nouns,firetruck,NA
+61,27,item_61,word,kamyon,vehicles,nouns,truck,6.96
+62,33,item_62,word,kayık,vehicles,nouns,kayak,NA
+63,31,item_63,word,motosiklet,vehicles,nouns,motorcycle,NA
+64,27,item_64,word,otobüs,vehicles,nouns,bus,6.86
+65,33,item_65,word,traktör,vehicles,nouns,tractor,NA
+66,27,item_66,word,tren,vehicles,nouns,train,6.9
+67,24,item_67,word,uçak,vehicles,nouns,airplane,6.91
+68,NA,item_68,word,yelkenli,vehicles,nouns,sailboat,NA
+69,21,item_69,word,balon,toys,nouns,balloon,NA
+70,13,item_70,word,bebek (object),toys,nouns,doll,NA
+71,NA,item_71,word,blok,toys,nouns,blocks,NA
+72,25,item_72,word,boya (object),toys,nouns,crayon,NA
+73,28,item_73,word,davul,toys,nouns,drum (object),NA
+74,26,item_74,word,defter,toys,nouns,notebook,NA
+75,26,item_75,word,düdük,toys,nouns,whistle (object),5.49
+76,22,item_76,word,kalem,toys,nouns,pen/pencil,NA
+77,24,item_77,word,kitap,toys,nouns,book,6.65
+78,28,item_78,word,kova,toys,nouns,bucket,NA
+79,33,item_79,word,kukla,toys,nouns,puppet,NA
+80,29,item_80,word,kürek,toys,nouns,shovel,NA
+81,30,item_81,word,lego,toys,nouns,blocks,NA
+82,29,item_82,word,masal,toys,nouns,story,NA
+83,23,item_83,word,oyuncak,toys,nouns,toy (object),NA
+84,31,item_84,word,pazıl/yap-boz,toys,nouns,puzzle,NA
+85,31,item_85,word,robot,toys,nouns,robot,NA
+86,15,item_86,word,top,toys,nouns,ball,NA
+87,33,item_87,word,tüfek,toys,nouns,gun,6.93
+88,29,item_88,word,uçurtma,toys,nouns,kite,NA
+89,26,item_89,word,armut,food_drink,nouns,pear,NA
+90,25,item_90,word,ayran,food_drink,nouns,yogurt drink,NA
+91,26,item_91,word,bal,food_drink,nouns,honey,6.84
+92,23,item_92,word,balık (food),food_drink,nouns,fish (food),6.79
+93,25,item_93,word,bisküvi,food_drink,nouns,cracker,NA
+94,27,item_94,word,börek,food_drink,nouns,pastry,NA
+95,26,item_95,word,cips,food_drink,nouns,chips,NA
+96,20,item_96,word,çay,food_drink,nouns,tea,NA
+97,23,item_97,word,çikolata,food_drink,nouns,chocolate,6.91
+98,26,item_98,word,çilek,food_drink,nouns,strawberry,NA
+99,23,item_99,word,çorba,food_drink,nouns,soup,NA
+100,28,item_100,word,dolma,food_drink,nouns,NA,NA
+101,25,item_101,word,domates,food_drink,nouns,tomato,NA
+102,25,item_102,word,dondurma,food_drink,nouns,ice cream,NA
+103,21,item_103,word,ekmek,food_drink,nouns,bread,NA
+104,22,item_104,word,elma,food_drink,nouns,apple,6.95
+105,23,item_105,word,et,food_drink,nouns,meat,6.76
+106,30,item_106,word,fasulye,food_drink,nouns,beans,NA
+107,29,item_107,word,fıstık,food_drink,nouns,nut,NA
+108,31,item_108,word,gazoz,food_drink,nouns,soda,NA
+109,32,item_109,word,ispanak,food_drink,nouns,spinach,NA
+110,29,item_110,word,kahve,food_drink,nouns,coffee,NA
+111,25,item_111,word,karpuz,food_drink,nouns,watermelon,NA
+112,30,item_112,word,kayısı,food_drink,nouns,apricot,6.82
+113,23,item_113,word,kek,food_drink,nouns,cake,6.77
+114,31,item_114,word,ketçap,food_drink,nouns,ketchup,NA
+115,28,item_115,word,kiraz,food_drink,nouns,cherry,NA
+116,24,item_116,word,kola,food_drink,nouns,soda,NA
+117,26,item_117,word,köfte,food_drink,nouns,meatball,NA
+118,30,item_118,word,kurabiye,food_drink,nouns,cookie,NA
+119,28,item_119,word,limon,food_drink,nouns,lemon,6.93
+120,32,item_120,word,lokum,food_drink,nouns,NA,NA
+121,24,item_121,word,makarna,food_drink,nouns,pasta,NA
+122,29,item_122,word,mandalina,food_drink,nouns,tangerine,NA
+123,27,item_123,word,meyve,food_drink,nouns,fruit,6.63
+124,27,item_124,word,mısır,food_drink,nouns,corn,NA
+125,34,item_125,word,muhallebi,food_drink,nouns,pudding,NA
+126,22,item_126,word,muz,food_drink,nouns,banana,6.92
+127,29,item_127,word,nar,food_drink,nouns,pomegranate,NA
+128,31,item_128,word,nohut,food_drink,nouns,chickpea,NA
+129,25,item_129,word,pasta,food_drink,nouns,cake,6.77
+130,25,item_130,word,patates,food_drink,nouns,potato,NA
+131,25,item_131,word,peynir,food_drink,nouns,cheese,6.88
+132,24,item_132,word,pilav,food_drink,nouns,rice,6.85
+133,32,item_133,word,pizza,food_drink,nouns,pizza,NA
+134,30,item_134,word,poğaça,food_drink,nouns,pastry,NA
+135,27,item_135,word,portakal,food_drink,nouns,orange (food),NA
+136,29,item_136,word,reçel,food_drink,nouns,jam,NA
+137,24,item_137,word,sakız/çiklet,food_drink,nouns,gum,NA
+138,31,item_138,word,salam,food_drink,nouns,salami,NA
+139,27,item_139,word,salatalık,food_drink,nouns,cucumber,NA
+140,26,item_140,word,simit,food_drink,nouns,pretzel,NA
+141,29,item_141,word,soğan,food_drink,nouns,onion,6.9
+142,30,item_142,word,sosis,food_drink,nouns,sausage,NA
+143,11,item_143,word,su,food_drink,nouns,water (beverage),NA
+144,29,item_144,word,sucuk,food_drink,nouns,sausage,NA
+145,18,item_145,word,süt,food_drink,nouns,milk,6.79
+146,23,item_146,word,şeker,food_drink,nouns,candy,NA
+147,35,item_147,word,tarhana,food_drink,nouns,tarhana,NA
+148,29,item_148,word,tost,food_drink,nouns,toast,NA
+149,27,item_149,word,tuz,food_drink,nouns,salt,NA
+150,26,item_150,word,üzüm,food_drink,nouns,grapes,6.93
+151,25,item_151,word,yemek,food_drink,nouns,food,NA
+152,24,item_152,word,yoğurt,food_drink,nouns,yogurt,6.79
+153,24,item_153,word,yumurta,food_drink,nouns,egg,NA
+154,25,item_154,word,zeytin,food_drink,nouns,olive,6.92
+155,20,item_155,word,ayakkabı/pabuç,clothing,nouns,shoe,6.88
+156,22,item_156,word,bez (çocuk bezi),clothing,nouns,diaper,NA
+157,30,item_157,word,bilezik,clothing,nouns,bracelet,NA
+158,35,item_158,word,bluz,clothing,nouns,blouse,NA
+159,31,item_159,word,bot,clothing,nouns,boots,NA
+160,30,item_160,word,ceket,clothing,nouns,jacket,NA
+161,27,item_161,word,cep,clothing,nouns,pocket,NA
+162,32,item_162,word,çizme,clothing,nouns,boots,NA
+163,23,item_163,word,çorap,clothing,nouns,sock,NA
+164,27,item_164,word,don/külot,clothing,nouns,underpants,6.89
+165,26,item_165,word,elbise,clothing,nouns,dress (object),NA
+166,29,item_166,word,eldiven,clothing,nouns,glove,NA
+167,33,item_167,word,eşofman,clothing,nouns,tracksuit,NA
+168,27,item_168,word,etek,clothing,nouns,skirt,NA
+169,29,item_169,word,fanila/atlet,clothing,nouns,NA,NA
+170,33,item_170,word,gecelik,clothing,nouns,pajamas,NA
+171,25,item_171,word,gözlük,clothing,nouns,glasses,6.87
+172,28,item_172,word,kazak,clothing,nouns,sweater,NA
+173,30,item_173,word,kemer,clothing,nouns,belt,NA
+174,28,item_174,word,küpe,clothing,nouns,earring,NA
+175,29,item_175,word,mont,clothing,nouns,jacket,7
+176,30,item_176,word,önlük,clothing,nouns,bib,NA
+177,34,item_177,word,palto,clothing,nouns,coat,6.77
+178,26,item_178,word,pantolon,clothing,nouns,pants,NA
+179,28,item_179,word,pijama,clothing,nouns,pajamas,NA
+180,23,item_180,word,şapka,clothing,nouns,hat,NA
+181,29,item_181,word,şort,clothing,nouns,shorts,NA
+182,30,item_182,word,taç,clothing,nouns,headband,NA
+183,33,item_183,word,tayt,clothing,nouns,tights,NA
+184,24,item_184,word,terlik,clothing,nouns,slipper,NA
+185,30,item_185,word,tişört,clothing,nouns,t-shirt,NA
+186,23,item_186,word,toka,clothing,nouns,hair clip,NA
+187,22,item_187,word,ağız,body_parts,nouns,mouth,NA
+188,21,item_188,word,ayak,body_parts,nouns,foot,NA
+189,24,item_189,word,bacak,body_parts,nouns,leg,6.86
+190,23,item_190,word,baş/kafa,body_parts,nouns,head,NA
+191,29,item_191,word,bıyık,body_parts,nouns,mustache,NA
+192,28,item_192,word,boğaz,body_parts,nouns,throat,NA
+193,28,item_193,word,boyun,body_parts,nouns,neck,NA
+194,21,item_194,word,burun,body_parts,nouns,nose,NA
+195,27,item_195,word,çene,body_parts,nouns,chin,NA
+196,23,item_196,word,dil,body_parts,nouns,tongue,NA
+197,22,item_197,word,diş,body_parts,nouns,tooth,NA
+198,28,item_198,word,diz,body_parts,nouns,knee,NA
+199,20,item_199,word,el,body_parts,nouns,hand,NA
+200,24,item_200,word,göbek,body_parts,nouns,tummy,NA
+201,21,item_201,word,göz,body_parts,nouns,eye,NA
+202,32,item_202,word,kalp,body_parts,nouns,heart,NA
+203,26,item_203,word,karın,body_parts,nouns,tummy,NA
+204,29,item_204,word,kirpik,body_parts,nouns,eyelash,NA
+205,24,item_205,word,kol,body_parts,nouns,arm,NA
+206,23,item_206,word,kulak,body_parts,nouns,ear,6.75
+207,24,item_207,word,parmak,body_parts,nouns,finger,6.89
+208,23,item_208,word,popo,body_parts,nouns,butt,NA
+209,21,item_209,word,saç,body_parts,nouns,hair,NA
+210,26,item_210,word,tırnak,body_parts,nouns,fingernail,NA
+211,32,item_211,word,vücut,body_parts,nouns,body,NA
+212,25,item_212,word,yanak,body_parts,nouns,cheek,NA
+213,26,item_213,word,yüz/surat,body_parts,nouns,face,NA
+214,25,item_214,word,anahtar,household,nouns,key,NA
+215,25,item_215,word,ayna,household,nouns,mirror,6.79
+216,31,item_216,word,bant (plaster),household,nouns,bandaid,NA
+217,22,item_217,word,bardak,household,nouns,glasses,6.87
+218,28,item_218,word,battaniye,household,nouns,blanket,NA
+219,25,item_219,word,bıçak,household,nouns,knife,6.87
+220,25,item_220,word,biberon,household,nouns,bottle,NA
+221,24,item_221,word,çanta,household,nouns,purse,NA
+222,24,item_222,word,çatal,household,nouns,fork,NA
+223,29,item_223,word,çaydanlık,household,nouns,teapot,NA
+224,33,item_224,word,çekiç,household,nouns,hammer,NA
+225,24,item_225,word,çöp,household,nouns,trash,NA
+226,26,item_226,word,emzik,household,nouns,pacifier,NA
+227,27,item_227,word,havlu,household,nouns,towel,NA
+228,26,item_228,word,ilaç,household,nouns,medicine,6.56
+229,26,item_229,word,kağıt,household,nouns,paper,6.83
+230,23,item_230,word,kaşık,household,nouns,spoon,6.86
+231,25,item_231,word,kumanda,household,nouns,remote control,NA
+232,25,item_232,word,lamba/işık,household,nouns,lamp,6.84
+233,27,item_233,word,mendil,household,nouns,tissue,NA
+234,30,item_234,word,pamuk,household,nouns,cotton,6.77
+235,26,item_235,word,peçete,household,nouns,napkin,NA
+236,27,item_236,word,perde,household,nouns,curtain,NA
+237,31,item_237,word,radyo,household,nouns,radio,6.75
+238,26,item_238,word,resim,household,nouns,picture,NA
+239,24,item_239,word,saat,household,nouns,clock,NA
+240,26,item_240,word,sabun,household,nouns,soap,NA
+241,27,item_241,word,süpürge,household,nouns,vacuum,NA
+242,29,item_242,word,şemsiye,household,nouns,umbrella,NA
+243,24,item_243,word,tabak,household,nouns,plate,NA
+244,25,item_244,word,tarak,household,nouns,comb (object),NA
+245,23,item_245,word,telefon,household,nouns,telephone,NA
+246,26,item_246,word,ütü,household,nouns,iron (object),6.77
+247,27,item_247,word,balkon,furniture_rooms,nouns,porch,NA
+248,24,item_248,word,banyo (object),furniture_rooms,nouns,bathroom,NA
+249,28,item_249,word,bilgisayar,furniture_rooms,nouns,computer,NA
+250,28,item_250,word,buzdolabı,furniture_rooms,nouns,refrigerator,NA
+251,26,item_251,word,dolap,furniture_rooms,nouns,cupboard,NA
+252,32,item_252,word,duş,furniture_rooms,nouns,shower,NA
+253,29,item_253,word,fırın,furniture_rooms,nouns,oven,NA
+254,26,item_254,word,kalorifer,furniture_rooms,nouns,radiator,NA
+255,35,item_255,word,halı,furniture_rooms,nouns,carpet,NA
+256,22,item_256,word,kapı,furniture_rooms,nouns,door,6.86
+257,26,item_257,word,koltuk,furniture_rooms,nouns,armchair,NA
+258,32,item_258,word,lazımlık/oturak,furniture_rooms,nouns,potty,NA
+259,24,item_259,word,masa,furniture_rooms,nouns,table,NA
+260,27,item_260,word,merdiven,furniture_rooms,nouns,stairs,NA
+261,26,item_261,word,mutfak,furniture_rooms,nouns,kitchen,6.75
+262,29,item_262,word,ocak,furniture_rooms,nouns,stove,NA
+263,26,item_263,word,pencere,furniture_rooms,nouns,window,6.93
+264,27,item_264,word,oda,furniture_rooms,nouns,room,NA
+265,29,item_265,word,salon,furniture_rooms,nouns,living room,NA
+266,27,item_266,word,sandalye/iskemle,furniture_rooms,nouns,chair,NA
+267,29,item_267,word,sehpa,furniture_rooms,nouns,coffee table,NA
+268,24,item_268,word,televizyon/tv,furniture_rooms,nouns,tv,6.89
+269,26,item_269,word,tuvalet,furniture_rooms,nouns,potty,NA
+270,25,item_270,word,yatak,furniture_rooms,nouns,bed,NA
+271,24,item_271,word,yastık,furniture_rooms,nouns,pillow,6.91
+272,27,item_272,word,zil,furniture_rooms,nouns,bell,NA
+273,26,item_273,word,yorgan,furniture_rooms,nouns,NA,NA
+274,25,item_274,word,ay/aydede,outside,nouns,moon,NA
+275,24,item_275,word,ağaç,outside,nouns,tree,NA
+276,27,item_276,word,ateş,outside,nouns,fire,6.07
+277,27,item_277,word,bahçe,outside,nouns,garden,NA
+278,29,item_278,word,bulut,outside,nouns,cloud,6.29
+279,28,item_279,word,bayrak,outside,nouns,flag,6.59
+280,29,item_280,word,çamur,outside,nouns,mud,NA
+281,22,item_281,word,çiçek,outside,nouns,flower,6.67
+282,31,item_282,word,çimen,outside,nouns,yard,NA
+283,31,item_283,word,dağ,outside,nouns,mountain,NA
+284,32,item_284,word,dal,outside,nouns,stick,6.47
+285,30,item_285,word,duman,outside,nouns,smoke,NA
+286,28,item_286,word,duvar,outside,nouns,wall,NA
+287,33,item_287,word,dünya,outside,nouns,earth,NA
+288,30,item_288,word,fotoğraf,outside,nouns,photo,6.62
+289,35,item_289,word,garaj,outside,nouns,garage,NA
+290,33,item_290,word,göl,outside,nouns,lake,6.76
+291,26,item_291,word,güneş,outside,nouns,sun,NA
+292,27,item_292,word,kar,outside,nouns,snow,NA
+293,30,item_293,word,kaydırak,outside,nouns,slide (object),NA
+294,31,item_294,word,kaza,outside,nouns,accident,NA
+295,NA,item_295,word,kozalak,outside,nouns,pine cone,NA
+296,31,item_296,word,köprü,outside,nouns,bridge,NA
+297,27,item_297,word,kum,outside,nouns,sand,6.62
+298,30,item_298,word,odun,outside,nouns,wood,6.94
+299,29,item_299,word,ot,outside,nouns,grass,6.79
+300,25,item_300,word,salıncak,outside,nouns,swing (object),NA
+301,28,item_301,word,sokak,outside,nouns,street,6.52
+302,25,item_302,word,taş,outside,nouns,rock (object),NA
+303,29,item_303,word,tekerlek,outside,nouns,wheel,NA
+304,28,item_304,word,toprak,outside,nouns,soil,NA
+305,29,item_305,word,toz,outside,nouns,dust,6.09
+306,34,item_306,word,trafik,outside,nouns,traffic,5.35
+307,25,item_307,word,yağmur,outside,nouns,rain,6.55
+308,31,item_308,word,yangın,outside,nouns,fire,6.07
+309,28,item_309,word,yaprak,outside,nouns,leaf,NA
+310,27,item_310,word,yol,outside,nouns,road,NA
+311,NA,item_311,word,atta,places,other,outing,NA
+312,25,item_312,word,bakkal,places,other,market,NA
+313,30,item_313,word,cami,places,other,church,NA
+314,30,item_314,word,çarşı,places,other,market,NA
+315,25,item_315,word,dışarı,places,other,outside,NA
+316,27,item_316,word,deniz,places,other,sea,6.57
+317,30,item_317,word,düğün,places,other,wedding,NA
+318,30,item_318,word,dükkan,places,other,store,NA
+319,22,item_319,word,ev,places,other,home,NA
+320,28,item_320,word,hastane,places,other,hospital,6.68
+321,26,item_321,word,iş,places,other,work (place),NA
+322,29,item_322,word,komşu,places,other,neighbor,5.76
+323,30,item_323,word,köy,places,other,town,5.35
+324,34,item_324,word,kreş/yuva,places,other,NA,NA
+325,31,item_325,word,maç,places,other,game,NA
+326,28,item_326,word,market,places,other,market,NA
+327,25,item_327,word,okul,places,other,school,6.6
+328,32,item_328,word,orman,places,other,forest,6.57
+329,22,item_329,word,park,places,other,park,NA
+330,29,item_330,word,pazar,places,other,market,NA
+331,31,item_331,word,piknik,places,other,picnic,NA
+332,NA,item_332,word,plaj,places,other,beach,NA
+333,34,item_333,word,sinema,places,other,movie,NA
+334,NA,item_334,word,sirk,places,other,circus,NA
+335,36,item_335,word,tiyatro,places,other,theater,5.59
+336,11,item_336,word,abi,people,other,brother,NA
+337,NA,item_337,word,abla,people,other,sister,NA
+338,25,item_338,word,adam,people,other,man,NA
+339,20,item_339,word,amca,people,other,uncle,NA
+340,NA,item_340,word,anne,people,other,mommy,5.84
+341,17,item_341,word,anneanne,people,other,grandma,NA
+342,27,item_342,word,arkadaş,people,other,friend,5.25
+343,29,item_343,word,asker,people,other,soldier,6.7
+344,NA,item_344,word,baba,people,other,daddy,5.92
+345,22,item_345,word,babaanne,people,other,grandma,NA
+346,14,item_346,word,bebek (person),people,other,baby,NA
+347,31,item_347,word,berber/kuaför,people,other,barber,6.61
+348,24,item_348,word,çocuk,people,other,child,6.45
+349,NA,item_349,word,dede,people,other,grandpa,6.48
+350,26,item_350,word,doktor,people,other,doctor,NA
+351,28,item_351,word,erkek,people,other,man,NA
+352,30,item_352,word,gelin,people,other,bride,6.28
+353,19,item_353,word,hala,people,other,aunt,NA
+354,30,item_354,word,kadın,people,other,woman,6.24
+355,24,item_355,word,kardeş,people,other,sibling,NA
+356,22,item_356,word,kendi ismi,people,other,child's own name,NA
+357,26,item_357,word,kız,people,other,girl,6.11
+358,33,item_358,word,kral,people,other,king,5.33
+359,28,item_359,word,nine,people,other,grandma,NA
+360,32,item_360,word,oğlan,people,other,boy,NA
+361,29,item_361,word,öğretmen,people,other,teacher,NA
+362,32,item_362,word,palyaço,people,other,clown,5.24
+363,27,item_363,word,polis,people,other,police,6.55
+364,32,item_364,word,prenses,people,other,princess,NA
+365,33,item_365,word,tamirci,people,other,NA,NA
+366,18,item_366,word,teyze,people,other,aunt,NA
+367,25,item_367,word,na,unknown,unknown,NA,NA
+368,26,item_368,word,aferin,games_routines,other,bravo,NA
+369,20,item_369,word,alkış,games_routines,other,clap,NA
+370,11,item_370,word,alo,games_routines,other,hello,NA
+371,26,item_371,word,ayıp,games_routines,other,shame,NA
+372,25,item_372,word,banyo (routine),games_routines,other,bath,NA
+373,12,item_373,word,bay-bay,games_routines,other,bye,NA
+374,17,item_374,word,çiş,games_routines,other,go potty,NA
+375,31,item_375,word,dikkat,games_routines,other,watch out,NA
+376,30,item_376,word,doğumgünü,games_routines,other,birthday,NA
+377,27,item_377,word,efendim,games_routines,other,excuse me,NA
+378,31,item_378,word,evcilik,games_routines,other,playhouse,NA
+379,22,item_379,word,evet,games_routines,other,yes,NA
+380,22,item_380,word,güle-güle,games_routines,other,bye,NA
+381,29,item_381,word,günaydın,games_routines,other,good morning,NA
+382,20,item_382,word,hadi,games_routines,other,come on,NA
+383,22,item_383,word,hayır,games_routines,other,don't,NA
+384,30,item_384,word,hoşgeldiniz,games_routines,other,welcome,NA
+385,27,item_385,word,iyi geceler,games_routines,other,good night,NA
+386,29,item_386,word,kahvaltı,games_routines,other,breakfast,6.37
+387,20,item_387,word,kaka,games_routines,other,go potty,NA
+388,25,item_388,word,kucak,games_routines,other,take in arms,NA
+389,29,item_389,word,lütfen,games_routines,other,please,NA
+390,NA,item_390,word,mama,games_routines,other,baby food,NA
+391,29,item_391,word,merhaba,games_routines,other,hi,NA
+392,28,item_392,word,müzik,games_routines,other,music,5.34
+393,27,item_393,word,ninni,games_routines,other,lullaby,NA
+394,30,item_394,word,saklambaç,games_routines,other,hide and seek,NA
+395,30,item_395,word,sürpriz,games_routines,other,surprise,2.71
+396,28,item_396,word,şaka,games_routines,other,joke,2.76
+397,27,item_397,word,şarkı,games_routines,other,sing,NA
+398,30,item_398,word,tabii,games_routines,other,NA,NA
+399,31,item_399,word,takla,games_routines,other,somersault,NA
+400,23,item_400,word,tamam,games_routines,other,ok,NA
+401,28,item_401,word,teşekkür/mersi/sağol,games_routines,other,thank you,NA
+402,25,item_402,word,uyku,games_routines,other,sleep,3.4
+403,23,item_403,word,var,games_routines,other,present,NA
+404,31,item_404,word,yarış,games_routines,other,NA,NA
+405,31,item_405,word,yazık,games_routines,other,NA,NA
+406,28,item_406,word,yeter,games_routines,other,NA,NA
+407,21,item_407,word,yok,games_routines,other,all gone,NA
+408,20,item_408,word,acı (canı),action_words,predicates,hurt (action),NA
+409,27,item_409,word,acık,action_words,predicates,get hungry,NA
+410,18,item_410,word,aç,action_words,predicates,open (action),NA
+411,30,item_411,word,açıl,action_words,predicates,open (action),NA
+412,25,item_412,word,ağla,action_words,predicates,cry,NA
+413,16,item_413,word,al,action_words,predicates,take,NA
+414,30,item_414,word,anla,action_words,predicates,understand,NA
+415,29,item_415,word,anlat,action_words,predicates,tell,NA
+416,26,item_416,word,ara,action_words,predicates,look for,NA
+417,27,item_417,word,atla,action_words,predicates,jump,NA
+418,18,item_418,word,at (action),action_words,predicates,throw,NA
+419,28,item_419,word,bağır,action_words,predicates,shout,NA
+420,29,item_420,word,bağla,action_words,predicates,tie (action),NA
+421,20,item_421,word,bak,action_words,predicates,look,NA
+422,26,item_422,word,bas,action_words,predicates,press,NA
+423,29,item_423,word,başla,action_words,predicates,begin,NA
+424,30,item_424,word,beğen,action_words,predicates,like,NA
+425,27,item_425,word,bekle,action_words,predicates,wait,NA
+426,33,item_426,word,benze,action_words,predicates,resemble,NA
+427,24,item_427,word,bırak,action_words,predicates,drop,6.64
+428,29,item_428,word,bil,action_words,predicates,know,NA
+429,26,item_429,word,bin,action_words,predicates,ride,NA
+430,26,item_430,word,bit,action_words,predicates,finish,NA
+431,29,item_431,word,bitir,action_words,predicates,finish,NA
+432,26,item_432,word,boya (action),action_words,predicates,paint (action),6.43
+433,28,item_433,word,boz,action_words,predicates,NA,NA
+434,26,item_434,word,bul,action_words,predicates,find,NA
+435,30,item_435,word,büyü,action_words,predicates,NA,NA
+436,29,item_436,word,çağır,action_words,predicates,call,3.9
+437,30,item_437,word,çalış,action_words,predicates,work (action),NA
+438,26,item_438,word,çek,action_words,predicates,pull,NA
+439,30,item_439,word,çevir,action_words,predicates,turn,NA
+440,27,item_440,word,çıkar,action_words,predicates,remove,NA
+441,26,item_441,word,çiz,action_words,predicates,draw,NA
+442,30,item_442,word,dağıt,action_words,predicates,scatter,NA
+443,28,item_443,word,dinle,action_words,predicates,listen,NA
+444,30,item_444,word,dokun,action_words,predicates,touch,NA
+445,26,item_445,word,doy,action_words,predicates,fill,NA
+446,27,item_446,word,dön,action_words,predicates,turn,NA
+447,26,item_447,word,döv,action_words,predicates,kick,NA
+448,24,item_448,word,dur,action_words,predicates,stop,NA
+449,28,item_449,word,duy,action_words,predicates,hear,NA
+450,25,item_450,word,dök,action_words,predicates,spill,NA
+451,25,item_451,word,düş,action_words,predicates,fall,NA
+452,30,item_452,word,düzelt,action_words,predicates,NA,NA
+453,28,item_453,word,elle,action_words,predicates,touch,NA
+454,27,item_454,word,el salla,action_words,predicates,wave,NA
+455,30,item_455,word,ez,action_words,predicates,crush,NA
+456,17,item_456,word,gel,action_words,predicates,come,NA
+457,25,item_457,word,getir,action_words,predicates,bring,NA
+458,28,item_458,word,gez,action_words,predicates,travel,NA
+459,28,item_459,word,gıdıkla,action_words,predicates,tickle,NA
+460,27,item_460,word,gir,action_words,predicates,enter,NA
+461,19,item_461,word,git,action_words,predicates,go,NA
+462,25,item_462,word,giy,action_words,predicates,wear,NA
+463,26,item_463,word,giydir,action_words,predicates,dress (action),NA
+464,27,item_464,word,gör,action_words,predicates,see,NA
+465,28,item_465,word,göster,action_words,predicates,show,NA
+466,26,item_466,word,götür,action_words,predicates,take away,NA
+467,27,item_467,word,gül,action_words,predicates,laugh,NA
+468,30,item_468,word,hastalan,action_words,predicates,NA,NA
+469,32,item_469,word,hatırla,action_words,predicates,remember,NA
+470,25,item_470,word,isır,action_words,predicates,bite,NA
+471,28,item_471,word,islan,action_words,predicates,wet (action),5.91
+472,22,item_472,word,iç,action_words,predicates,drink (action),NA
+473,26,item_473,word,in,action_words,predicates,get off,NA
+474,27,item_474,word,iste,action_words,predicates,want,NA
+475,27,item_475,word,it,action_words,predicates,push,NA
+476,27,item_476,word,kaç,action_words,predicates,escape,NA
+477,28,item_477,word,kal,action_words,predicates,stay,NA
+478,28,item_478,word,kaldır,action_words,predicates,lift (action),NA
+479,24,item_479,word,kalk,action_words,predicates,stand,NA
+480,30,item_480,word,kana,action_words,predicates,bleed,NA
+481,31,item_481,word,kapan,action_words,predicates,NA,NA
+482,25,item_482,word,kapat,action_words,predicates,close,NA
+483,28,item_483,word,karıştır,action_words,predicates,mix,NA
+484,27,item_484,word,kay,action_words,predicates,slide (action),NA
+485,26,item_485,word,kes,action_words,predicates,cut,NA
+486,27,item_486,word,kır,action_words,predicates,break,NA
+487,29,item_487,word,kırıl,action_words,predicates,break,NA
+488,29,item_488,word,kirlet,action_words,predicates,NA,NA
+489,27,item_489,word,kokla,action_words,predicates,smell,NA
+490,31,item_490,word,kon,action_words,predicates,put,NA
+491,27,item_491,word,konuş,action_words,predicates,talk,NA
+492,30,item_492,word,kop,action_words,predicates,detach,NA
+493,29,item_493,word,kopar,action_words,predicates,detach,NA
+494,27,item_494,word,kork,action_words,predicates,be scared,NA
+495,24,item_495,word,koş,action_words,predicates,run,NA
+496,26,item_496,word,koy,action_words,predicates,put,NA
+497,30,item_497,word,kurtar,action_words,predicates,save,NA
+498,25,item_498,word,küs,action_words,predicates,NA,NA
+499,26,item_499,word,oku,action_words,predicates,read,NA
+500,29,item_500,word,ol,action_words,predicates,be,NA
+501,22,item_501,word,otur,action_words,predicates,sit,NA
+502,24,item_502,word,oyna,action_words,predicates,play,NA
+503,31,item_503,word,öğret,action_words,predicates,teach,NA
+504,28,item_504,word,öl,action_words,predicates,die,NA
+505,18,item_505,word,öp,action_words,predicates,kiss,NA
+506,26,item_506,word,ört,action_words,predicates,cover (action),6.75
+507,29,item_507,word,özle,action_words,predicates,miss,NA
+508,30,item_508,word,patla,action_words,predicates,explode,NA
+509,27,item_509,word,pişir,action_words,predicates,cook,NA
+510,27,item_510,word,sakla,action_words,predicates,hide,NA
+511,26,item_511,word,salla,action_words,predicates,shake,NA
+512,28,item_512,word,sallan,action_words,predicates,swing (action),NA
+513,26,item_513,word,sarıl,action_words,predicates,hug,NA
+514,29,item_514,word,say,action_words,predicates,count,NA
+515,26,item_515,word,sev,action_words,predicates,love,1.73
+516,29,item_516,word,seyret,action_words,predicates,watch (action),NA
+517,30,item_517,word,sık,action_words,predicates,squeeze,NA
+518,31,item_518,word,sıkış,action_words,predicates,tighten,NA
+519,26,item_519,word,sil,action_words,predicates,wipe,NA
+520,31,item_520,word,sok,action_words,predicates,put in,NA
+521,29,item_521,word,sor,action_words,predicates,ask,NA
+522,27,item_522,word,söyle,action_words,predicates,say,NA
+523,23,item_523,word,sus,action_words,predicates,shh,NA
+524,28,item_524,word,susa,action_words,predicates,thirst,NA
+525,28,item_525,word,süpür,action_words,predicates,sweep,NA
+526,28,item_526,word,şişir,action_words,predicates,inflate,NA
+527,25,item_527,word,tak,action_words,predicates,put on,NA
+528,26,item_528,word,tara,action_words,predicates,comb (action),NA
+529,29,item_529,word,taşı,action_words,predicates,carry,NA
+530,27,item_530,word,topla,action_words,predicates,gather,NA
+531,23,item_531,word,tut,action_words,predicates,hold,NA
+532,27,item_532,word,uç,action_words,predicates,fly (action),NA
+533,30,item_533,word,unut,action_words,predicates,forget,NA
+534,27,item_534,word,uyan,action_words,predicates,wake,NA
+535,30,item_535,word,üzül,action_words,predicates,NA,NA
+536,18,item_536,word,ver,action_words,predicates,give,NA
+537,24,item_537,word,vur,action_words,predicates,hit,NA
+538,29,item_538,word,yak,action_words,predicates,burn,NA
+539,29,item_539,word,yan,action_words,predicates,burn,NA
+540,25,item_540,word,yap,action_words,predicates,do,NA
+541,30,item_541,word,yapış,action_words,predicates,snap,NA
+542,23,item_542,word,yat,action_words,predicates,lie down,NA
+543,26,item_543,word,yaz,action_words,predicates,write,NA
+544,21,item_544,word,ye,action_words,predicates,eat,NA
+545,27,item_545,word,yedir,action_words,predicates,feed,NA
+546,30,item_546,word,yık,action_words,predicates,tear,NA
+547,31,item_547,word,yıkıl,action_words,predicates,break,NA
+548,25,item_548,word,yıka,action_words,predicates,wash,NA
+549,28,item_549,word,yıkan,action_words,predicates,bathe,NA
+550,28,item_550,word,yırt,action_words,predicates,tear,NA
+551,28,item_551,word,yorul,action_words,predicates,tire (action),3.41
+552,27,item_552,word,yut,action_words,predicates,swallow,NA
+553,25,item_553,word,yürü,action_words,predicates,walk,NA
+554,21,item_554,word,acı,descriptive_words,predicates,bitter,NA
+555,27,item_555,word,açık,descriptive_words,predicates,open (description),NA
+556,29,item_556,word,ağır,descriptive_words,predicates,heavy,NA
+557,26,item_557,word,az,descriptive_words,predicates,few,NA
+558,30,item_558,word,beyaz,descriptive_words,predicates,white,5.04
+559,28,item_559,word,boş,descriptive_words,predicates,empty,NA
+560,27,item_560,word,büyük,descriptive_words,predicates,big,NA
+561,30,item_561,word,cadı,descriptive_words,predicates,naughty,NA
+562,31,item_562,word,canavar,descriptive_words,predicates,NA,NA
+563,11,item_563,word,cici,descriptive_words,predicates,cute,NA
+564,33,item_564,word,cüce,descriptive_words,predicates,little (description),NA
+565,29,item_565,word,çirkin,descriptive_words,predicates,ugly,2.61
+566,31,item_566,word,delik,descriptive_words,predicates,hollow,NA
+567,29,item_567,word,dolu,descriptive_words,predicates,full,NA
+568,28,item_568,word,ekşi,descriptive_words,predicates,sour,NA
+569,30,item_569,word,eski,descriptive_words,predicates,old,NA
+570,26,item_570,word,güzel,descriptive_words,predicates,pretty,NA
+571,27,item_571,word,hasta,descriptive_words,predicates,sick,NA
+572,31,item_572,word,hazır,descriptive_words,predicates,ready,NA
+573,30,item_573,word,hızlı,descriptive_words,predicates,fast,NA
+574,26,item_574,word,islak,descriptive_words,predicates,wet (description),5.91
+575,31,item_575,word,iğrenç,descriptive_words,predicates,disgusting,NA
+576,24,item_576,word,iki,descriptive_words,predicates,NA,NA
+577,26,item_577,word,iyi,descriptive_words,predicates,good,1.42
+578,34,item_578,word,kahverengi,descriptive_words,predicates,brown,NA
+579,28,item_579,word,kapalı,descriptive_words,predicates,closed,NA
+580,28,item_580,word,karanlık,descriptive_words,predicates,dark,3.91
+581,34,item_581,word,katı,descriptive_words,predicates,solid,NA
+582,28,item_582,word,kırık,descriptive_words,predicates,broken,5.72
+583,30,item_583,word,kırmızı,descriptive_words,predicates,red,4.32
+584,30,item_584,word,kısa,descriptive_words,predicates,short,NA
+585,28,item_585,word,kirli,descriptive_words,predicates,dirty,NA
+586,29,item_586,word,kocaman,descriptive_words,predicates,big,NA
+587,30,item_587,word,komik,descriptive_words,predicates,funny,2.59
+588,34,item_588,word,koyu,descriptive_words,predicates,dark,3.91
+589,28,item_589,word,kötü,descriptive_words,predicates,bad,NA
+590,30,item_590,word,kuru,descriptive_words,predicates,dry (description),NA
+591,27,item_591,word,küçük,descriptive_words,predicates,little (description),NA
+592,33,item_592,word,mor,descriptive_words,predicates,purple,NA
+593,21,item_593,word,pis,descriptive_words,predicates,dirty,NA
+594,31,item_594,word,sarı,descriptive_words,predicates,yellow,NA
+595,31,item_595,word,sert,descriptive_words,predicates,hard,NA
+596,31,item_596,word,sessiz,descriptive_words,predicates,quiet,NA
+597,23,item_597,word,sıcak,descriptive_words,predicates,hot,NA
+598,31,item_598,word,siyah,descriptive_words,predicates,black,NA
+599,25,item_599,word,soğuk,descriptive_words,predicates,cold,5.43
+600,33,item_600,word,şirin,descriptive_words,predicates,cute,NA
+601,26,item_601,word,tatlı,descriptive_words,predicates,sweet,NA
+602,28,item_602,word,temiz,descriptive_words,predicates,clean (description),3.89
+603,31,item_603,word,ters,descriptive_words,predicates,opposite,NA
+604,33,item_604,word,turuncu,descriptive_words,predicates,orange (description),NA
+605,30,item_605,word,uzun,descriptive_words,predicates,tall,NA
+606,33,item_606,word,yapışkan,descriptive_words,predicates,sticky,NA
+607,28,item_607,word,yavaş,descriptive_words,predicates,slow,NA
+608,31,item_608,word,yeşil,descriptive_words,predicates,green,NA
+609,30,item_609,word,yumuşak,descriptive_words,predicates,soft,NA
+610,30,item_610,word,yüksek,descriptive_words,predicates,high,NA
+611,31,item_611,word,zor,descriptive_words,predicates,difficult,NA
+612,29,item_612,word,yaramaz,descriptive_words,predicates,naughty,NA
+613,30,item_613,word,yaş,descriptive_words,predicates,wet (description),5.91
+614,29,item_614,word,yeni,descriptive_words,predicates,new,2.62
+615,26,item_615,word,akşam,time_words,other,evening,NA
+616,34,item_616,word,bazen,time_words,other,sometimes,NA
+617,29,item_617,word,bugün,time_words,other,today,NA
+618,32,item_618,word,dün,time_words,other,yesterday,NA
+619,28,item_619,word,gece,time_words,other,night,4.39
+620,29,item_620,word,hemen,time_words,other,now,NA
+621,32,item_621,word,ondan sonra,time_words,other,then,NA
+622,32,item_622,word,öğlen,time_words,other,noon,NA
+623,31,item_623,word,önce,time_words,other,before,NA
+624,27,item_624,word,sabah,time_words,other,morning,NA
+625,29,item_625,word,sonra,time_words,other,after,NA
+626,28,item_626,word,şimdi,time_words,other,now,NA
+627,30,item_627,word,yarın,time_words,other,tomorrow,NA
+628,25,item_628,word,bana,pronouns,function_words,1SG,NA
+629,21,item_629,word,ben,pronouns,function_words,1SG,NA
+630,21,item_630,word,benim,pronouns,function_words,1SG.POSS,NA
+631,21,item_631,word,bu,pronouns,function_words,this,NA
+632,29,item_632,word,biz,pronouns,function_words,1PL,NA
+633,27,item_633,word,bizim,pronouns,function_words,1PL.POSS,NA
+634,26,item_634,word,sen,pronouns,function_words,2SG,NA
+635,27,item_635,word,senin,pronouns,function_words,2SG.POSS,NA
+636,31,item_636,word,siz,pronouns,function_words,2PL,NA
+637,31,item_637,word,sizin,pronouns,function_words,2PL.POSS,NA
+638,28,item_638,word,şu,pronouns,function_words,that,NA
+639,32,item_639,word,kendi,pronouns,function_words,REFL,NA
+640,31,item_640,word,kendim,pronouns,function_words,1SG.REFL,NA
+641,23,item_641,word,o,pronouns,function_words,that,NA
+642,29,item_642,word,ona,pronouns,function_words,3SG,NA
+643,31,item_643,word,onlar,pronouns,function_words,3PL,NA
+644,28,item_644,word,onun,pronouns,function_words,3SG.POSS,NA
+645,32,item_645,word,kimse,pronouns,function_words,anybody,NA
+646,28,item_646,word,sana,pronouns,function_words,2SG,NA
+647,32,item_647,word,biri,pronouns,function_words,someone,NA
+648,29,item_648,word,şey,pronouns,function_words,thing,NA
+649,30,item_649,word,hangi,question_words,function_words,which (question),NA
+650,30,item_650,word,kaç tane,question_words,function_words,how,NA
+651,26,item_651,word,kim,question_words,function_words,who,NA
+652,30,item_652,word,nasıl,question_words,function_words,how,NA
+653,23,item_653,word,ne,question_words,function_words,what,NA
+654,30,item_654,word,ne zaman,question_words,function_words,when (question),NA
+655,30,item_655,word,neden,question_words,function_words,why,NA
+656,33,item_656,word,ne kadar,question_words,function_words,how,NA
+657,27,item_657,word,nereye,question_words,function_words,where (question),NA
+658,28,item_658,word,nerede,question_words,function_words,where (question),NA
+659,33,item_659,word,nereden,question_words,function_words,where (question),NA
+660,28,item_660,word,niye,question_words,function_words,why,NA
+661,27,item_661,word,altında,locations,function_words,under,NA
+662,32,item_662,word,arasında,locations,function_words,between,NA
+663,29,item_663,word,arkasında,locations,function_words,back (location),NA
+664,28,item_664,word,aşağıda,locations,function_words,below,NA
+665,26,item_665,word,burada,locations,function_words,here,NA
+666,27,item_666,word,dışarıda,locations,function_words,out,NA
+667,34,item_667,word,dışında,locations,function_words,outside,NA
+668,35,item_668,word,geride,locations,function_words,behind,NA
+669,29,item_669,word,içeride,locations,function_words,inside,NA
+670,29,item_670,word,içinde,locations,function_words,in,NA
+671,34,item_671,word,ileride,locations,function_words,ahead,NA
+672,32,item_672,word,karşıda,locations,function_words,NA,NA
+673,27,item_673,word,orada,locations,function_words,there,NA
+674,34,item_674,word,ortada,locations,function_words,between,NA
+675,30,item_675,word,önünde,locations,function_words,front,NA
+676,31,item_676,word,şurada,locations,function_words,there,NA
+677,29,item_677,word,uzak,locations,function_words,far,NA
+678,29,item_678,word,üstünde/üzerinde,locations,function_words,on,NA
+679,32,item_679,word,yakın,locations,function_words,near,NA
+680,30,item_680,word,yanında,locations,function_words,next to,NA
+681,29,item_681,word,yukarıda,locations,function_words,above,NA
+682,30,item_682,word,aynı,quantifiers,function_words,same,NA
+683,29,item_683,word,başka,quantifiers,function_words,other,NA
+684,33,item_684,word,belki,quantifiers,function_words,maybe,NA
+685,35,item_685,word,bile,quantifiers,function_words,even,NA
+686,29,item_686,word,biraz,quantifiers,function_words,some,NA
+687,31,item_687,word,böyle,quantifiers,function_words,NA,NA
+688,24,item_688,word,çok,quantifiers,function_words,much,NA
+689,30,item_689,word,daha,quantifiers,function_words,more,NA
+690,32,item_690,word,en,quantifiers,function_words,most,NA
+691,35,item_691,word,galiba,quantifiers,function_words,probably,NA
+692,33,item_692,word,gibi,quantifiers,function_words,like,NA
+693,33,item_693,word,her,quantifiers,function_words,every,NA
+694,31,item_694,word,hep,quantifiers,function_words,always,NA
+695,29,item_695,word,hepsi,quantifiers,function_words,all,NA
+696,31,item_696,word,hiç,quantifiers,function_words,none,NA
+697,34,item_697,word,hiçbiri,quantifiers,function_words,none,NA
+698,29,item_698,word,işte,quantifiers,function_words,here,NA
+699,32,item_699,word,öbürü,quantifiers,function_words,other,NA
+700,33,item_700,word,öteki,quantifiers,function_words,other,NA
+701,32,item_701,word,tam,quantifiers,function_words,all,NA
+702,32,item_702,word,tek,quantifiers,function_words,only,NA
+703,30,item_703,word,yine/gene,quantifiers,function_words,again,NA
+704,33,item_704,word,zaten,quantifiers,function_words,already,NA
+705,28,item_705,word,ama,connecting_words,function_words,but,NA
+706,31,item_706,word,çünkü,connecting_words,function_words,because,NA
+707,30,item_707,word,de/da,connecting_words,function_words,also,NA
+708,34,item_708,word,diye,connecting_words,function_words,so,NA
+709,32,item_709,word,o zaman,connecting_words,function_words,then,NA
+710,29,item_710,word,sonra,connecting_words,function_words,after,NA
+711,32,item_711,word,ve,connecting_words,function_words,and,NA
