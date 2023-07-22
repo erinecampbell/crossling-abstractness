@@ -41,12 +41,20 @@ Specificity
 # Methods
 
 ## CDI
-Data from Wordbank [@frank2017], a large database of 
 
-We will take the full set of participants from Wordbank, then filter to only monolingual, typically-developing participants (~84,000 children). In addition, we will exclude participants who are not yet producing any words.
+in which parents are asked to indicate whether their child produces each of several hundred words.
+
+@fenson1994, and has since adapted into many languages, validated with many populations, and administered to many thousands of children. 
+
+Data from Wordbank [@frank2017], a large database of CDI administrations from 
+
+We will take the full set of participants from Wordbank, then filter to only monolingual, typically-developing participants (~84,000 children). In addition, we will exclude participants who are not yet producing any words. or all words?
 
 
 ## Lexical Properties
+
+
+All subjective lexical ratings are first re-scaled to a 1 to 10 scale. To achieve maximum lexical rating coverage across words and languages, while recognizing that 
 
 Norms will be scaled within languages (or for zipfian-distributed norms, logged then scaled) for comparability across languages.
 For norms pertaining to the underlying concept (e.g., concreteness, perceptual strength, emotional valence):
@@ -75,6 +83,32 @@ systematicity: https://journals.sagepub.com/doi/full/10.1177/17470218211053472#b
 ```
 
 # Results
+
+## Relationships among Abstractness Variables
+
+First, we computed pairwise Pearson’s correlation coefficients for all variables, displayed in Figure 2, together with histograms showing the distribution of each variable and scatterplots showing how variables relate to each other. Here, we summarize across languages, but the by-language plots can be found in Supplementals.
+
+## Abstractness effects on word production
+
+First, we fit a baseline statistical models for each language where word production is modeled as a combination of age, frequency, and phonological complexity. We then added each of our target predictors. For each target predictor for each language, it is thus possible to extract an effect size estimate of the target predictor and its interaction with age on the likelihood of word production. To explore heterogeneity and to estimate central tendency and variation in the effects, we borrow from meta-analytic techniques, treating each language as a study, and creating a weighted average of the effect size. 
+
+# What drives abstractness effects?
+
+Finally, we conduct an exploratory analysis aimed at measuring which of these abstractness variables best accounts for variability in words' production. Because these variables are interrelated, as shown in Figure xxx, when adding them to the same model, there is a risk of collinearity (Tomaschek et al., 2018). To get around this issue, we compare the predictive strength of the abstractness variables using random forest regression, implemented with the ranger package in R (Wright & Ziegler, 2017). Random Forest regression is a machine learning method based on decision trees and recursive partitioning. Each tree is fit to a subset of the data and only uses a subset of the predictors (a third of the available variables in our analyses). The predictions of many hundreds of trees can then be averaged, which helps avoid overfitting and increases accuracy. Because Random Factor regression does not need to estimate a coefficient for every predictor variable in every tree, this approach allows us to avoid issues of collinearity, but the relative importance of two highly correlated predictors can still be compared by assessing the trees in which they do not co-occur. 
+
+This approach yields variance importance scores for each of the variables in our model. In Figure XXX, we display the overall ranking of the variance importance scores. We find that XXX is most important, followed by xxx. 
+
+Importance plots from random forest regression
+
+We next explore the variability in ranking across languages. intra-class correlation of importance by variable across languages. we find an ICC of R = xxx, indicating xxx stability in relative importance of these predictors across languages.
+
+<!-- how to plot cross-linguistic variability in ordering: maybe horizontal stacked bar graph of importance, with a bar for each language, the importance represented by relative size, and a consistent color for each trait
+-->
+
+## Multiple behavioral tasks - abstractness effects 
+picture naming
+lexical decision
+
 
 # Discussion
 

@@ -95,6 +95,24 @@ croatian_dict <- croatian_data %>%
   mutate(croatian_word = item_definition) %>%
   select(uni_lemma, croatian_word, matches("^croatian_.*_rating$"))
 
+# danish
+danish_instrument_data <- get_instrument_data("Danish", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+danish_aoas <- fit_aoa(
+  instrument_data = danish_instrument_data,
+  measure = "produces",
+  method = "glm",
+  proportion = 0.5,
+  age_min = 8,
+  age_max = max(danish_instrument_data$age, na.rm = TRUE)
+) %>% 
+  mutate(item_definition = tolower(item_definition))
+danish_data <- danish_aoas %>%
+  distinct(item_definition,.keep_all = TRUE) 
+danish_dict <- danish_data %>%
+  mutate(danish_word = item_definition) %>%
+  select(uni_lemma, danish_word, matches("^danish_.*_rating$"))
+
 # dutch
 dutch_instrument_data <- get_instrument_data("Dutch", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
@@ -116,6 +134,44 @@ dutch_data <-
 dutch_dict <- dutch_data %>%
   mutate(dutch_word = item_definition) %>%
   select(uni_lemma, dutch_word, matches("^dutch_.*_rating$"))
+
+#german
+german_instrument_data <- get_instrument_data("German", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+german_aoas <- fit_aoa(
+  instrument_data = german_instrument_data,
+  measure = "produces",
+  method = "glm",
+  proportion = 0.5,
+  age_min = 8,
+  age_max = max(german_instrument_data$age, na.rm = TRUE)
+) %>% 
+  mutate(item_definition = tolower(item_definition))
+german_data <- german_aoas %>%
+  distinct(item_definition,.keep_all = TRUE)
+
+german_dict <- german_data %>%
+  mutate(german_word = item_definition) %>%
+  select(uni_lemma, german_word, matches("^german_.*_rating$"))
+
+# korean
+korean_instrument_data <- get_instrument_data("Korean", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+korean_aoas <- fit_aoa(
+  instrument_data = korean_instrument_data,
+  measure = "produces",
+  method = "glm",
+  proportion = 0.5,
+  age_min = 8,
+  age_max = max(korean_instrument_data$age, na.rm = TRUE)
+) %>% 
+  mutate(item_definition = tolower(item_definition))
+korean_data <- korean_aoas %>%
+  distinct(item_definition,.keep_all = TRUE)
+
+korean_dict <- korean_data %>%
+  mutate(korean_word = item_definition) %>%
+  select(uni_lemma, korean_word, matches("^korean_.*_rating$"))
 
 # norwegian
 norwegian_instrument_data <- get_instrument_data("Norwegian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
@@ -579,12 +635,18 @@ master_dictionary <- full_join(english_dict, asl_dict) %>%
   distinct(uni_lemma, chinese_word, .keep_all = TRUE) %>%
   full_join(croatian_dict) %>%
   distinct(uni_lemma,  croatian_word, .keep_all = TRUE) %>%
-  full_join(dutch_dict) %>%
+  full_join(danish_dict) %>%
+  distinct(uni_lemma,  dutch_word, .keep_all = TRUE) %>%
+   full_join(dutch_dict) %>%
   distinct(uni_lemma,  dutch_word, .keep_all = TRUE) %>%
   full_join(french_dict) %>%
   distinct(uni_lemma,  french_word,.keep_all = TRUE) %>%
+  full_join(german_dict) %>%
+  distinct(uni_lemma,  german_word, .keep_all = TRUE) %>%
   full_join(italian_dict) %>%
   distinct(uni_lemma,  italian_word, .keep_all = TRUE) %>%
+  full_join(korean_dict) %>%
+  distinct(uni_lemma,  korean_word, .keep_all = TRUE) %>%
   full_join(norwegian_dict) %>%
   distinct(uni_lemma,  norwegian_word, .keep_all = TRUE) %>%
   full_join(portuguese_dict) %>%
@@ -594,7 +656,13 @@ master_dictionary <- full_join(english_dict, asl_dict) %>%
   full_join(spanish_dict) %>%
   distinct(uni_lemma,  spanish_word, .keep_all = TRUE) %>%  
   full_join(turkish_dict) %>%
-  distinct(uni_lemma, turkish_word, .keep_all = TRUE) %>%
+  distinct(uni_lemma, turkish_word, .keep_all = TRUE) 
+
+master_cdi_word_list <- master_dictionary %>%
+  select(uni_lemma, matches("^.*_word$"))
+  
+
+master_dictionary_with_ratings <- master_dictionary
 rowwise() %>%
   mutate(average_imageability_rating = mean(c_across(matches("^.*_imageability_rating$")), na.rm = TRUE),
          average_visual_rating = mean(c_across(matches("^.*_visual_rating$")), na.rm = TRUE),
