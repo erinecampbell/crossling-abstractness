@@ -1,4 +1,4 @@
-library(dplyr)
+library(tidyverse)
 library(wordbankr)
 library(rmeta)
 
@@ -13,424 +13,477 @@ cor_test_info <- function(listaoa, listproperty, language) {
              conf_int_upper = result$conf.int[2])
 }
 
+# asl ----
 
-# cdi wrangle
+asl_instrument_data_FormA <- get_instrument_data("American Sign Language", form = "FormA", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+asl_instrument_data_FormBOne <- get_instrument_data("American Sign Language", form = "FormBOne", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+asl_instrument_data_FormBTwo <-  get_instrument_data("American Sign Language", form = "FormBTwo", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+asl_instrument_data_FormC <-  get_instrument_data("American Sign Language", form = "FormC", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+asl_instrument_data_CDITwo <-  get_instrument_data("American Sign Language", form = "CDITwo", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+asl_instrument_data <- bind_rows(asl_instrument_data_FormA, 
+                                 asl_instrument_data_FormBOne, 
+                                 asl_instrument_data_FormBTwo,
+                                 asl_instrument_data_FormC,
+                                 asl_instrument_data_CDITwo) %>%
+  mutate(produces = as.factor(produces))%>%
+  as.data.frame() %>%
+  left_join(asl_ratings_subset, by = c("item_definition" = "American Sign Language"))
 
-american_english_instrument_data <- get_instrument_data("English (American)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+n_asl <- (asl_instrument_data %>% distinct(child_id) %>% nrow())
+ # 139
+# bsl ----
+bsl_instrument_data_WG <-  get_instrument_data("British Sign Language", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+bsl_instrument_data <- bsl_instrument_data_WG %>%
+  left_join(bsl_ratings_subset, by = c("item_definition" = "British Sign Language")) %>%
+  mutate(produces = as.factor(produces))
+n_bsl <- (bsl_instrument_data %>% distinct(child_id) %>% nrow())
+
+# chinese ----
+cantonese_instrument_data <- get_instrument_data("Cantonese", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)%>%
+  mutate(produces = as.factor(produces))  %>%
+  left_join(chinese_ratings_subset, by = c("item_definition" = "Cantonese"))
+
+mandarin_beijing_instrument_data_IC <- get_instrument_data("Mandarin (Beijing)", form = "IC", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+mandarin_beijing_instrument_data_TC <- get_instrument_data("Mandarin (Beijing)", form = "TC", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+mandarin_beijing_instrument_data_WS <- get_instrument_data("Mandarin (Beijing)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+mandarin_beijing_instrument_data <- bind_rows(mandarin_beijing_instrument_data_WS, 
+                                              mandarin_beijing_instrument_data_IC, 
+                                              mandarin_beijing_instrument_data_TC)%>%
+  mutate(produces = as.factor(produces)) %>%
+  left_join(chinese_ratings_subset, by = c("item_definition" = "Mandarin (Beijing)"))
+
+
+mandarin_taiwanese_instrument_data_WG <- get_instrument_data("Mandarin (Taiwanese)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+mandarin_taiwanese_instrument_data_WS <- get_instrument_data("Mandarin (Taiwanese)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+mandarin_taiwanese_instrument_data <- bind_rows(mandarin_taiwanese_instrument_data_WG, 
+                                                mandarin_taiwanese_instrument_data_WS) %>%
+  mutate(produces = as.factor(produces))%>%
+  left_join(chinese_ratings_subset, by = c("item_definition" = "Mandarin (Taiwanese)"))
+
+n_chinese <-  (cantonese_instrument_data %>% distinct(child_id) %>% nrow()) + # 1208
+  (mandarin_beijing_instrument_data %>% distinct(child_id) %>% nrow()) + # 1938
+  (mandarin_taiwanese_instrument_data %>% distinct(child_id) %>% nrow())  #1654
+# 5800
+
+# croatian ----
+croatian_instrument_data_WG <- get_instrument_data("Croatian", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+croatian_instrument_data_WS <- get_instrument_data("Croatian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+croatian_instrument_data <- bind_rows(croatian_instrument_data_WG, 
+                                      croatian_instrument_data_WS) %>%
+  left_join(croatian_ratings_subset, by = c("item_definition" = "Croatian")) 
+n_croatian <- croatian_instrument_data %>% distinct(child_id) %>% nrow() #627
+# czech ----
+czech_instrument_data <- get_instrument_data("Czech", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces) %>%
+  left_join(czech_ratings_subset, by = c("item_definition" = "Czech")) 
+n_czech <- czech_instrument_data %>% distinct(child_id) %>% nrow() 
+# danish ---- 
+danish_instrument_data_WG <- get_instrument_data("Danish", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+danish_instrument_data_WS <- get_instrument_data("Danish", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+danish_instrument_data <- bind_rows(danish_instrument_data_WG, 
+                                      danish_instrument_data_WS) %>%
+  mutate(produces = as.factor(produces)) %>%
+  left_join(danish_ratings_subset, by = c("item_definition" = "Danish"))
+n_danish <- danish_instrument_data %>% distinct(child_id) %>% nrow() #6112
+
+# dutch ----
+dutch_instrument_data_WG <- get_instrument_data("Dutch", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+dutch_instrument_data_WS <- get_instrument_data("Dutch", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+dutch_instrument_data_Swingley <- get_instrument_data("Dutch", form = "Swingley", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+dutch_instrument_data_FormOne <- get_instrument_data("Dutch", form = "FormOne", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+dutch_instrument_data_FormTwoA <- get_instrument_data("Dutch", form = "FormTwoA", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+dutch_instrument_data_FormTwoB <- get_instrument_data("Dutch", form = "FormTwoB", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+dutch_instrument_data_FormThree <- get_instrument_data("Dutch", form = "FormThree", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+
+
+dutch_instrument_data <- bind_rows(dutch_instrument_data_WG, 
+                                    dutch_instrument_data_WS,
+                                   dutch_instrument_data_Swingley,
+                                   dutch_instrument_data_FormOne,
+                                   dutch_instrument_data_FormTwoA,
+                                   dutch_instrument_data_FormTwoB,
+                                   dutch_instrument_data_FormThree)%>%
+  left_join(dutch_ratings_subset, by = c("item_definition" = "Dutch")) %>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_dutch <- dutch_instrument_data %>% distinct(child_id) %>% nrow()
+ #1936
+# english ---- 
+
+american_english_instrument_data_WG <- get_instrument_data("English (American)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
     drop_na(produces)
-american_english_aoas <- fit_aoa(
-   instrument_data = american_english_instrument_data,
-   measure = "produces",
-   method = "glm",
-   proportion = 0.5,
-   age_min = 8,
-  age_max = max(american_english_instrument_data$age, na.rm = TRUE)
-  )
-american_english_data <-
-  left_join(american_english_aoas, english_iconicity, by=c("item_definition"="english_word")) %>%
-  left_join(english_perceptual, by=c("item_definition"="english_word")) %>%
-  left_join(english_concreteness, by=c("item_definition"="english_word")) %>%
-  left_join(english_bois, by=c("item_definition"="english_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
-
-australian_english_instrument_data <- get_instrument_data("English (Australian)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+american_english_instrument_data_WGShort <- get_instrument_data("English (American)", form = "WGShort", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-australian_english_aoas <- fit_aoa(
-  instrument_data = australian_english_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(australian_english_instrument_data$age, na.rm = TRUE)
-)
-australian_english_data <-
-  left_join(australian_english_aoas, english_iconicity, by=c("item_definition"="english_word")) %>%
-  left_join(english_perceptual, by=c("item_definition"="english_word")) %>%
-  left_join(english_concreteness, by=c("item_definition"="english_word")) %>%
-  left_join(english_bois, by=c("item_definition"="english_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
-
-
-english_dict <- american_english_data %>%
-  mutate(english_word = item_definition) %>%
-  select(uni_lemma, english_word, matches("^english_.*_rating$"))
-
-# asl
-asl_instrument_data <- get_instrument_data("American Sign Language", form = "CDITwo", administration_info = TRUE,item_info = TRUE) %>%
+american_english_instrument_data_WS <-  get_instrument_data("English (American)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+      drop_na(produces)
+american_english_instrument_data_WSShort <-  get_instrument_data("English (American)", form = "WSShort", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-asl_aoas <- fit_aoa(
-  instrument_data = asl_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(asl_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-asl_data <-
-  left_join(asl_aoas, asl_iconicity, by=c("item_definition"="asl_word")) %>%
-  left_join(english_perceptual, by=c("english_gloss"="english_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
+american_english_instrument_data <- bind_rows(american_english_instrument_data_WG, 
+                                              american_english_instrument_data_WS, 
+                                              american_english_instrument_data_WGShort,
+                                              american_english_instrument_data_WSShort)%>%
+    left_join(english_ratings_subset, by = c("item_definition" = "English (American)")) %>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
 
-asl_dict <- asl_data %>%
-  mutate(asl_word = item_definition) %>%
-  select(uni_lemma, asl_word, matches("^asl_.*_rating$"))
 
-# croatian
-croatian_instrument_data <- get_instrument_data("Croatian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+australian_english_instrument_data_WS <-  get_instrument_data("English (Australian)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-croatian_aoas <- fit_aoa(
-  instrument_data = croatian_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(croatian_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-croatian_data <-
-  left_join(croatian_aoas, croatian_ratings, by=c("item_definition"="croatian_word"))
+australian_english_instrument_data <- australian_english_instrument_data_WS %>%
+  left_join(english_ratings_subset, by = c("item_definition" = "English (Australian)"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
 
-croatian_dict <- croatian_data %>%
-  mutate(croatian_word = item_definition) %>%
-  select(uni_lemma, croatian_word, matches("^croatian_.*_rating$"))
 
-# danish
-danish_instrument_data <- get_instrument_data("Danish", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+british_english_instrument_data_TEDSTwos <- get_instrument_data("English (British)", form = "TEDS Twos", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-danish_aoas <- fit_aoa(
-  instrument_data = danish_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(danish_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-danish_data <- danish_aoas %>%
-  distinct(item_definition,.keep_all = TRUE) 
-danish_dict <- danish_data %>%
-  mutate(danish_word = item_definition) %>%
-  select(uni_lemma, danish_word, matches("^danish_.*_rating$"))
-
-# dutch
-dutch_instrument_data <- get_instrument_data("Dutch", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+british_english_instrument_data_TEDSThrees <- get_instrument_data("English (British)", form = "TEDS Threes", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-dutch_aoas <- fit_aoa(
-  instrument_data = dutch_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(dutch_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-dutch_data <-
-  left_join(dutch_aoas, dutch_perceptual, by=c("item_definition"="dutch_word")) %>%
-  left_join(dutch_perceptual, by=c("item_definition"="dutch_word")) %>%
-  left_join(dutch_concreteness, by=c("item_definition"="dutch_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
+british_english_instrument_data_OxfordCDI <-  get_instrument_data("English (British)", form = "Oxford CDI", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+british_english_instrument_data_OxfordShort <-  get_instrument_data("English (British)", form = "OxfordShort", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+british_english_instrument_data <- bind_rows(british_english_instrument_data_TEDSTwos, 
+                                             british_english_instrument_data_TEDSThrees, 
+                                             british_english_instrument_data_OxfordCDI,
+                                             british_english_instrument_data_OxfordShort) %>%
+  left_join(english_ratings_subset, by = c("item_definition" = "English (British)"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
 
-dutch_dict <- dutch_data %>%
-  mutate(dutch_word = item_definition) %>%
-  select(uni_lemma, dutch_word, matches("^dutch_.*_rating$"))
 
-#german
+irish_english_instrument_data_WS <-  get_instrument_data("English (Irish)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+irish_english_instrument_data <- irish_english_instrument_data_WS%>%
+  left_join(english_ratings_subset, by = c("item_definition" = "English (Irish)"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+
+n_english <- (american_english_instrument_data %>% distinct(child_id) %>% nrow()) + #10234
+  (australian_english_instrument_data %>% distinct(child_id) %>% nrow()) + #1497
+  (british_english_instrument_data %>% distinct(child_id) %>% nrow()) + #22589
+  (irish_english_instrument_data %>% distinct(child_id) %>% nrow()) #48
+ #34368
+# finnish ----
+finnish_instrument_data_WS <- get_instrument_data("Finnish", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+finnish_instrument_data_WSShort <- get_instrument_data("Finnish", form = "WSShort", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+
+
+finnish_instrument_data <- bind_rows(finnish_instrument_data_WS, 
+                                     finnish_instrument_data_WSShort) %>%
+  left_join(finnish_ratings_subset, by = c("item_definition" = "Finnish"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_finnish <- finnish_instrument_data %>% distinct(child_id) %>% nrow() #9
+
+# french ----
+french_european_instrument_data_WG <- get_instrument_data("French (French)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+french_european_instrument_data_WS <- get_instrument_data("French (French)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+french_european_instrument_data <- bind_rows(french_european_instrument_data_WG, 
+                                     french_european_instrument_data_WS) %>%
+  left_join(french_ratings_subset, by = c("item_definition" = "French (French)"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+
+french_quebecois_instrument_data_WG <- get_instrument_data("French (Quebecois)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+french_quebecois_instrument_data_WS <- get_instrument_data("French (Quebecois)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+french_quebecois_instrument_data <- bind_rows(french_quebecois_instrument_data_WG, 
+                                             french_quebecois_instrument_data_WS) %>%
+  left_join(french_ratings_subset, by = c("item_definition" = "French (French)"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+
+
+n_french<- (french_european_instrument_data %>% distinct(child_id) %>% nrow()) + #747
+(french_quebecois_instrument_data %>% distinct(child_id) %>% nrow())
+
+# german ----
 german_instrument_data <- get_instrument_data("German", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces) %>%
+  left_join(german_ratings_subset, by = c("item_definition" = "German"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_german <- german_instrument_data %>% distinct(child_id) %>% nrow() # 1181
+
+# greek ----
+greek_instrument_data <- get_instrument_data("Greek (Cypriot)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces) %>%
+  left_join(greek_ratings_subset, by = c("item_definition" = "Greek (Cypriot)"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_greek <- greek_instrument_data %>% distinct(child_id) %>% nrow() # 176
+
+# hebrew ----
+hebrew_instrument_data_WG <- get_instrument_data("Hebrew", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-german_aoas <- fit_aoa(
-  instrument_data = german_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(german_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-german_data <- german_aoas %>%
-  distinct(item_definition,.keep_all = TRUE)
-
-german_dict <- german_data %>%
-  mutate(german_word = item_definition) %>%
-  select(uni_lemma, german_word, matches("^german_.*_rating$"))
-
-# korean
-korean_instrument_data <- get_instrument_data("Korean", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+hebrew_instrument_data_WS <- get_instrument_data("Hebrew", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-korean_aoas <- fit_aoa(
-  instrument_data = korean_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(korean_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-korean_data <- korean_aoas %>%
-  distinct(item_definition,.keep_all = TRUE)
 
-korean_dict <- korean_data %>%
-  mutate(korean_word = item_definition) %>%
-  select(uni_lemma, korean_word, matches("^korean_.*_rating$"))
+hebrew_instrument_data <- bind_rows(hebrew_instrument_data_WG, 
+                                     hebrew_instrument_data_WS) %>%
+  left_join(hebrew_ratings_subset, by = c("item_definition" = "Hebrew"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_hebrew <- hebrew_instrument_data %>% distinct(child_id) %>% nrow() # 557
 
-# norwegian
-norwegian_instrument_data <- get_instrument_data("Norwegian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+# hungarian ----
+hungarian_instrument_data <- get_instrument_data("Hungarian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces) %>%
+  left_join(hungarian_ratings_subset, by = c("item_definition" = "Hungarian"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_hungarian <- hungarian_instrument_data %>% distinct(child_id) %>% nrow() # 363
+
+# irish ----
+irish_instrument_data <- get_instrument_data("Irish", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces) %>%
+  left_join(irish_ratings_subset, by = c("item_definition" = "Irish"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_irish <- irish_instrument_data %>% distinct(child_id) %>% nrow() # 48
+
+
+# italian ----
+italian_instrument_data_WG <- get_instrument_data("Italian", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-norwegian_aoas <- fit_aoa(
-  instrument_data = norwegian_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(norwegian_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-norwegian_data <-
-  left_join(norwegian_aoas, norwegian_imageability, by=c("item_definition"="norwegian_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
-
-norwegian_dict <- norwegian_data %>%
-  mutate(norwegian_word = item_definition) %>%
-  select(uni_lemma, norwegian_word, matches("^norwegian_.*_rating$"))
-
-
-# portuguese
-portuguese_instrument_data <- get_instrument_data("Portuguese (European)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+italian_instrument_data_WS <- get_instrument_data("Italian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-portuguese_aoas <- fit_aoa(
-  instrument_data = portuguese_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(portuguese_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-portuguese_data <-
-  left_join(portuguese_aoas, portuguese_concreteness, by=c("item_definition"="portuguese_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
 
-portuguese_dict <- portuguese_data %>%
-  mutate(portuguese_word = item_definition) %>%
-  select(uni_lemma, portuguese_word, matches("^portuguese_.*_rating$"))
+italian_instrument_data <- bind_rows(italian_instrument_data_WG, 
+                                    italian_instrument_data_WS) %>%
+  left_join(italian_ratings_subset, by = c("item_definition" = "Italian"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_italian <- italian_instrument_data %>% distinct(child_id) %>% nrow() # 1400
 
 
-#spanish
-peruvian_spanish_instrument_data <- get_instrument_data("Spanish (Peruvian)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+# kigiriama ----
+kigiriama_instrument_data_WG <- get_instrument_data("Kigiriama", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-peruvian_spanish_aoas <- fit_aoa(
-  instrument_data = spanish_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(peruvian_spanish_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-peruvian_spanish_data <-
-  left_join(peruvian_spanish_aoas, spanish_iconicity, by=c("item_definition"="spanish_word")) %>%
-  left_join(spanish_perceptual, by=c("item_definition"="spanish_word")) %>%
-  left_join(spanish_emotions, by=c("item_definition"="spanish_word")) %>%
-  left_join(spanish_imageability, by=c("item_definition"="spanish_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
-
-mexican_spanish_instrument_data <- get_instrument_data("Spanish (Mexican)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+kigiriama_instrument_data_WS <- get_instrument_data("Kigiriama", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-mexican_spanish_aoas <- fit_aoa(
-  instrument_data = mexican_spanish_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(mexican_spanish_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-mexican_spanish_data <-
-  left_join(mexican_spanish_aoas, spanish_iconicity, by=c("item_definition"="spanish_word")) %>%
-  left_join(spanish_perceptual, by=c("item_definition"="spanish_word")) %>%
-  left_join(spanish_emotions, by=c("item_definition"="spanish_word")) %>%
-  left_join(spanish_imageability, by=c("item_definition"="spanish_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
 
-european_spanish_instrument_data <- get_instrument_data("Spanish (European)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+kigiriama_instrument_data <- bind_rows(kigiriama_instrument_data_WG, 
+                                     kigiriama_instrument_data_WS)%>%
+  left_join(kigiriama_ratings_subset, by = c("item_definition" = "Kigiriama"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_kigiriama <- kigiriama_instrument_data %>% distinct(child_id) %>% nrow() # 207
+
+
+# kiswahili ----
+kiswahili_instrument_data_WG <- get_instrument_data("Kiswahili", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-european_spanish_aoas <- fit_aoa(
-  instrument_data = european_spanish_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(european_spanish_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-european_spanish_data <-
-  left_join(european_spanish_aoas, spanish_iconicity, by=c("item_definition"="spanish_word")) %>%
-  left_join(spanish_perceptual, by=c("item_definition"="spanish_word")) %>%
-  left_join(spanish_emotions, by=c("item_definition"="spanish_word")) %>%
-  left_join(spanish_imageability, by=c("item_definition"="spanish_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
-
-argentinian_spanish_instrument_data <- get_instrument_data("Spanish (Argentinian)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+kiswahili_instrument_data_WS <- get_instrument_data("Kiswahili", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-argentinian_spanish_aoas <- fit_aoa(
-  instrument_data = argentinian_spanish_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(argentinian_spanish_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-argentinian_spanish_data <-
-  left_join(argentinian_spanish_aoas, spanish_iconicity, by=c("item_definition"="spanish_word")) %>%
-  left_join(spanish_perceptual, by=c("item_definition"="spanish_word")) %>%
-  left_join(spanish_imageability, by=c("item_definition"="spanish_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
 
-spanish_dict <- bind_rows(argentinian_spanish_data, peruvian_spanish_data, european_spanish_data, mexican_spanish_data) %>%
-  mutate(spanish_word = item_definition) %>%
-  select(uni_lemma, spanish_word, matches("^spanish_.*_rating$")) %>%
-  distinct(spanish_word, .keep_all = TRUE)
+kiswahili_instrument_data <- bind_rows(kiswahili_instrument_data_WG, 
+                                       kiswahili_instrument_data_WS) %>%
+  left_join(kiswahili_ratings_subset, by = c("item_definition" = "Kiswahili"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_kiswahili <- kiswahili_instrument_data %>% distinct(child_id) %>% nrow() # 130
+
+# korean ----
+korean_instrument_data_WG <- get_instrument_data("Korean", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+korean_instrument_data_WS <- get_instrument_data("Korean", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+
+korean_instrument_data <- bind_rows(korean_instrument_data_WG, 
+                                       korean_instrument_data_WS) %>%
+  left_join(korean_ratings_subset, by = c("item_definition" = "Korean"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_korean <- korean_instrument_data %>% distinct(child_id) %>% nrow() # 1971
+# latvian ----
+latvian_instrument_data_WG <- get_instrument_data("Latvian", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+latvian_instrument_data_WS <- get_instrument_data("Latvian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+
+latvian_instrument_data <- bind_rows(latvian_instrument_data_WG, 
+                                    latvian_instrument_data_WS) %>%
+  left_join(latvian_ratings_subset, by = c("item_definition" = "Latvian"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_latvian <- latvian_instrument_data %>% distinct(child_id) %>% nrow() # 683
+
+# norwegian ----
+norwegian_instrument_data_WG <- get_instrument_data("Norwegian", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+norwegian_instrument_data_WS <- get_instrument_data("Norwegian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+
+norwegian_instrument_data <- bind_rows(norwegian_instrument_data_WG, 
+                                    norwegian_instrument_data_WS) %>%
+  left_join(norwegian_ratings_subset, by = c("item_definition" = "Norwegian"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_norwegian <- norwegian_instrument_data %>% distinct(child_id) %>% nrow() # 7358
+
+
+# persian ----
+persian_instrument_data_WG <- get_instrument_data("Persian", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+persian_instrument_data_WS <- get_instrument_data("Persian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+
+persian_instrument_data <- bind_rows(persian_instrument_data_WG, 
+                                       persian_instrument_data_WS) %>%
+  left_join(persian_ratings_subset, by = c("item_definition" = "Persian"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_persian <- persian_instrument_data %>% distinct(child_id) %>% nrow() # 163
+
+
+# portuguese ----
+portuguese_instrument_data_WG <- get_instrument_data("Portuguese (European)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+portuguese_instrument_data_WS <- get_instrument_data("Portuguese (European)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+
+portuguese_instrument_data <- bind_rows(portuguese_instrument_data_WG, 
+                                     portuguese_instrument_data_WS) %>%
+  left_join(portuguese_ratings_subset, by = c("item_definition" = "Portuguese (European)"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_portuguese <- portuguese_instrument_data %>% distinct(child_id) %>% nrow() # 4326
+
+
+# russian ----
+russian_instrument_data_WG <- get_instrument_data("Russian", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+russian_instrument_data_WS <- get_instrument_data("Russian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+
+russian_instrument_data <- bind_rows(russian_instrument_data_WG, 
+                                     russian_instrument_data_WS) %>%
+  left_join(russian_ratings_subset, by = c("item_definition" = "Russian"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_russian <- russian_instrument_data %>% distinct(child_id) %>% nrow() # 1805
+
+# slovak ----
+slovak_instrument_data_WG <- get_instrument_data("Slovak", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+slovak_instrument_data_WS <- get_instrument_data("Slovak", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+
+slovak_instrument_data <- bind_rows(slovak_instrument_data_WG, 
+                                     slovak_instrument_data_WS) %>%
+  left_join(slovak_ratings_subset, by = c("item_definition" = "Slovak"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_slovak <- slovak_instrument_data %>% distinct(child_id) %>% nrow() # 1712
+
+# spanish ----
+
+spanish_argentinian_instrument_data <- get_instrument_data("Spanish (Argentinian)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces) %>%
+  left_join(spanish_ratings_subset, by = c("item_definition" = "Spanish (Argentinian)"))
+spanish_chilean_instrument_data <- get_instrument_data("Spanish (Chilean)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)%>%
+  left_join(spanish_ratings_subset, by = c("item_definition" = "Spanish (Chilean)"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+
+spanish_european_instrument_data_WG <- get_instrument_data("Spanish (European)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+spanish_european_instrument_data_WS <- get_instrument_data("Spanish (European)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+
+spanish_european_instrument_data <- bind_rows(spanish_european_instrument_data_WG, 
+                                              spanish_european_instrument_data_WS) %>%
+  mutate(produces = as.factor(produces))%>%
+  left_join(spanish_ratings_subset, by = c("item_definition" = "Spanish (European)"))
+
+
+spanish_mexican_instrument_data_WG <-  get_instrument_data("Spanish (Mexican)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+spanish_mexican_instrument_data_WS <-  get_instrument_data("Spanish (Mexican)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+spanish_mexican_instrument_data <- bind_rows(spanish_mexican_instrument_data_WG, 
+                                              spanish_mexican_instrument_data_WS) %>%
+  left_join(spanish_ratings_subset, by = c("item_definition" = "Spanish (Mexican)"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+
+spanish_peruvian_instrument_data_WG <-  get_instrument_data("Spanish (Peruvian)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+spanish_peruvian_instrument_data_WS <-  get_instrument_data("Spanish (Peruvian)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+  drop_na(produces)
+spanish_peruvian_instrument_data <- bind_rows(spanish_peruvian_instrument_data_WG, 
+                                              spanish_peruvian_instrument_data_WS) %>%
+  left_join(spanish_ratings_subset, by = c("item_definition" = "Spanish (Peruvian)"))%>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+
+n_spanish <- (spanish_argentinian_instrument_data %>% distinct(child_id) %>% nrow() ) + #783
+  (spanish_chilean_instrument_data %>% distinct(child_id) %>% nrow() ) + #48
+  (spanish_european_instrument_data %>% distinct(child_id) %>% nrow() ) + #1005
+  (spanish_mexican_instrument_data %>% distinct(child_id) %>% nrow() ) + #2283
+  (spanish_peruvian_instrument_data %>% distinct(child_id) %>% nrow() )  #192
+# 4311  
   
-
-# italian
-italian_instrument_data <- get_instrument_data("Italian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+# swedish ----
+swedish_instrument_data_WG <- get_instrument_data("Swedish", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-italian_aoas <- fit_aoa(
-  instrument_data = italian_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(italian_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-italian_data <-
-  left_join(italian_aoas, italian_perceptual, by=c("item_definition"="italian_word")) %>%
-  left_join(italian_ratings, by=c("item_definition"="italian_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
-
-italian_dict <- italian_data %>%
-  mutate(italian_word = item_definition) %>%
-  select(uni_lemma, italian_word, matches("^italian_.*_rating$"))
-
-# french
-quebec_french_instrument_data <- get_instrument_data("French (Quebecois)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+swedish_instrument_data_WS <- get_instrument_data("Swedish", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-quebec_french_aoas <- fit_aoa(
-  instrument_data = quebec_french_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(quebec_french_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-quebec_french_data <-
-  left_join(quebec_french_aoas, french_perceptual, by=c("item_definition"="french_word")) %>%
-  left_join(french_imageability, by=c("item_definition"="french_word")) %>%
-  left_join(french_bois, by=c("item_definition"="french_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
 
-french_instrument_data <- get_instrument_data("French (French)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+swedish_instrument_data <- bind_rows(swedish_instrument_data_WG, 
+                                     swedish_instrument_data_WS) %>%
+  left_join(swedish_ratings_subset, by = c("item_definition" = "Swedish")) %>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_swedish <- swedish_instrument_data %>% distinct(child_id) %>% nrow() # 1357
+
+# turkish ----
+turkish_instrument_data_WG <- get_instrument_data("Turkish", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-french_aoas <- fit_aoa(
-  instrument_data = french_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(french_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-french_data <-
-  left_join(french_aoas, french_perceptual, by=c("item_definition"="french_word")) %>%
-  left_join(french_imageability, by=c("item_definition"="french_word")) %>%
-  left_join(french_bois, by=c("item_definition"="french_word")) %>%
-  distinct(item_definition,.keep_all = TRUE)
-
-french_dict <- bind_rows(french_data, quebec_french_data) %>%
-  mutate(french_word = item_definition) %>%
-  select(uni_lemma, french_word, matches("^french_.*_rating$")) %>%
-  distinct(french_word, .keep_all = TRUE)
-
-# russian
-
-russian_instrument_data <- get_instrument_data("Russian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
+turkish_instrument_data_WS <- get_instrument_data("Turkish", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
-russian_aoas <- fit_aoa(
-  instrument_data = russian_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(russian_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-russian_data <-
-  left_join(russian_aoas, russian_perceptual, by=c("item_definition"="WORD")) %>%
-  distinct(item_definition,.keep_all = TRUE)
 
-russian_dict <- russian_data %>%
-  mutate(russian_word = item_definition) %>%
-  select(uni_lemma, russian_word, matches("^russian_.*_rating$")) 
-
-# chinese
-
-beijing_instrument_data <- get_instrument_data("Mandarin (Beijing)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
-  drop_na(produces)
-beijing_aoas <- fit_aoa(
-  instrument_data = beijing_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(beijing_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-beijing_data <-
-  left_join(beijing_aoas, chinese_perceptual, by=c("item_definition"="traditional")) %>%
-  distinct(item_definition,.keep_all = TRUE)
-
-taiwanese_instrument_data <- get_instrument_data("Mandarin (Taiwanese)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
-  drop_na(produces)
-taiwanese_aoas <- fit_aoa(
-  instrument_data = taiwanese_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(taiwanese_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-taiwanese_data <-
-  left_join(taiwanese_aoas, chinese_perceptual, by=c("item_definition"="traditional")) %>%
-  distinct(item_definition,.keep_all = TRUE)
-
-chinese_dict <- bind_rows(beijing_data, taiwanese_data) %>%
-  mutate(chinese_word = item_definition) %>%
-  select(uni_lemma, chinese_word, matches("^chinese_.*_rating$")) %>%
-  distinct(chinese_word, .keep_all = TRUE)
+turkish_instrument_data <- bind_rows(turkish_instrument_data_WG, 
+                                     turkish_instrument_data_WS) %>%
+  left_join(turkish_ratings_subset, by = c("item_definition" = "Turkish")) %>%
+  mutate(produces = as.factor(produces)) %>%
+  as.data.frame()
+n_turkish <- turkish_instrument_data %>% distinct(child_id) %>% nrow() # 3537
 
 
-turkish_instrument_data <- get_instrument_data("Turkish", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
-  drop_na(produces)
-turkish_aoas <- fit_aoa(
-  instrument_data = turkish_instrument_data,
-  measure = "produces",
-  method = "glm",
-  proportion = 0.5,
-  age_min = 8,
-  age_max = max(turkish_instrument_data$age, na.rm = TRUE)
-) %>% 
-  mutate(item_definition = tolower(item_definition))
-turkish_data <- read_csv("norms/turkish/aoas_and_concreteness.csv")
 
-turkish_dict <- turkish_data %>%
-  mutate(turkish_word = item_definition) %>%
-  select(uni_lemma, turkish_word, matches("^turkish_.*_rating$")) %>%
-  distinct(turkish_word, .keep_all = TRUE)
-
+# GENERAL STUFF ----
 iconicity_corrs <- bind_rows(cor_test_info(american_english_data$aoa,american_english_data$english_iconicity_rating, "American English"),
 cor_test_info(australian_english_data$aoa,australian_english_data$english_iconicity_rating, "Australian English"),
 cor_test_info(mexican_spanish_data$aoa,mexican_spanish_data$spanish_iconicity_rating, "Mexican Spanish"),
@@ -662,17 +715,3 @@ master_cdi_word_list <- master_dictionary %>%
   select(uni_lemma, matches("^.*_word$"))
   
 
-master_dictionary_with_ratings <- master_dictionary
-rowwise() %>%
-  mutate(average_imageability_rating = mean(c_across(matches("^.*_imageability_rating$")), na.rm = TRUE),
-         average_visual_rating = mean(c_across(matches("^.*_visual_rating$")), na.rm = TRUE),
-         average_auditory_rating = mean(c_across(matches("^.*_auditory_rating$")), na.rm = TRUE),
-         average_gustatory_rating = mean(c_across(matches("^.*_gustatory_rating$")), na.rm = TRUE),
-         average_olfactory_rating = mean(c_across(matches("^.*_olfactory_rating$")), na.rm = TRUE),
-         average_interoceptive_rating = mean(c_across(matches("^.*_interoceptive_rating$")), na.rm = TRUE),
-         average_haptic_rating = mean(c_across(matches("^.*_haptic_rating$")), na.rm = TRUE),
-         average_concreteness_rating = mean(c_across(matches("^.*_concreteness_rating$")), na.rm = TRUE),
-         average_maxperceptual_rating = mean(c_across(matches("^.*_maxperceptual_rating$")), na.rm = TRUE),
-         average_boi_rating = mean(c_across(matches("^.*_boi_rating$")), na.rm = TRUE)) %>%
-  ungroup() 
-  

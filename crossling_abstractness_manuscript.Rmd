@@ -48,8 +48,40 @@ in which parents are asked to indicate whether their child produces each of seve
 
 Data from Wordbank [@frank2017], a large database of CDI administrations from 
 
-We will take the full set of participants from Wordbank, then filter to only monolingual, typically-developing participants (~84,000 children). In addition, we will exclude participants who are not yet producing any words. or all words?
 
+
+```{r n-participants}
+n_participants <- n_asl + 
+n_bsl +
+  n_chinese +
+  n_croatian +
+  n_czech +
+  n_danish +
+  n_dutch + 
+  n_english +
+  n_finnish +
+  n_french +
+  n_german +
+  n_greek +
+  n_hebrew +
+  n_hungarian + 
+  n_irish +
+  n_italian +
+  n_kigiriama +
+  n_kiswahili + 
+  n_latvian +
+  n_norwegian +
+  n_persian +
+  n_portuguese +
+  n_russian +
+  n_slovak +
+  n_spanish +
+  n_swedish +
+  n_turkish 
+    
+```
+
+We will take the full set of participants from Wordbank, then filter to only monolingual, typically-developing participants. This results in a sample of  N = `r n_participants`. 
 
 ## Lexical Properties
 
