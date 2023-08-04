@@ -1,0 +1,259 @@
+---
+title: "Untitled"
+shorttitle: "Crossling Abstractness"
+author:
+  - name          : "Erin Campbell"
+    affiliation   : "1"
+    corresponding : yes    
+    email         : "eecamp@bu.edu"
+    address       : "2 Silber Way, Boston, MA xxxxx"
+  - name          : "Charles P. Davis"
+    affiliation   : "2"
+  - name          : "Naomi Caselli"
+    affiliation   : "1"
+
+
+affiliation:
+  - id            : "2"
+    institution   : "Department of Psychology & Neuroscience, Duke University, Durham, NC"
+  - id            : "1"
+    institution   : "Wheelock College of Education & Human Development, Boston University, Boston, MA"
+
+
+bibliography: ["crossling_abstractness_citations.bib"]
+
+lineno: true
+figsintext: yes
+
+documentclass     : "apa6"
+classoption       : "man"
+output            : papaja::apa6_pdf
+latex_engine      : xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+
+# trackdown::update_file(file="crossling_abstractness_manuscript.Rmd",gpath="trackdown/CrosslingAbstractness",hide_code=TRUE)
+```
+
+```{r libraries}
+library(tidyverse)
+library(glue)
+library(cowplot)
+```
+
+```{r source-and-load}
+source("summarize_effects.R")
+source("clusters_and_correlations.R")
+
+n_participants <- read_rds("models/n_participants.rds")
+```
+
+```{r reporting-functions}
+print_effect_size_summary <- function(variable_name) {
+  summary_data <- summaries_summary %>%
+    filter(variable == variable_name)
+  
+  if (nrow(summary_data) == 0) {
+    cat("Variable not found.")
+    return(NULL)
+  }
+  
+  mean_effect_size <- round(summary_data$mean_effect_size,2)
+  min_effect_size <- round(summary_data$min_effect_size,2)
+  max_effect_size <- round(summary_data$max_effect_size,2)
+  
+  glue("B = ", {mean_effect_size}, " (range: ", {min_effect_size}, " - ", {max_effect_size}, ")\n", sep = "")
+}
+```
+
+# Abstract
+
+of vocabulary data from `r n_participants` children
+
+# where to send this?
+
+Open Mind, CogSci (the journal, not the conference), Cognition, DevSci, Language and Cognition
+
+# Introduction
+
+Young children rapidly learn new words, but some words are easier to learn than others. There are many reasons why a word might be challenging to learn---it is hard to pronounce (e.g., "sixth"), it is syntactically complex (e.g., "inedible"), or it is relative abstract, i.e., its referent is not readily observable in the environment (e.g., "problem"). Here we focus on abstractness as a predictor of when words are learned. Why might words referring to abstract things be challenging to learn? Consider this: you are attempting to teach alien visitors some important words. What properties of words might make your job relatively easy or difficult? Words like "snake" would be easy to teach---snakes have a readily identifiable shape and make characteristic sounds---they are strongly associated with particular sensory and perceptual experiences [@lynott2020]---and while they vary in size and color, these differences aren't terribly important in determining whether something is a snake or not (whether it is dangerous is another question entirely). Words like "moo" might also be readily teachable, as the motivated mapping between the sound of the word and the sound it refers to eases the learning process (e.g., [imai2013]. Finally, [some example illustrating the "Abstract from specific circumstance" bit] ...
+
+Each of these three examples highlights different ways we might conceive of abstractness: abstract words can be characterized by an absence of sensory and perceptual features (e.g., want; [@paivio1971; @paivio1991]), they may have a less stable mapping between word form and meaning (though cf. CITE), and they tend to be applicable in a wide range of linguistic contexts (e.g., problem, [@schwanenflugel1983; @hoffman2013; @davis2020]). However, research on word learning has typically collapsed these construals into the more general problem of abstract words lacking a stable referent. In the following, we unpack existing research on acquisition of abstract (vs. concrete) words, before elaborating on each of the proposed construals of abstractness and how each construal might make unique predictions about the effects of abstractness on word learning.
+
+## Abstractness in Acquisition
+
+children learn abstract words later [@bergelson2013]
+
+## Different Constructions of Abstractness
+
+The most oft-cited reason why children tend to acquire abstract words later than concrete ones is because abstract words lack a clear sensory-perceptual referent, and thus are characterized by referential uncertainty [@bergelson2013]. However, this explanation rests on a negative definition of abstract words---namely, whereas concrete words refer to things that can be experienced directly through the senses, abstract words refer to things that cannot, and must be instead defined by other words [@brysbaert2014]. This view on abstract words is increasingly coming into question, with a growing literature pointing to the richness of experiences associated with abstract words, emphasizing not only that understanding abstract words tends to rely more on language associations [@paivio1991; @borghi2019] and that they tend to be more ambiguous and deployed in diverse lexical and situational contexts [@schwanenflugel1983; @hoffman2013; @davis2020; @barsalou2018] but also that they tend to be highly associated with emotional experience [@vigliocco2013] and social knowledge [@wilson-mendenhall2013]. There are also differences between abstract and concrete words in iconicity (i.e., the degree to which a word's meaning is reflected in its form [@hinojosa2021; @winter2023], such that abstract words counterintuitively tend to be rated as more iconic. Assuming a multidimensional perspective on abstract words---that is, that they have a range of experiential properties beyond just a lack of sensory referents---allows us to unpack what properties of abstractness lead to differences in word learning. In the following sections, we consider three different ways in which a word meaning might be abstract: a lack of associated perceptual experience, arbitrary mappings between word form and meaning, and the ability to use a word in a variety of distinct contexts.
+
+### Word Meaning Abstract from Perceptual Experience
+
+Embodied theories propose that sensorimotor processes are essential for learning the meanings of words (e.g., CITE). Under such hypotheses, words with referents that afford greater sensorimotor experience should be easier to acquire. Greater sensorimotor experience can be thought of both in terms of the saliency of the experience and in terms of the multisensoriness of the experience. English-speaking sighted children, but not blind children, were more likely to produce words when the words are more strongly associated with visual experience [@campbell2023]. @seidl2023 observed that English words tend to be learned earlier when their semantic associations span multiple senses. In related experimental work, @seidl2023 observed that 2-year-olds learn words more readily when they are able to interact with the referents than when they are only able to see the referents.
+
+#### Imageability
+
+The property of being something perceptible has traditionally been quantified using two closely related measures: imageability and concreteness. Imageability seeks to capture to what extent a word gives rise to a mental image [@paivio1968], whereas concreteness seeks to identify the degree to which a word is associated with any of the senses, reflecting the totality of subjective sensory experience with a word [@brysbaert2014]. Imageability and concreteness correlate strongly with one another [@rofes2018], and while they are often used interchangeably, these two constructs tend to diverge based on frequency (e.g., chair and protuberance are similarly concrete, but protuberance is more challenging to summon a mental image for) and specificity (e.g., chair and furniture are similarly imageable, but the more specific word "chair" is rated as more concrete). Like concreteness, words rated higher in imageability tend to be processed more quickly [cite cite] and learned earlier [cite cite cite]. [describe the possible mechanism]
+
+#### Perceptual Strength and Perceptual Exclusivity
+
+More recently, researchers have developed more specific measures of words' perceptual associations. Beyond general perceptibility, these norms separate associations by modality (visual, tactile, auditory, haptic, gustatory, interoceptive), yielding the modality specific ratings, an overall strength rating, and a measure of the spread of ratings across modalities [@lynott2020]. Such specificity allows researchers to test whether information from certain senses, like vision or touch, may be privileged over others [cite], as well as whether receiving sensory information from multiple modalities may support acquisition (e.g., @seidl2023).
+
+#### BOI
+
+In English, body-object-interaction ratings predict words' AoA [@thill2016; @pexman2019] and children's lexical processing [@suggate2017; @wellsby2014; @inkster2016], such that words with high sensorimotor interaction ratings are acquired earlier and processed faster. The motor aspect of this relationship may offer additional explanatory power beyond the sensory association effects described in previous paragraphs: the processing speed of high body-object-interaction words (but not low-BOI words) is linked to children's fine motor skills [@suggate2017]. Work with adults finds that pairing novel words with motor actions related to their meaning improves learning [@casasanto2019; @vukovic2019], and that activation of the motor cortex is involved in the acquisition of novel words [@luizzi2010; vukovic2019]. This effect may be particularly subject to cross-linguistic variation, given the wide cross-cultural variation in infant's motor development [@cintas2009; @lohaus2014].
+
+### Word Form Abstract from Word Meaning
+
+Arbitrariness to be a requisite property of language. Language is language because words are abstract symbols of their meaning. Words with an iconic (or motivated) mapping between form and meaning have originally been relegated to the fringes of linguistic discussion. Work on onomatopoeias, ideophones, and systematicity show that iconicity is a more prevalent phenomenon than previously recognized. Across languages, words that are higher in iconicity tend to be learned earlier [cite]. Some speculate that this is due to easier mapping between the referent and the wordform. Others, however, find this explanation unsatisfying: do young children, who have limited experience, have the world knowledge necessary to recognize these perceptual mappings? It could be that effects of iconicity on acquisition are related to phonological constraints on the meaning of highly-iconic words: highly-iconic words are likely to be concrete [cite] and carry perceptual information that aligns with the modality of the language (e.g., iconic spoken language words often pertain to auditory referents; iconic sign language words often depict auditory or tactile information; cite)
+
+### Word Meaning Abstract from Specific Circumstance
+
+#### Context Diversity / Availability
+
+The diversity of contexts a word appears in predicts word learning in both children [@hills2010; @rosa2022; @kachergis2009] and adults [@johns2015]. These effects have been interpreted in line with two processes in early word learning: the lure of the associates, which suggests that words learned earlier tend to be better connected with a range of other known words; and preferential acquisition, where words learned earlier tend to be used in a range of distinct contexts [@hills2010]. The direction of these context diversity effects are variable; in some contexts, verbs(?), are more likely to be learned when the context is more consistent, whereas nouns(?) with diverse contexts are more likely to be learned. More contextually diverse words also tend to be more abstract [@hoffman2013], as abstract words like *idea* have more flexible meanings that can be deployed in a range of contexts, as compared to concrete words like *spaceship*.
+
+Multiple theories: preferential attachment--A word is more likely to enter the lexicon the more connected the known words to which it is related. more highly connected words at Time 1 are more likely to receive new links at Time 2. preferential acquisition---words enter the lexicon not because they are related to well-connected words, but because they connect well to other words in the learning environment [@hills2009]. Early-learned words may tend to be highly connected because words with greater connectivity in the learning environment are more noticeable and readily learned; that is, children may learn first the most well-connected words in the speech stream to which they are exposed. This is possible because the adult semantic network is both a product of learning and the input (the material to be learned) for the next generation of learners. We call this hypothesis preferential acquisition. lure of the associates---new words are favored in proportion to their connections with known words. [@hills2009] Unknown words may be highlighted by known words to which they are related and learned in proportion to those relations.
+
+## The Present Study
+
+The present study examines the cross-linguistic stability of associations between lexical properties traditionally linked to abstractness and age of acquisition. In doing so, we hope to uncover, across many languages: what is it about abstractness that makes a word challenging to learn? This study is only possible due to massive effort from researchers around the world to document lexical properties and vocabulary. We leverage lexical ratings collected by hundreds of researchers from thousands of participants. The vocabulary data presented here span tens of thousands of young children. Today's backdrop of open science practices makes such an analysis feasible.
+
+# Methods
+
+## CDI
+
+the MacArthur-Bates Communicative Development Inventory (CDI), a vocabulary measure in which parents are asked to indicate whether their child understands and/or produces each of several hundred words @fenson1994. Since its conception, the CDI has been adapted into many languages, validated with many populations, and administered to many thousands of children.
+
+adaptations of the CDI into other languages are not merely translations. Instead, researchers of each language tend to consult previous CDIs, parents, educators, and child development experts to curate a culturally-relevant set of early-learned words [@jaruskova2023]. Thus, the CDIs contain partially-overlapping subsets of words (e.g., words for mother and father are ubiquitous across CDI forms, but acorn, magpie, and paprika appear on only the Latvian, Beijing Mandarin, and Hungarian forms, respectively).
+
+We pull data from Wordbank, a large, open database of CDI data [@frank2017], using the wordbankr R package [@braginsky2024]. For the present analyses, we take the full set of participants from Wordbank as of DATExxx. This results in a sample of N = `r n_participants`.
+
+## Lexical Properties
+
+All lexical ratings are first re-scaled (within languages) to a 1 to 10 scale for better comparability across languages and lexical properties. For zipfian-distributed norms (e.g., corpus-based frequency), norms were first logged and then scaled.
+
+To achieve maximum lexical rating coverage across words and languages, while recognizing that language-specific ratings by native speakers are likely the best source of lexical data, we developed the following rules for imputation:
+
+-   For norms pertaining to the underlying concept (e.g., concreteness, perceptual strength, emotional valence):
+
+    -   If norms are available for a specific word in a specific language, the scaled value will be used.
+
+    -   If norms are not available for a specific word or not available in a specific language, then the mean rating for the words' translation equivalent from all available languages will be used.
+
+    -   If norms are not available for a specific word or its translation equivalent, then any words without norms will be excluded from the analysis.
+
+```{=html}
+<!-- -->
+```
+-   For norms pertaining to the wordform (e.g., frequency, iconicity, phonological properties):
+
+    -   If norms are available for a specific word in a specific language, the scaled value will be used.
+
+    -   If norms are not available for a specific word but are for other words in that language, then any words without norms will be excluded from the analysis.
+
+    -   If there are no norms at all for a language along one of these scales, then any set of analyses using that norming scale will exclude that language.
+
+<https://docs.google.com/spreadsheets/d/1fivS85qayBJtp_nXjVmAvwZn7u6F517RFur0UPTJcAw/edit#gid=0>
+
+### Imageability
+
+### Perceptual properties
+
+For example, the Lancaster Sensorimotor Norms, created for English , Using similar instructions, sensory norms have been created for other languages, including Chinese [@zhong2022], Spanish [@diezalamo2017], French [@miceli2021], Russian [@miklashevsky2018], and Italian [@vergallito2020].
+
+Body-object interaction (BOI) ratings measure the extent to which a human body can physically interact with a word's referent [@siakaluk2008], and in particular, seem to index ease of graspability [@heard2019]. In neuroimaging studies, semantic processing of high BOI (vs low BOI) words is associated with neural regions involved in grasping (Hargreaves et al., 2012). In line with embodied theories of cognition, words' BOI ratings predict the speed of lexical processing in children and adults [CITE] as well as age of acquisition [@thill2016; @pexman2019; @muraki2022]. Child-centered BOI ratings, gathered by asking parents of elementary-aged children "how easily the average 6-year-old can physically interact (using the body: hands, mouth, etc.) with what each word represents" [@muraki2022, pg.9], may capture this variability even better; though in English, child BOI ratings and adult BOI ratings correlate strongly (*r* = 0.67) with each other [@muraki2022].
+
+### Iconicity
+
+At the time of publication, iconicity norms were only available for English [@winter2023], ASL [@caselli2017; @sehyr2021], BSL, and Spanish [@hinojosa2021]. We did not attempt to interpolate values for this property given its intrinsic connection to phonological form, which varies cross-linguistically.
+
+### xxx
+
+| Property                | Source                                                                                                                                                                             | Highest Words                      | Lowest Words                                |
+|----------|----------------------------------------|------------|-----------|
+| Iconicity               | English [@winter2023a], Spanish [@hinojosa2020], ASL [@caselli2017a], Japanese [CITE]                                                                                              | squeak, bang, buzz, vroom          | if, how, are, very                          |
+| Visual                  | Dutch [@speed2022], English [@lynott2020], Estonian [], French [@miceli2021], Italian [@vergallito2020], Mandarin [CITE], Russian [@miklashevsky2018], Spanish [@diez-alamo2017],  | orange, colors, see                | hear, smell, fart                           |
+| Auditory                | Estonian, French [@miceli2021], Italian [@vergallito2020], Mandarin, Russian [@miklashevsky2018], Spanish,                                                                         | noise, moo, hair dryer             | fog, picture, avocado                       |
+| Haptic                  | Estonian, French [@miceli2021], Italian [@vergallito2020], Mandarin, Russian [@miklashevsky2018], Spanish,                                                                         | touch, pillow, scratch             | listen, also, rainbow                       |
+| Olfactory               | Estonian, French [@miceli2021], Italian [@vergallito2020], Mandarin, Russian [@miklashevsky2018], Spanish,                                                                         | perfume, smell, fart, cigarette    | chase, song, three                          |
+| Gustatory               | Estonian, French [@miceli2021], Italian [@vergallito2020], Mandarin, Russian [@miklashevsky2018], Spanish,                                                                         | spaghetti, honey, soy sauce        | a, knock, dragonfly, fart                   |
+| Interoceptive           | English [@lynott2020], French?? [@miceli2021], Mandarin                                                                                                                            | painful, fear, hungry              | a, fish, jar                                |
+| Emotional Arousal       | Dutch [@verheyen2020], Estonian, French [cite], Italian [], Swedish [@blomberg2015], Turkish [@torkamani-azar2019]                                                                 | dog, kiss, tiger, hospital         | corridor, basket, empty, tired              |
+| Imageability            | Croatian, Dutch [@verheyen2020], French [@desrocher2009], Italian, Norwegian, Portuguese [@soares2017], Russian [@miklashevsky2018], Spanish, Swedish [@blomberg2015],             | newspaper, spaghetti, fish, cowboy | if, from, little, which                     |
+| Concreteness            | Croatian, Dutch [@verheyen2020], English [@brysbaert2014], Estonian [], French [@bonin2018], Italian, Portuguese [@soares2017],                                                    | snake, sand, comb, tv              | little, could, for, enough                  |
+| Context Diversity       | *all* [wikipedia], except ASL, BSL, xxx, and xxx                                                                                                                                   | and, of, a, on                     | ballpit, achoo, pine cone, chocolate mousse |
+| Body Object Interaction | English [@body], French [@miceli2021], Spanish [],                                                                                                                                 | toothbrush, pajamas, bread, crayon | whose, crocodile, and, cloud                |
+
+: Lexical property sources and example
+
+### Covariates
+
+All models included the following variables as covariates: age (from Wordbank, rounded to the nearest month), frequency (from Wikipedia, or from subjective native speaker ratings), phonological complexity (for spoken languages, word length; for sign languages, xxx), lexical category (from Wordbank; levels included: nouns, predicates, function words, other)
+
+```{r ratings-table}
+# language by property, with citation in cell
+```
+
+# Results
+
+## Relationships among Abstractness Variables
+
+First, we computed pairwise Pearson's correlation coefficients for all variables, displayed in Figure 2, together with histograms showing the distribution of each variable and scatterplots showing how variables relate to each other. Here, we summarize across languages, but the by-language plots can be found in Supplementals (possibly as confusion matrix). Also the correlations for a given property across languages in supplement
+
+<!-- stats? maybe for this section, confusion matrix is enough -->
+
+```{r variable-relationships, fig.height=7}
+
+corrplot(average_ratings_matrix, "color",type="upper", order = "alphabet",
+         tl.col="black", addCoef.col = "white", col=colorRampPalette(c("#CC0000","white","#3B9AB2"))(200))
+```
+
+```{r variable-relationships-dendro, fig.height=3, fig.width=7}
+average_ratings_dendro
+```
+
+## Abstractness effects on word production
+
+First, we fit a baseline statistical models for each language where word production is modeled as a combination of age, frequency, and phonological complexity. We then added each of our target predictors. For each target predictor for each language, it is thus possible to extract an effect size estimate of the target predictor and its interaction with age on the likelihood of word production. To explore heterogeneity and to estimate central tendency and variation in the effects, we borrow from meta-analytic techniques, treating each language as a study, and creating a weighted average of the effect size.
+
+Figure \@ref(fig:summary-of-maineffects) shows the coefficient estimate for each predictor in each language; see Table xxx for a full accounting of abstractness effect sizes. We find that iconicity is the strongest predictor of acquisition (mean across languages and measures: `r print_effect_size_summary("iconicity")`). Many of the sensorimotor variables were relatively strong predictors of word production, including body-object-interaction (`r print_effect_size_summary("Body Object Interaction")`), imageability (`r print_effect_size_summary("imageability")`), hapticness (`r print_effect_size_summary("haptic")`), and visualness (`r print_effect_size_summary("visual")`). The effects of the social-emotional variables socialness (`r print_effect_size_summary("socialness")`) and emotional arousal (`r print_effect_size_summary("emotionalarousal")`)--as well as several of the other sensorimotor variables (olfactoriness, interoceptiveness, auditoriness, and gustatoriness)--had much smaller mean effects on children's word production. Interestingly, concreteness was not reliably associated with word production across languages (`r print_effect_size_summary("Concreteness")`). Finally, the effect of context diversity was highly variable, with some languages showing large positive effects (e.g., ), while others showed large negative effects. Looking across languages, words which were used in more contexts were less likely to be produced (`r print_effect_size_summary("contextdiversity")`).
+
+```{r summary-of-maineffects, fig.cap="Effect size estimates (from logistic regression) of each of the abstractness variables studied. Each dot represents the effect size of one language, with filled-in dots showing significant effects and empty dots indicating that the effect was not significant in that language. Black dot and whiskers show mean effect size with standard error."}
+summary_of_maineffects
+```
+
+### Developmental Change
+
+Positive age interactions can be seen in at least xxx out of xxx languages for visualness, hapticness, body-object-interaction, and imageability. Conversely, there are negative age interactions for auditoryiness and iconicity in at least xxx out of xxx languages. This suggests that certain sensorimotor properties (chiefly, children's ability to see and touch a word's referent) facilitate learning more so later in development, while iconicity and auditoriness[^1] facilitate learning earlier in development. This result is consistent with the speculation above that xxx.
+
+[^1]: The interaction between auditoriness and age was near 0 for both American Sign Language (B = xxx) and British Sign Language (B = xxx).
+
+```{r summary-of-interactions, fig.cap="Effect size estimates (from logistic regression) of the interaction between each of the abstractness variables and age. Each dot represents the effect size of one language, with filled-in dots showing significant interactions and empty dots indicating that the effect was not significant in that language. Black dot and whiskers show mean effect size with standard error. Positive values show that effects are stronger for older children, while negative values show that effects are larger for younger children."}
+summary_of_interactions
+```
+
+# What drives abstractness effects?
+
+Finally, we conduct an exploratory analysis aimed at measuring which of these abstractness variables best accounts for variability in words' production. Because these variables are interrelated, as shown in Figure xxx, when adding them to the same model, there is a risk of collinearity (Tomaschek et al., 2018). To get around this issue, we compare the predictive strength of the abstractness variables using random forest regression, implemented with the ranger package in R (Wright & Ziegler, 2017). Random Forest regression is a machine learning method based on decision trees and recursive partitioning. Each tree is fit to a subset of the data and only uses a subset of the predictors (a third of the available variables in our analyses). The predictions of many hundreds of trees can then be averaged, which helps avoid overfitting and increases accuracy. Because Random Factor regression does not need to estimate a coefficient for every predictor variable in every tree, this approach allows us to avoid issues of collinearity, but the relative importance of two highly correlated predictors can still be compared by assessing the trees in which they do not co-occur.
+
+This approach yields variance importance scores for each of the variables in our model. In Figure XXX, we display the overall ranking of the variance importance scores. We find that XXX is most important, followed by xxx.
+
+Importance plots from random forest regression
+
+We next explore the variability in ranking across languages. intra-class correlation of importance by variable across languages. we find an ICC of R = xxx, indicating xxx stability in relative importance of these predictors across languages.
+
+```{=html}
+<!-- how to plot cross-linguistic variability in ordering: maybe horizontal stacked bar graph of importance, with a bar for each language, the importance represented by relative size, and a consistent color for each trait
+-->
+```
+## Multiple behavioral tasks - abstractness effects
+
+picture naming lexical decision
+
+# Discussion
+
+Parents may not have an accurate sense of their children's comprehension of emotion words [@roepstorff2024].
