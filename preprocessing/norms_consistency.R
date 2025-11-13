@@ -802,6 +802,8 @@ arabic_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
   filter(`Arabic (Saudi)` != "") %>%
   left_join(arabic_CD) 
 write_csv(arabic_ratings_subset, "norms/arabic/arabic_ratings_subset.csv")
+write_rds(arabic_ratings_subset, "norms/arabic/arabic_ratings_subset.rds")
+
 arabic_ratings_correlations <- arabic_ratings_subset %>%
   select(matches("^arabic_.*_rating$")) %>%
   rename_with(
@@ -833,6 +835,8 @@ asl_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          asl_cognitiveness_rating = average_cognitiveness_rating) %>%
   filter(`American Sign Language` != "") 
 write_csv(asl_ratings_subset, "norms/asl/asl_ratings_subset.csv")
+write_rds(asl_ratings_subset, "norms/asl/asl_ratings_subset.rds")
+
 asl_ratings_correlations <- asl_ratings_subset %>%
   select(matches("^asl_.*_rating$")) %>%
   rename_with(
