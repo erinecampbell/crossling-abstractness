@@ -97,7 +97,7 @@ chinese_taiwanese_imageability_interaction_summary <- summary(chinese_taiwanese_
          p_value = `Pr(>|z|)`)
 
 croatian_instrument_data <- read_rds("norms/croatian/croatian_instrument_data.rds")
-croatian_imageability_model <- glm(as.factor(produces) ~ age + croatian_imageability_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_imageability_model <- glm(as.factor(produces) ~ age + croatian_imageability_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_imageability_effect <- ggpredict(croatian_imageability_model, terms = "croatian_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Croatian",
          variable_coefficient = croatian_imageability_model$coefficients[[3]])
@@ -107,7 +107,7 @@ croatian_imageability_summary <- summary(croatian_imageability_model)$coefficien
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-croatian_imageability_interaction_model <- glm(as.factor(produces) ~ age * croatian_imageability_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_imageability_interaction_model <- glm(as.factor(produces) ~ age * croatian_imageability_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_imageability_interaction_summary <- summary(croatian_imageability_interaction_model)$coefficients %>% as.data.frame() %>%
   filter(row.names(.) == "age:croatian_imageability_rating") %>%
   mutate(language = "croatian",
@@ -653,7 +653,7 @@ swedish_imageability_interaction_summary <- summary(swedish_imageability_interac
   mutate(language = "swedish")
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
-arabic_imageability_model <- glm(as.factor(produces) ~ age + arabic_imageability_rating + lexical_category, 
+arabic_imageability_model <- glm(as.factor(produces) ~ age + arabic_imageability_rating + arabic_freq_rating + lexical_category, 
                            data = arabic_instrument_data, family = "binomial")
 arabic_imageability_effect <- ggpredict(arabic_imageability_model, terms = "arabic_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
@@ -662,7 +662,7 @@ arabic_imageability_summary <- summary(arabic_imageability_model)$coefficients %
   as.data.frame() %>%
   filter(row.names(.) == "arabic_imageability_rating") %>%
   mutate(language = "Arabic (Saudi)") 
-arabic_imageability_interaction_model <- glm(as.factor(produces) ~ age * arabic_imageability_rating + lexical_category, 
+arabic_imageability_interaction_model <- glm(as.factor(produces) ~ age * arabic_imageability_rating + arabic_freq_rating + lexical_category, 
                                        data = arabic_instrument_data, family = "binomial")
 arabic_imageability_interaction_summary <- summary(arabic_imageability_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -670,7 +670,7 @@ arabic_imageability_interaction_summary <- summary(arabic_imageability_interacti
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_imageability_model <- glm(as.factor(produces) ~ age + catalan_imageability_rating + lexical_category, 
+catalan_imageability_model <- glm(as.factor(produces) ~ age + catalan_imageability_rating + catalan_freq_rating + lexical_category, 
                             data = catalan_instrument_data, family = "binomial")
 catalan_imageability_effect <- ggpredict(catalan_imageability_model, terms = "catalan_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -679,7 +679,7 @@ catalan_imageability_summary <- summary(catalan_imageability_model)$coefficients
   as.data.frame() %>%
   filter(row.names(.) == "catalan_imageability_rating") %>%
   mutate(language = "catalan") 
-catalan_imageability_interaction_model <- glm(as.factor(produces) ~ age * catalan_imageability_rating  + lexical_category, 
+catalan_imageability_interaction_model <- glm(as.factor(produces) ~ age * catalan_imageability_rating + catalan_freq_rating + lexical_category, 
                                         data = catalan_instrument_data, family = "binomial")
 catalan_imageability_interaction_summary <- summary(catalan_imageability_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -687,7 +687,7 @@ catalan_imageability_interaction_summary <- summary(catalan_imageability_interac
   mutate(language = "catalan") 
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
-estonian_imageability_model <- glm(as.factor(produces) ~ age + estonian_imageability_rating + lexical_category, 
+estonian_imageability_model <- glm(as.factor(produces) ~ age + estonian_imageability_rating + estonian_freq_rating + lexical_category, 
                              data = estonian_instrument_data, family = "binomial")
 estonian_imageability_effect <- ggpredict(estonian_imageability_model, terms = "estonian_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -696,7 +696,7 @@ estonian_imageability_summary <- summary(estonian_imageability_model)$coefficien
   as.data.frame() %>%
   filter(row.names(.) == "estonian_imageability_rating") %>%
   mutate(language = "estonian") 
-estonian_imageability_interaction_model <- glm(as.factor(produces) ~ age * estonian_imageability_rating  + lexical_category, 
+estonian_imageability_interaction_model <- glm(as.factor(produces) ~ age * estonian_imageability_rating + estonian_freq_rating  + lexical_category, 
                                          data = estonian_instrument_data, family = "binomial")
 estonian_imageability_interaction_summary <- summary(estonian_imageability_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -704,7 +704,7 @@ estonian_imageability_interaction_summary <- summary(estonian_imageability_inter
   mutate(language = "estonian")
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
-japanese_imageability_model <- glm(as.factor(produces) ~ age + japanese_imageability_rating + lexical_category, 
+japanese_imageability_model <- glm(as.factor(produces) ~ age + japanese_imageability_rating+ japanese_freq_rating  + lexical_category, 
                              data = japanese_instrument_data, family = "binomial")
 japanese_imageability_effect <- ggpredict(japanese_imageability_model, terms = "japanese_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -713,7 +713,7 @@ japanese_imageability_summary <- summary(japanese_imageability_model)$coefficien
   as.data.frame() %>%
   filter(row.names(.) == "japanese_imageability_rating") %>%
   mutate(language = "japanese") 
-japanese_imageability_interaction_model <- glm(as.factor(produces) ~ age * japanese_imageability_rating  + lexical_category, 
+japanese_imageability_interaction_model <- glm(as.factor(produces) ~ age * japanese_imageability_rating+ japanese_freq_rating   + lexical_category, 
                                          data = japanese_instrument_data, family = "binomial")
 japanese_imageability_interaction_summary <- summary(japanese_imageability_interaction_model)$coefficients %>% 
   as.data.frame() %>%

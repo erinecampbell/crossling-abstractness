@@ -37,7 +37,7 @@ chinese_cantonese_CD_summary <- summary(chinese_cantonese_CD_model)$coefficients
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-chinese_cantonese_CD_interaction_model <- glm(produces ~ age * chinese_CD_rating + chinese_freq_rating + lexical_category, data = cantonese_instrument_data, family = "binomial")
+chinese_cantonese_CD_interaction_model <- glm(produces ~ age * chinese_CD_rating + lexical_category, data = cantonese_instrument_data, family = "binomial")
 chinese_cantonese_CD_interaction_summary <- summary(chinese_cantonese_CD_interaction_model)$coefficients %>% as.data.frame() %>%
   filter(row.names(.) == "age:chinese_CD_rating") %>%
   mutate(language = "chinese_cantonese",

@@ -97,7 +97,7 @@ chinese_taiwanese_olfactory_interaction_summary <- summary(chinese_taiwanese_olf
          p_value = `Pr(>|z|)`)
 
 croatian_instrument_data <- read_rds("norms/croatian/croatian_instrument_data.rds")
-croatian_olfactory_model <- glm(as.factor(produces) ~ age + croatian_olfactory_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_olfactory_model <- glm(as.factor(produces) ~ age + croatian_olfactory_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_olfactory_effect <- ggpredict(croatian_olfactory_model, terms = "croatian_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Croatian",
          variable_coefficient = croatian_olfactory_model$coefficients[[3]])
@@ -107,7 +107,7 @@ croatian_olfactory_summary <- summary(croatian_olfactory_model)$coefficients %>%
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-croatian_olfactory_interaction_model <- glm(as.factor(produces) ~ age * croatian_olfactory_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_olfactory_interaction_model <- glm(as.factor(produces) ~ age * croatian_olfactory_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_olfactory_interaction_summary <- summary(croatian_olfactory_interaction_model)$coefficients %>% as.data.frame() %>%
   filter(row.names(.) == "age:croatian_olfactory_rating") %>%
   mutate(language = "croatian",
@@ -653,7 +653,7 @@ swedish_olfactory_interaction_summary <- summary(swedish_olfactory_interaction_m
   mutate(language = "swedish")
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
-arabic_olfactory_model <- glm(as.factor(produces) ~ age + arabic_olfactory_rating + lexical_category, 
+arabic_olfactory_model <- glm(as.factor(produces) ~ age + arabic_olfactory_rating + arabic_freq_rating + lexical_category, 
                            data = arabic_instrument_data, family = "binomial")
 arabic_olfactory_effect <- ggpredict(arabic_olfactory_model, terms = "arabic_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
@@ -662,7 +662,7 @@ arabic_olfactory_summary <- summary(arabic_olfactory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "arabic_olfactory_rating") %>%
   mutate(language = "Arabic (Saudi)") 
-arabic_olfactory_interaction_model <- glm(as.factor(produces) ~ age * arabic_olfactory_rating + lexical_category, 
+arabic_olfactory_interaction_model <- glm(as.factor(produces) ~ age * arabic_olfactory_rating + arabic_freq_rating + lexical_category, 
                                        data = arabic_instrument_data, family = "binomial")
 arabic_olfactory_interaction_summary <- summary(arabic_olfactory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -670,7 +670,7 @@ arabic_olfactory_interaction_summary <- summary(arabic_olfactory_interaction_mod
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_olfactory_model <- glm(as.factor(produces) ~ age + catalan_olfactory_rating + lexical_category, 
+catalan_olfactory_model <- glm(as.factor(produces) ~ age + catalan_olfactory_rating + catalan_freq_rating + lexical_category, 
                             data = catalan_instrument_data, family = "binomial")
 catalan_olfactory_effect <- ggpredict(catalan_olfactory_model, terms = "catalan_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -679,7 +679,7 @@ catalan_olfactory_summary <- summary(catalan_olfactory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "catalan_olfactory_rating") %>%
   mutate(language = "catalan") 
-catalan_olfactory_interaction_model <- glm(as.factor(produces) ~ age * catalan_olfactory_rating  + lexical_category, 
+catalan_olfactory_interaction_model <- glm(as.factor(produces) ~ age * catalan_olfactory_rating  + catalan_freq_rating + lexical_category, 
                                         data = catalan_instrument_data, family = "binomial")
 catalan_olfactory_interaction_summary <- summary(catalan_olfactory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -687,7 +687,7 @@ catalan_olfactory_interaction_summary <- summary(catalan_olfactory_interaction_m
   mutate(language = "catalan") 
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
-estonian_olfactory_model <- glm(as.factor(produces) ~ age + estonian_olfactory_rating + lexical_category, 
+estonian_olfactory_model <- glm(as.factor(produces) ~ age + estonian_olfactory_rating + estonian_freq_rating + lexical_category, 
                              data = estonian_instrument_data, family = "binomial")
 estonian_olfactory_effect <- ggpredict(estonian_olfactory_model, terms = "estonian_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -696,7 +696,7 @@ estonian_olfactory_summary <- summary(estonian_olfactory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "estonian_olfactory_rating") %>%
   mutate(language = "estonian") 
-estonian_olfactory_interaction_model <- glm(as.factor(produces) ~ age * estonian_olfactory_rating  + lexical_category, 
+estonian_olfactory_interaction_model <- glm(as.factor(produces) ~ age * estonian_olfactory_rating + estonian_freq_rating  + lexical_category, 
                                          data = estonian_instrument_data, family = "binomial")
 estonian_olfactory_interaction_summary <- summary(estonian_olfactory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -704,7 +704,7 @@ estonian_olfactory_interaction_summary <- summary(estonian_olfactory_interaction
   mutate(language = "estonian")
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
-japanese_olfactory_model <- glm(as.factor(produces) ~ age + japanese_olfactory_rating + lexical_category, 
+japanese_olfactory_model <- glm(as.factor(produces) ~ age + japanese_olfactory_rating+ japanese_freq_rating  + lexical_category , 
                              data = japanese_instrument_data, family = "binomial")
 japanese_olfactory_effect <- ggpredict(japanese_olfactory_model, terms = "japanese_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -713,7 +713,7 @@ japanese_olfactory_summary <- summary(japanese_olfactory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "japanese_olfactory_rating") %>%
   mutate(language = "japanese") 
-japanese_olfactory_interaction_model <- glm(as.factor(produces) ~ age * japanese_olfactory_rating  + lexical_category, 
+japanese_olfactory_interaction_model <- glm(as.factor(produces) ~ age * japanese_olfactory_rating + japanese_freq_rating  + lexical_category, 
                                          data = japanese_instrument_data, family = "binomial")
 japanese_olfactory_interaction_summary <- summary(japanese_olfactory_interaction_model)$coefficients %>% 
   as.data.frame() %>%

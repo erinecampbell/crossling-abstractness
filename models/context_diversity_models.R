@@ -65,7 +65,7 @@ chinese_taiwanese_CD_interaction_summary <- summary(chinese_taiwanese_CD_interac
          p_value = `Pr(>|z|)`)
 
 croatian_instrument_data <- read_rds("norms/croatian/croatian_instrument_data.rds")
-croatian_CD_model <- glm(as.factor(produces) ~ age + croatian_CD_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_CD_model <- glm(as.factor(produces) ~ age + croatian_CD_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_CD_effect <- ggpredict(croatian_CD_model, terms = "croatian_CD_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Croatian",
          variable_coefficient = croatian_CD_model$coefficients[[3]])
@@ -75,7 +75,7 @@ croatian_CD_summary <- summary(croatian_CD_model)$coefficients %>% as.data.frame
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-croatian_CD_interaction_model <- glm(as.factor(produces) ~ age * croatian_CD_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_CD_interaction_model <- glm(as.factor(produces) ~ age * croatian_CD_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_CD_interaction_summary <- summary(croatian_CD_interaction_model)$coefficients %>% as.data.frame() %>%
   filter(row.names(.) == "age:croatian_CD_rating") %>%
   mutate(language = "croatian",
@@ -672,8 +672,7 @@ all_CD_effects_plot <- ggplot(all_CD_effects %>% filter(language!="Kiswahili")) 
 ggsave("models/plots/all_CD_effects_plots.png", all_CD_effects_plot, height = 8, width = 5)
 
 
-all_CD_summaries <- bind_rows(asl_CD_summary,
-                                        bsl_CD_summary,
+all_CD_summaries <- bind_rows(
                                         chinese_beijing_CD_summary,
                                         chinese_cantonese_CD_summary,
                                         chinese_taiwanese_CD_summary,

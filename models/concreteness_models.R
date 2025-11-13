@@ -97,7 +97,7 @@ chinese_taiwanese_concreteness_interaction_summary <- summary(chinese_taiwanese_
          p_value = `Pr(>|z|)`)
 
 croatian_instrument_data <- read_rds("norms/croatian/croatian_instrument_data.rds")
-croatian_concreteness_model <- glm(as.factor(produces) ~ age + croatian_concreteness_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_concreteness_model <- glm(as.factor(produces) ~ age + croatian_concreteness_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_concreteness_effect <- ggpredict(croatian_concreteness_model, terms = "croatian_concreteness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Croatian",
          variable_coefficient = croatian_concreteness_model$coefficients[[3]])
@@ -107,7 +107,7 @@ croatian_concreteness_summary <- summary(croatian_concreteness_model)$coefficien
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-croatian_concreteness_interaction_model <- glm(as.factor(produces) ~ age * croatian_concreteness_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_concreteness_interaction_model <- glm(as.factor(produces) ~ age * croatian_concreteness_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_concreteness_interaction_summary <- summary(croatian_concreteness_interaction_model)$coefficients %>% as.data.frame() %>%
   filter(row.names(.) == "age:croatian_concreteness_rating") %>%
   mutate(language = "croatian",
@@ -653,7 +653,7 @@ swedish_concreteness_interaction_summary <- summary(swedish_concreteness_interac
   mutate(language = "swedish")
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
-arabic_concreteness_model <- glm(as.factor(produces) ~ age + arabic_concreteness_rating + lexical_category, 
+arabic_concreteness_model <- glm(as.factor(produces) ~ age + arabic_concreteness_rating + arabic_freq_rating + lexical_category, 
                         data = arabic_instrument_data, family = "binomial")
 arabic_concreteness_effect <- ggpredict(arabic_concreteness_model, terms = "arabic_concreteness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
@@ -662,7 +662,7 @@ arabic_concreteness_summary <- summary(arabic_concreteness_model)$coefficients %
   as.data.frame() %>%
   filter(row.names(.) == "arabic_concreteness_rating") %>%
   mutate(language = "Arabic (Saudi)") 
-arabic_concreteness_interaction_model <- glm(as.factor(produces) ~ age * arabic_concreteness_rating + lexical_category, 
+arabic_concreteness_interaction_model <- glm(as.factor(produces) ~ age * arabic_concreteness_rating + arabic_freq_rating + lexical_category, 
                                     data = arabic_instrument_data, family = "binomial")
 arabic_concreteness_interaction_summary <- summary(arabic_concreteness_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -670,7 +670,7 @@ arabic_concreteness_interaction_summary <- summary(arabic_concreteness_interacti
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_concreteness_model <- glm(as.factor(produces) ~ age + catalan_concreteness_rating + lexical_category, 
+catalan_concreteness_model <- glm(as.factor(produces) ~ age + catalan_concreteness_rating + catalan_freq_rating + lexical_category, 
                          data = catalan_instrument_data, family = "binomial")
 catalan_concreteness_effect <- ggpredict(catalan_concreteness_model, terms = "catalan_concreteness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -679,7 +679,7 @@ catalan_concreteness_summary <- summary(catalan_concreteness_model)$coefficients
   as.data.frame() %>%
   filter(row.names(.) == "catalan_concreteness_rating") %>%
   mutate(language = "catalan") 
-catalan_concreteness_interaction_model <- glm(as.factor(produces) ~ age * catalan_concreteness_rating  + lexical_category, 
+catalan_concreteness_interaction_model <- glm(as.factor(produces) ~ age * catalan_concreteness_rating  + catalan_freq_rating + lexical_category, 
                                      data = catalan_instrument_data, family = "binomial")
 catalan_concreteness_interaction_summary <- summary(catalan_concreteness_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -687,7 +687,7 @@ catalan_concreteness_interaction_summary <- summary(catalan_concreteness_interac
   mutate(language = "catalan") 
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
-estonian_concreteness_model <- glm(as.factor(produces) ~ age + estonian_concreteness_rating + lexical_category, 
+estonian_concreteness_model <- glm(as.factor(produces) ~ age + estonian_concreteness_rating + estonian_freq_rating + lexical_category, 
                           data = estonian_instrument_data, family = "binomial")
 estonian_concreteness_effect <- ggpredict(estonian_concreteness_model, terms = "estonian_concreteness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -696,7 +696,7 @@ estonian_concreteness_summary <- summary(estonian_concreteness_model)$coefficien
   as.data.frame() %>%
   filter(row.names(.) == "estonian_concreteness_rating") %>%
   mutate(language = "estonian") 
-estonian_concreteness_interaction_model <- glm(as.factor(produces) ~ age * estonian_concreteness_rating  + lexical_category, 
+estonian_concreteness_interaction_model <- glm(as.factor(produces) ~ age * estonian_concreteness_rating + estonian_freq_rating  + lexical_category, 
                                       data = estonian_instrument_data, family = "binomial")
 estonian_concreteness_interaction_summary <- summary(estonian_concreteness_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -704,7 +704,7 @@ estonian_concreteness_interaction_summary <- summary(estonian_concreteness_inter
   mutate(language = "estonian")
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
-japanese_concreteness_model <- glm(as.factor(produces) ~ age + japanese_concreteness_rating + lexical_category, 
+japanese_concreteness_model <- glm(as.factor(produces) ~ age + japanese_concreteness_rating+ japanese_freq_rating  + lexical_category, 
                           data = japanese_instrument_data, family = "binomial")
 japanese_concreteness_effect <- ggpredict(japanese_concreteness_model, terms = "japanese_concreteness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -713,7 +713,7 @@ japanese_concreteness_summary <- summary(japanese_concreteness_model)$coefficien
   as.data.frame() %>%
   filter(row.names(.) == "japanese_concreteness_rating") %>%
   mutate(language = "japanese") 
-japanese_concreteness_interaction_model <- glm(as.factor(produces) ~ age * japanese_concreteness_rating  + lexical_category, 
+japanese_concreteness_interaction_model <- glm(as.factor(produces) ~ age * japanese_concreteness_rating + japanese_freq_rating  + lexical_category, 
                                       data = japanese_instrument_data, family = "binomial")
 japanese_concreteness_interaction_summary <- summary(japanese_concreteness_interaction_model)$coefficients %>% 
   as.data.frame() %>%

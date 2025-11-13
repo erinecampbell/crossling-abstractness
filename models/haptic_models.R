@@ -97,7 +97,7 @@ chinese_taiwanese_haptic_interaction_summary <- summary(chinese_taiwanese_haptic
          p_value = `Pr(>|z|)`)
 
 croatian_instrument_data <- read_rds("norms/croatian/croatian_instrument_data.rds")
-croatian_haptic_model <- glm(as.factor(produces) ~ age + croatian_haptic_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_haptic_model <- glm(as.factor(produces) ~ age + croatian_haptic_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_haptic_effect <- ggpredict(croatian_haptic_model, terms = "croatian_haptic_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Croatian",
          variable_coefficient = croatian_haptic_model$coefficients[[3]])
@@ -107,7 +107,7 @@ croatian_haptic_summary <- summary(croatian_haptic_model)$coefficients %>% as.da
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-croatian_haptic_interaction_model <- glm(as.factor(produces) ~ age * croatian_haptic_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_haptic_interaction_model <- glm(as.factor(produces) ~ age * croatian_haptic_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_haptic_interaction_summary <- summary(croatian_haptic_interaction_model)$coefficients %>% as.data.frame() %>%
   filter(row.names(.) == "age:croatian_haptic_rating") %>%
   mutate(language = "croatian",
@@ -653,7 +653,7 @@ swedish_haptic_interaction_summary <- summary(swedish_haptic_interaction_model)$
   mutate(language = "swedish")
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
-arabic_haptic_model <- glm(as.factor(produces) ~ age + arabic_haptic_rating + lexical_category, 
+arabic_haptic_model <- glm(as.factor(produces) ~ age + arabic_haptic_rating + arabic_freq_rating + lexical_category, 
                               data = arabic_instrument_data, family = "binomial")
 arabic_haptic_effect <- ggpredict(arabic_haptic_model, terms = "arabic_haptic_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
@@ -662,7 +662,7 @@ arabic_haptic_summary <- summary(arabic_haptic_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "arabic_haptic_rating") %>%
   mutate(language = "Arabic (Saudi)") 
-arabic_haptic_interaction_model <- glm(as.factor(produces) ~ age * arabic_haptic_rating + lexical_category, 
+arabic_haptic_interaction_model <- glm(as.factor(produces) ~ age * arabic_haptic_rating + arabic_freq_rating + lexical_category, 
                                           data = arabic_instrument_data, family = "binomial")
 arabic_haptic_interaction_summary <- summary(arabic_haptic_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -670,7 +670,7 @@ arabic_haptic_interaction_summary <- summary(arabic_haptic_interaction_model)$co
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_haptic_model <- glm(as.factor(produces) ~ age + catalan_haptic_rating + lexical_category, 
+catalan_haptic_model <- glm(as.factor(produces) ~ age + catalan_haptic_rating + catalan_freq_rating + lexical_category, 
                                data = catalan_instrument_data, family = "binomial")
 catalan_haptic_effect <- ggpredict(catalan_haptic_model, terms = "catalan_haptic_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -679,7 +679,7 @@ catalan_haptic_summary <- summary(catalan_haptic_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "catalan_haptic_rating") %>%
   mutate(language = "catalan") 
-catalan_haptic_interaction_model <- glm(as.factor(produces) ~ age * catalan_haptic_rating  + lexical_category, 
+catalan_haptic_interaction_model <- glm(as.factor(produces) ~ age * catalan_haptic_rating + catalan_freq_rating + lexical_category, 
                                            data = catalan_instrument_data, family = "binomial")
 catalan_haptic_interaction_summary <- summary(catalan_haptic_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -687,7 +687,7 @@ catalan_haptic_interaction_summary <- summary(catalan_haptic_interaction_model)$
   mutate(language = "catalan") 
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
-estonian_haptic_model <- glm(as.factor(produces) ~ age + estonian_haptic_rating + lexical_category, 
+estonian_haptic_model <- glm(as.factor(produces) ~ age + estonian_haptic_rating + estonian_freq_rating + lexical_category, 
                                 data = estonian_instrument_data, family = "binomial")
 estonian_haptic_effect <- ggpredict(estonian_haptic_model, terms = "estonian_haptic_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -696,7 +696,7 @@ estonian_haptic_summary <- summary(estonian_haptic_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "estonian_haptic_rating") %>%
   mutate(language = "estonian") 
-estonian_haptic_interaction_model <- glm(as.factor(produces) ~ age * estonian_haptic_rating  + lexical_category, 
+estonian_haptic_interaction_model <- glm(as.factor(produces) ~ age * estonian_haptic_rating + estonian_freq_rating  + lexical_category, 
                                             data = estonian_instrument_data, family = "binomial")
 estonian_haptic_interaction_summary <- summary(estonian_haptic_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -704,7 +704,7 @@ estonian_haptic_interaction_summary <- summary(estonian_haptic_interaction_model
   mutate(language = "estonian")
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
-japanese_haptic_model <- glm(as.factor(produces) ~ age + japanese_haptic_rating + lexical_category, 
+japanese_haptic_model <- glm(as.factor(produces) ~ age + japanese_haptic_rating+ japanese_freq_rating  + lexical_category, 
                                 data = japanese_instrument_data, family = "binomial")
 japanese_haptic_effect <- ggpredict(japanese_haptic_model, terms = "japanese_haptic_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -713,7 +713,7 @@ japanese_haptic_summary <- summary(japanese_haptic_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "japanese_haptic_rating") %>%
   mutate(language = "japanese") 
-japanese_haptic_interaction_model <- glm(as.factor(produces) ~ age * japanese_haptic_rating  + lexical_category, 
+japanese_haptic_interaction_model <- glm(as.factor(produces) ~ age * japanese_haptic_rating+ japanese_freq_rating   + lexical_category, 
                                             data = japanese_instrument_data, family = "binomial")
 japanese_haptic_interaction_summary <- summary(japanese_haptic_interaction_model)$coefficients %>% 
   as.data.frame() %>%

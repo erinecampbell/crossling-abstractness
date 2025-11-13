@@ -19,6 +19,37 @@ asl_iconicity_interaction_summary <- summary(asl_iconicity_interaction_model)$co
   filter(row.names(.) == "age:asl_iconicity_rating") %>%
   mutate(language = "asl") 
 
+bsl_instrument_data <- read_rds("norms/bsl/bsl_instrument_data.rds")
+bsl_iconicity_model <- glm(as.factor(produces) ~ age + bsl_iconicity_rating + lexical_category, 
+                           data = bsl_instrument_data, family = "binomial")
+bsl_iconicity_effect <- ggpredict(bsl_iconicity_model, terms = "bsl_iconicity_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "British Sign Language")
+bsl_iconicity_summary <- summary(bsl_iconicity_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "bsl_iconicity_rating") %>%
+  mutate(language = "British Sign Language") 
+bsl_iconicity_interaction_model <- glm(as.factor(produces) ~ age * bsl_iconicity_rating + lexical_category, 
+                                       data = bsl_instrument_data, family = "binomial")
+bsl_iconicity_interaction_summary <- summary(bsl_iconicity_interaction_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "age:bsl_iconicity_rating") %>%
+  mutate(language = "British Sign Language") 
+
+japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
+japanese_iconicity_model <- glm(as.factor(produces) ~ age + japanese_iconicity_rating + japanese_freq_rating + word_length + lexical_category, 
+                           data = japanese_instrument_data, family = "binomial")
+japanese_iconicity_effect <- ggpredict(japanese_iconicity_model, terms = "japanese_iconicity_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Japanese")
+japanese_iconicity_summary <- summary(japanese_iconicity_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "japanese_iconicity_rating") %>%
+  mutate(language = "japanese") 
+japanese_iconicity_interaction_model <- glm(as.factor(produces) ~ age * japanese_iconicity_rating + japanese_freq_rating + word_length + lexical_category, 
+                                       data = japanese_instrument_data, family = "binomial")
+japanese_iconicity_interaction_summary <- summary(japanese_iconicity_interaction_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "age:japanese_iconicity_rating") %>%
+  mutate(language = "Japanese") 
 
 american_english_instrument_data <- read_rds("norms/english/american_english_instrument_data.rds")
 english_american_iconicity_model <- glm(produces ~ age + english_iconicity_rating + english_freq_rating + lexical_category + word_length, data = american_english_instrument_data, family = "binomial")
@@ -79,9 +110,6 @@ english_irish_iconicity_interaction_summary <- summary(english_irish_iconicity_i
   as.data.frame() %>%
   filter(row.names(.) == "age:english_iconicity_rating") %>%
   mutate(language = "english_irish") 
-# bsl_iconicity_model <- glm(as.factor(produces) ~ age + bsl_iconicity_rating, data = bsl_instrument_data, family = "binomial")
-# bsl_iconicity_effect <- ggpredict(bsl_iconicity_model, terms = "bsl_iconicity_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "British Sign Language")
 
 spanish_argentinian_instrument_data <- read_rds("norms/spanish/spanish_argentinian_instrument_data.rds")
 spanish_argentinian_iconicity_model <- glm(produces ~ age + spanish_iconicity_rating + spanish_freq_rating + lexical_category + word_length, data = spanish_argentinian_instrument_data, family = "binomial")
@@ -168,7 +196,8 @@ all_iconicity_effects <- bind_rows(asl_iconicity_effect,
                                   spanish_chilean_iconicity_effect,
                                   spanish_european_iconicity_effect,
                                   spanish_mexican_iconicity_effect,
-                                  spanish_peruvian_iconicity_effect
+                                  spanish_peruvian_iconicity_effect,
+                                  japanese_iconicity_effect
 )
 
 all_iconicity_effects_plot <- ggplot(all_iconicity_effects)  + 
@@ -190,7 +219,8 @@ all_iconicity_summaries <- bind_rows(asl_iconicity_summary,
                                    spanish_chilean_iconicity_summary,
                                    spanish_european_iconicity_summary,
                                    spanish_mexican_iconicity_summary,
-                                   spanish_peruvian_iconicity_summary
+                                   spanish_peruvian_iconicity_summary,
+                                   japanese_iconicity_summary
 ) %>%
   mutate(variable = "iconicity",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",
@@ -199,7 +229,7 @@ write_rds(all_iconicity_summaries, "models/effects/all_iconicity_summaries.rds")
 
 
 all_iconicity_interaction_summaries <- bind_rows(asl_iconicity_interaction_summary,
-                                     # bsl_iconicity_summary,
+                                     bsl_iconicity_summary,
                                      english_american_iconicity_interaction_summary,
                                      english_australian_iconicity_interaction_summary,
                                      english_british_iconicity_interaction_summary,
@@ -208,7 +238,8 @@ all_iconicity_interaction_summaries <- bind_rows(asl_iconicity_interaction_summa
                                      spanish_chilean_iconicity_interaction_summary,
                                      spanish_european_iconicity_interaction_summary,
                                      spanish_mexican_iconicity_interaction_summary,
-                                     spanish_peruvian_iconicity_interaction_summary
+                                     spanish_peruvian_iconicity_interaction_summary,
+                                     japanese_iconicity_interaction_summary
 ) %>%
   mutate(variable = "age_iconicity",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",

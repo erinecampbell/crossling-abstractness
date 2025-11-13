@@ -97,7 +97,7 @@ chinese_taiwanese_emotionalarousal_interaction_summary <- summary(chinese_taiwan
          p_value = `Pr(>|z|)`)
 
 croatian_instrument_data <- read_rds("norms/croatian/croatian_instrument_data.rds")
-croatian_emotionalarousal_model <- glm(as.factor(produces) ~ age + croatian_emotionalarousal_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_emotionalarousal_model <- glm(as.factor(produces) ~ age + croatian_emotionalarousal_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_emotionalarousal_effect <- ggpredict(croatian_emotionalarousal_model, terms = "croatian_emotionalarousal_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Croatian",
          variable_coefficient = croatian_emotionalarousal_model$coefficients[[3]])
@@ -107,7 +107,7 @@ croatian_emotionalarousal_summary <- summary(croatian_emotionalarousal_model)$co
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-croatian_emotionalarousal_interaction_model <- glm(as.factor(produces) ~ age * croatian_emotionalarousal_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_emotionalarousal_interaction_model <- glm(as.factor(produces) ~ age * croatian_emotionalarousal_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_emotionalarousal_interaction_summary <- summary(croatian_emotionalarousal_interaction_model)$coefficients %>% as.data.frame() %>%
   filter(row.names(.) == "age:croatian_emotionalarousal_rating") %>%
   mutate(language = "croatian",
@@ -653,7 +653,7 @@ swedish_emotionalarousal_interaction_summary <- summary(swedish_emotionalarousal
   mutate(language = "swedish")
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
-arabic_emotionalarousal_model <- glm(as.factor(produces) ~ age + arabic_emotionalarousal_rating + lexical_category, 
+arabic_emotionalarousal_model <- glm(as.factor(produces) ~ age + arabic_emotionalarousal_rating + arabic_freq_rating + lexical_category, 
                                  data = arabic_instrument_data, family = "binomial")
 arabic_emotionalarousal_effect <- ggpredict(arabic_emotionalarousal_model, terms = "arabic_emotionalarousal_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
@@ -662,7 +662,7 @@ arabic_emotionalarousal_summary <- summary(arabic_emotionalarousal_model)$coeffi
   as.data.frame() %>%
   filter(row.names(.) == "arabic_emotionalarousal_rating") %>%
   mutate(language = "Arabic (Saudi)") 
-arabic_emotionalarousal_interaction_model <- glm(as.factor(produces) ~ age * arabic_emotionalarousal_rating + lexical_category, 
+arabic_emotionalarousal_interaction_model <- glm(as.factor(produces) ~ age * arabic_emotionalarousal_rating + arabic_freq_rating + lexical_category, 
                                              data = arabic_instrument_data, family = "binomial")
 arabic_emotionalarousal_interaction_summary <- summary(arabic_emotionalarousal_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -670,7 +670,7 @@ arabic_emotionalarousal_interaction_summary <- summary(arabic_emotionalarousal_i
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_emotionalarousal_model <- glm(as.factor(produces) ~ age + catalan_emotionalarousal_rating + lexical_category, 
+catalan_emotionalarousal_model <- glm(as.factor(produces) ~ age + catalan_emotionalarousal_rating + catalan_freq_rating+ lexical_category, 
                                   data = catalan_instrument_data, family = "binomial")
 catalan_emotionalarousal_effect <- ggpredict(catalan_emotionalarousal_model, terms = "catalan_emotionalarousal_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -679,7 +679,7 @@ catalan_emotionalarousal_summary <- summary(catalan_emotionalarousal_model)$coef
   as.data.frame() %>%
   filter(row.names(.) == "catalan_emotionalarousal_rating") %>%
   mutate(language = "catalan") 
-catalan_emotionalarousal_interaction_model <- glm(as.factor(produces) ~ age * catalan_emotionalarousal_rating  + lexical_category, 
+catalan_emotionalarousal_interaction_model <- glm(as.factor(produces) ~ age * catalan_emotionalarousal_rating +catalan_freq_rating  + lexical_category, 
                                               data = catalan_instrument_data, family = "binomial")
 catalan_emotionalarousal_interaction_summary <- summary(catalan_emotionalarousal_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -687,7 +687,7 @@ catalan_emotionalarousal_interaction_summary <- summary(catalan_emotionalarousal
   mutate(language = "catalan") 
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
-estonian_emotionalarousal_model <- glm(as.factor(produces) ~ age + estonian_emotionalarousal_rating + lexical_category, 
+estonian_emotionalarousal_model <- glm(as.factor(produces) ~ age + estonian_emotionalarousal_rating + estonian_freq_rating + lexical_category, 
                                    data = estonian_instrument_data, family = "binomial")
 estonian_emotionalarousal_effect <- ggpredict(estonian_emotionalarousal_model, terms = "estonian_emotionalarousal_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -696,7 +696,7 @@ estonian_emotionalarousal_summary <- summary(estonian_emotionalarousal_model)$co
   as.data.frame() %>%
   filter(row.names(.) == "estonian_emotionalarousal_rating") %>%
   mutate(language = "estonian") 
-estonian_emotionalarousal_interaction_model <- glm(as.factor(produces) ~ age * estonian_emotionalarousal_rating  + lexical_category, 
+estonian_emotionalarousal_interaction_model <- glm(as.factor(produces) ~ age * estonian_emotionalarousal_rating + estonian_freq_rating  + lexical_category, 
                                                data = estonian_instrument_data, family = "binomial")
 estonian_emotionalarousal_interaction_summary <- summary(estonian_emotionalarousal_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -704,7 +704,7 @@ estonian_emotionalarousal_interaction_summary <- summary(estonian_emotionalarous
   mutate(language = "estonian")
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
-japanese_emotionalarousal_model <- glm(as.factor(produces) ~ age + japanese_emotionalarousal_rating + lexical_category, 
+japanese_emotionalarousal_model <- glm(as.factor(produces) ~ age + japanese_emotionalarousal_rating+ japanese_freq_rating  + lexical_category, 
                                    data = japanese_instrument_data, family = "binomial")
 japanese_emotionalarousal_effect <- ggpredict(japanese_emotionalarousal_model, terms = "japanese_emotionalarousal_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -713,7 +713,7 @@ japanese_emotionalarousal_summary <- summary(japanese_emotionalarousal_model)$co
   as.data.frame() %>%
   filter(row.names(.) == "japanese_emotionalarousal_rating") %>%
   mutate(language = "japanese") 
-japanese_emotionalarousal_interaction_model <- glm(as.factor(produces) ~ age * japanese_emotionalarousal_rating  + lexical_category, 
+japanese_emotionalarousal_interaction_model <- glm(as.factor(produces) ~ age * japanese_emotionalarousal_rating + japanese_freq_rating  + lexical_category, 
                                                data = japanese_instrument_data, family = "binomial")
 japanese_emotionalarousal_interaction_summary <- summary(japanese_emotionalarousal_interaction_model)$coefficients %>% 
   as.data.frame() %>%

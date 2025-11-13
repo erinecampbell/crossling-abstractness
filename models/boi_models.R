@@ -97,7 +97,7 @@ chinese_taiwanese_boi_interaction_summary <- summary(chinese_taiwanese_boi_inter
          p_value = `Pr(>|z|)`)
 
 croatian_instrument_data <- read_rds("norms/croatian/croatian_instrument_data.rds")
-croatian_boi_model <- glm(as.factor(produces) ~ age + croatian_boi_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_boi_model <- glm(as.factor(produces) ~ age + croatian_boi_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_boi_effect <- ggpredict(croatian_boi_model, terms = "croatian_boi_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Croatian",
          variable_coefficient = croatian_boi_model$coefficients[[3]])
@@ -107,7 +107,7 @@ croatian_boi_summary <- summary(croatian_boi_model)$coefficients %>% as.data.fra
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-croatian_boi_interaction_model <- glm(as.factor(produces) ~ age * croatian_boi_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_boi_interaction_model <- glm(as.factor(produces) ~ age * croatian_boi_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_boi_interaction_summary <- summary(croatian_boi_interaction_model)$coefficients %>% as.data.frame() %>%
   filter(row.names(.) == "age:croatian_boi_rating") %>%
   mutate(language = "croatian",
@@ -653,7 +653,7 @@ swedish_boi_interaction_summary <- summary(swedish_boi_interaction_model)$coeffi
   mutate(language = "swedish")
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
-arabic_boi_model <- glm(as.factor(produces) ~ age + arabic_boi_rating + lexical_category, 
+arabic_boi_model <- glm(as.factor(produces) ~ age + arabic_boi_rating + arabic_freq_rating + lexical_category, 
                              data = arabic_instrument_data, family = "binomial")
 arabic_boi_effect <- ggpredict(arabic_boi_model, terms = "arabic_boi_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
@@ -662,7 +662,7 @@ arabic_boi_summary <- summary(arabic_boi_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "arabic_boi_rating") %>%
   mutate(language = "Arabic (Saudi)") 
-arabic_boi_interaction_model <- glm(as.factor(produces) ~ age * arabic_boi_rating + lexical_category, 
+arabic_boi_interaction_model <- glm(as.factor(produces) ~ age * arabic_boi_rating + arabic_freq_rating + lexical_category, 
                                          data = arabic_instrument_data, family = "binomial")
 arabic_boi_interaction_summary <- summary(arabic_boi_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -670,7 +670,7 @@ arabic_boi_interaction_summary <- summary(arabic_boi_interaction_model)$coeffici
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_boi_model <- glm(as.factor(produces) ~ age + catalan_boi_rating + lexical_category, 
+catalan_boi_model <- glm(as.factor(produces) ~ age + catalan_boi_rating + catalan_freq_rating + lexical_category, 
                               data = catalan_instrument_data, family = "binomial")
 catalan_boi_effect <- ggpredict(catalan_boi_model, terms = "catalan_boi_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -679,7 +679,7 @@ catalan_boi_summary <- summary(catalan_boi_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "catalan_boi_rating") %>%
   mutate(language = "catalan") 
-catalan_boi_interaction_model <- glm(as.factor(produces) ~ age * catalan_boi_rating  + lexical_category, 
+catalan_boi_interaction_model <- glm(as.factor(produces) ~ age * catalan_boi_rating  + catalan_freq_rating + lexical_category, 
                                           data = catalan_instrument_data, family = "binomial")
 catalan_boi_interaction_summary <- summary(catalan_boi_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -687,7 +687,7 @@ catalan_boi_interaction_summary <- summary(catalan_boi_interaction_model)$coeffi
   mutate(language = "catalan") 
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
-estonian_boi_model <- glm(as.factor(produces) ~ age + estonian_boi_rating + lexical_category, 
+estonian_boi_model <- glm(as.factor(produces) ~ age + estonian_boi_rating + estonian_freq_rating + lexical_category, 
                                data = estonian_instrument_data, family = "binomial")
 estonian_boi_effect <- ggpredict(estonian_boi_model, terms = "estonian_boi_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -696,7 +696,7 @@ estonian_boi_summary <- summary(estonian_boi_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "estonian_boi_rating") %>%
   mutate(language = "estonian") 
-estonian_boi_interaction_model <- glm(as.factor(produces) ~ age * estonian_boi_rating  + lexical_category, 
+estonian_boi_interaction_model <- glm(as.factor(produces) ~ age * estonian_boi_rating + estonian_freq_rating  + lexical_category, 
                                            data = estonian_instrument_data, family = "binomial")
 estonian_boi_interaction_summary <- summary(estonian_boi_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -704,7 +704,7 @@ estonian_boi_interaction_summary <- summary(estonian_boi_interaction_model)$coef
   mutate(language = "estonian")
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
-japanese_boi_model <- glm(as.factor(produces) ~ age + japanese_boi_rating + lexical_category, 
+japanese_boi_model <- glm(as.factor(produces) ~ age + japanese_boi_rating + japanese_freq_rating + lexical_category, 
                                data = japanese_instrument_data, family = "binomial")
 japanese_boi_effect <- ggpredict(japanese_boi_model, terms = "japanese_boi_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -713,7 +713,7 @@ japanese_boi_summary <- summary(japanese_boi_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "japanese_boi_rating") %>%
   mutate(language = "japanese") 
-japanese_boi_interaction_model <- glm(as.factor(produces) ~ age * japanese_boi_rating  + lexical_category, 
+japanese_boi_interaction_model <- glm(as.factor(produces) ~ age * japanese_boi_rating  + japanese_freq_rating + lexical_category, 
                                            data = japanese_instrument_data, family = "binomial")
 japanese_boi_interaction_summary <- summary(japanese_boi_interaction_model)$coefficients %>% 
   as.data.frame() %>%

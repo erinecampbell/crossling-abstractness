@@ -97,7 +97,7 @@ chinese_taiwanese_auditory_interaction_summary <- summary(chinese_taiwanese_audi
          p_value = `Pr(>|z|)`)
 
 croatian_instrument_data <- read_rds("norms/croatian/croatian_instrument_data.rds")
-croatian_auditory_model <- glm(as.factor(produces) ~ age + croatian_auditory_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_auditory_model <- glm(as.factor(produces) ~ age + croatian_auditory_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_auditory_effect <- ggpredict(croatian_auditory_model, terms = "croatian_auditory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Croatian",
          variable_coefficient = croatian_auditory_model$coefficients[[3]])
@@ -107,7 +107,7 @@ croatian_auditory_summary <- summary(croatian_auditory_model)$coefficients %>% a
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-croatian_auditory_interaction_model <- glm(as.factor(produces) ~ age * croatian_auditory_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_auditory_interaction_model <- glm(as.factor(produces) ~ age * croatian_auditory_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_auditory_interaction_summary <- summary(croatian_auditory_interaction_model)$coefficients %>% as.data.frame() %>%
   filter(row.names(.) == "age:croatian_auditory_rating") %>%
   mutate(language = "croatian",
@@ -420,9 +420,25 @@ italian_auditory_interaction_summary <- summary(italian_auditory_interaction_mod
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
 
-# kigiriama_auditory_model <- glm(produces ~ age + kigiriama_auditory_rating, data = kigiriama_instrument_data, family = "binomial")
-# kigiriama_auditory_effect <- ggeffect(kigiriama_auditory_model, terms = "kigiriama_auditory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Kigiriama")
+kigiriama_instrument_data <- read_rds("norms/kigiriama/kigiriama_instrument_data.rds")
+kigiriama_auditory_model <- glm(produces ~ age + kigiriama_auditory_rating, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_auditory_effect <- ggeffect(kigiriama_auditory_model, terms = "kigiriama_auditory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Kigiriama",
+         variable_coefficient = kigiriama_auditory_model$coefficients[[3]])
+kigiriama_auditory_summary <- summary(kigiriama_auditory_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "kigiriama_auditory_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+kigiriama_auditory_interaction_model <- glm(produces ~ age * kigiriama_auditory_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_auditory_interaction_summary <- summary(kigiriama_auditory_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:kigiriama_auditory_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+
 
 kiswahili_instrument_data <- read_rds("norms/kiswahili/kiswahili_instrument_data.rds")
 kiswahili_auditory_model <- glm(produces ~ age + kiswahili_auditory_rating + kiswahili_freq_rating + lexical_category + word_length, data = kiswahili_instrument_data, family = "binomial")
@@ -518,10 +534,25 @@ persian_auditory_interaction_summary <- summary(persian_auditory_interaction_mod
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
+
 # portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
 # portuguese_auditory_model <- glm(produces ~ age + portuguese_auditory_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
 # portuguese_auditory_effect <- ggeffect(portuguese_auditory_model, terms = "portuguese_auditory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
 #   mutate(language = "Portuguese (European)")
+# portuguese_auditory_summary <- summary(portuguese_auditory_model)$coefficients %>% as.data.frame() %>%
+#   filter(row.names(.) == "portuguese_auditory_rating") %>%
+#   mutate(language = "portuguese",
+#          effect_size = Estimate,
+#          standard_error = `Std. Error`,
+#          p_value = `Pr(>|z|)`)
+# portuguese_auditory_interaction_model <- glm(produces ~ age * portuguese_auditory_rating + portuguese_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
+# portuguese_auditory_interaction_summary <- summary(russian_auditory_interaction_model)$coefficients %>% as.data.frame() %>%
+#   filter(row.names(.) == "age:portuguese_auditory_rating") %>%
+#   mutate(language = "portuguese",
+#          effect_size = Estimate,
+#          standard_error = `Std. Error`,
+#          p_value = `Pr(>|z|)`)
+# Error in `contrasts<-`(`*tmp*`, value = contr.funs[1 + isOF[nn]]) : contrasts can be applied only to factors with 2 or more levels
 
 russian_instrument_data <- read_rds("norms/russian/russian_instrument_data.rds")
 russian_auditory_model <- glm(produces ~ age + russian_auditory_rating + russian_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
@@ -653,7 +684,7 @@ swedish_auditory_interaction_summary <- summary(swedish_auditory_interaction_mod
   mutate(language = "swedish")
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
-arabic_auditory_model <- glm(as.factor(produces) ~ age + arabic_auditory_rating + lexical_category, 
+arabic_auditory_model <- glm(as.factor(produces) ~ age + arabic_auditory_rating + arabic_freq_rating + lexical_category, 
                           data = arabic_instrument_data, family = "binomial")
 arabic_auditory_effect <- ggpredict(arabic_auditory_model, terms = "arabic_auditory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
@@ -662,7 +693,7 @@ arabic_auditory_summary <- summary(arabic_auditory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "arabic_auditory_rating") %>%
   mutate(language = "Arabic (Saudi)") 
-arabic_auditory_interaction_model <- glm(as.factor(produces) ~ age * arabic_auditory_rating + lexical_category, 
+arabic_auditory_interaction_model <- glm(as.factor(produces) ~ age * arabic_auditory_rating + arabic_freq_rating + lexical_category, 
                                       data = arabic_instrument_data, family = "binomial")
 arabic_auditory_interaction_summary <- summary(arabic_auditory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -670,7 +701,7 @@ arabic_auditory_interaction_summary <- summary(arabic_auditory_interaction_model
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_auditory_model <- glm(as.factor(produces) ~ age + catalan_auditory_rating + lexical_category, 
+catalan_auditory_model <- glm(as.factor(produces) ~ age + catalan_auditory_rating + catalan_freq_rating + lexical_category, 
                           data = catalan_instrument_data, family = "binomial")
 catalan_auditory_effect <- ggpredict(catalan_auditory_model, terms = "catalan_auditory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -679,7 +710,7 @@ catalan_auditory_summary <- summary(catalan_auditory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "catalan_auditory_rating") %>%
   mutate(language = "catalan") 
-catalan_auditory_interaction_model <- glm(as.factor(produces) ~ age * catalan_auditory_rating  + lexical_category, 
+catalan_auditory_interaction_model <- glm(as.factor(produces) ~ age * catalan_auditory_rating + catalan_freq_rating + lexical_category, 
                                       data = catalan_instrument_data, family = "binomial")
 catalan_auditory_interaction_summary <- summary(catalan_auditory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -687,7 +718,7 @@ catalan_auditory_interaction_summary <- summary(catalan_auditory_interaction_mod
   mutate(language = "catalan") 
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
-estonian_auditory_model <- glm(as.factor(produces) ~ age + estonian_auditory_rating + lexical_category, 
+estonian_auditory_model <- glm(as.factor(produces) ~ age + estonian_auditory_rating + estonian_freq_rating+ lexical_category, 
                               data = estonian_instrument_data, family = "binomial")
 estonian_auditory_effect <- ggpredict(estonian_auditory_model, terms = "estonian_auditory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -696,7 +727,7 @@ estonian_auditory_summary <- summary(estonian_auditory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "estonian_auditory_rating") %>%
   mutate(language = "estonian") 
-estonian_auditory_interaction_model <- glm(as.factor(produces) ~ age * estonian_auditory_rating  + lexical_category, 
+estonian_auditory_interaction_model <- glm(as.factor(produces) ~ age * estonian_auditory_rating + estonian_freq_rating  + lexical_category, 
                                           data = estonian_instrument_data, family = "binomial")
 estonian_auditory_interaction_summary <- summary(estonian_auditory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -704,7 +735,7 @@ estonian_auditory_interaction_summary <- summary(estonian_auditory_interaction_m
   mutate(language = "estonian")
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
-japanese_auditory_model <- glm(as.factor(produces) ~ age + japanese_auditory_rating + lexical_category, 
+japanese_auditory_model <- glm(as.factor(produces) ~ age + japanese_auditory_rating + japanese_freq_rating + lexical_category, 
                               data = japanese_instrument_data, family = "binomial")
 japanese_auditory_effect <- ggpredict(japanese_auditory_model, terms = "japanese_auditory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -713,7 +744,7 @@ japanese_auditory_summary <- summary(japanese_auditory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "japanese_auditory_rating") %>%
   mutate(language = "japanese") 
-japanese_auditory_interaction_model <- glm(as.factor(produces) ~ age * japanese_auditory_rating  + lexical_category, 
+japanese_auditory_interaction_model <- glm(as.factor(produces) ~ age * japanese_auditory_rating  + japanese_freq_rating + lexical_category, 
                                           data = japanese_instrument_data, family = "binomial")
 japanese_auditory_interaction_summary <- summary(japanese_auditory_interaction_model)$coefficients %>% 
   as.data.frame() %>%

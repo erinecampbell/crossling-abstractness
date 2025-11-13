@@ -97,7 +97,7 @@ chinese_taiwanese_gustatory_interaction_summary <- summary(chinese_taiwanese_gus
          p_value = `Pr(>|z|)`)
 
 croatian_instrument_data <- read_rds("norms/croatian/croatian_instrument_data.rds")
-croatian_gustatory_model <- glm(as.factor(produces) ~ age + croatian_gustatory_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_gustatory_model <- glm(as.factor(produces) ~ age + croatian_gustatory_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_gustatory_effect <- ggpredict(croatian_gustatory_model, terms = "croatian_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Croatian",
          variable_coefficient = croatian_gustatory_model$coefficients[[3]])
@@ -107,7 +107,7 @@ croatian_gustatory_summary <- summary(croatian_gustatory_model)$coefficients %>%
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-croatian_gustatory_interaction_model <- glm(as.factor(produces) ~ age * croatian_gustatory_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_gustatory_interaction_model <- glm(as.factor(produces) ~ age * croatian_gustatory_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_gustatory_interaction_summary <- summary(croatian_gustatory_interaction_model)$coefficients %>% as.data.frame() %>%
   filter(row.names(.) == "age:croatian_gustatory_rating") %>%
   mutate(language = "croatian",
@@ -653,7 +653,7 @@ swedish_gustatory_interaction_summary <- summary(swedish_gustatory_interaction_m
   mutate(language = "swedish")
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
-arabic_gustatory_model <- glm(as.factor(produces) ~ age + arabic_gustatory_rating + lexical_category, 
+arabic_gustatory_model <- glm(as.factor(produces) ~ age + arabic_gustatory_rating + arabic_freq_rating + lexical_category, 
                                      data = arabic_instrument_data, family = "binomial")
 arabic_gustatory_effect <- ggpredict(arabic_gustatory_model, terms = "arabic_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
@@ -662,7 +662,7 @@ arabic_gustatory_summary <- summary(arabic_gustatory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "arabic_gustatory_rating") %>%
   mutate(language = "Arabic (Saudi)") 
-arabic_gustatory_interaction_model <- glm(as.factor(produces) ~ age * arabic_gustatory_rating + lexical_category, 
+arabic_gustatory_interaction_model <- glm(as.factor(produces) ~ age * arabic_gustatory_rating + arabic_freq_rating + lexical_category, 
                                                  data = arabic_instrument_data, family = "binomial")
 arabic_gustatory_interaction_summary <- summary(arabic_gustatory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -670,7 +670,7 @@ arabic_gustatory_interaction_summary <- summary(arabic_gustatory_interaction_mod
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_gustatory_model <- glm(as.factor(produces) ~ age + catalan_gustatory_rating + lexical_category, 
+catalan_gustatory_model <- glm(as.factor(produces) ~ age + catalan_gustatory_rating + catalan_freq_rating + lexical_category, 
                                       data = catalan_instrument_data, family = "binomial")
 catalan_gustatory_effect <- ggpredict(catalan_gustatory_model, terms = "catalan_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -679,7 +679,7 @@ catalan_gustatory_summary <- summary(catalan_gustatory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "catalan_gustatory_rating") %>%
   mutate(language = "catalan") 
-catalan_gustatory_interaction_model <- glm(as.factor(produces) ~ age * catalan_gustatory_rating  + lexical_category, 
+catalan_gustatory_interaction_model <- glm(as.factor(produces) ~ age * catalan_gustatory_rating + catalan_freq_rating + lexical_category, 
                                                   data = catalan_instrument_data, family = "binomial")
 catalan_gustatory_interaction_summary <- summary(catalan_gustatory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -687,7 +687,7 @@ catalan_gustatory_interaction_summary <- summary(catalan_gustatory_interaction_m
   mutate(language = "catalan") 
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
-estonian_gustatory_model <- glm(as.factor(produces) ~ age + estonian_gustatory_rating + lexical_category, 
+estonian_gustatory_model <- glm(as.factor(produces) ~ age + estonian_gustatory_rating + estonian_freq_rating + lexical_category, 
                                        data = estonian_instrument_data, family = "binomial")
 estonian_gustatory_effect <- ggpredict(estonian_gustatory_model, terms = "estonian_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -696,7 +696,7 @@ estonian_gustatory_summary <- summary(estonian_gustatory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "estonian_gustatory_rating") %>%
   mutate(language = "estonian") 
-estonian_gustatory_interaction_model <- glm(as.factor(produces) ~ age * estonian_gustatory_rating  + lexical_category, 
+estonian_gustatory_interaction_model <- glm(as.factor(produces) ~ age * estonian_gustatory_rating + estonian_freq_rating  + lexical_category, 
                                                    data = estonian_instrument_data, family = "binomial")
 estonian_gustatory_interaction_summary <- summary(estonian_gustatory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -704,7 +704,7 @@ estonian_gustatory_interaction_summary <- summary(estonian_gustatory_interaction
   mutate(language = "estonian")
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
-japanese_gustatory_model <- glm(as.factor(produces) ~ age + japanese_gustatory_rating + lexical_category, 
+japanese_gustatory_model <- glm(as.factor(produces) ~ age + japanese_gustatory_rating+ japanese_freq_rating  + lexical_category, 
                                        data = japanese_instrument_data, family = "binomial")
 japanese_gustatory_effect <- ggpredict(japanese_gustatory_model, terms = "japanese_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -713,7 +713,7 @@ japanese_gustatory_summary <- summary(japanese_gustatory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "japanese_gustatory_rating") %>%
   mutate(language = "japanese") 
-japanese_gustatory_interaction_model <- glm(as.factor(produces) ~ age * japanese_gustatory_rating  + lexical_category, 
+japanese_gustatory_interaction_model <- glm(as.factor(produces) ~ age * japanese_gustatory_rating+ japanese_freq_rating   + lexical_category, 
                                                    data = japanese_instrument_data, family = "binomial")
 japanese_gustatory_interaction_summary <- summary(japanese_gustatory_interaction_model)$coefficients %>% 
   as.data.frame() %>%

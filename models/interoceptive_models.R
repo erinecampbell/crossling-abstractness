@@ -97,7 +97,7 @@ chinese_taiwanese_interoceptive_interaction_summary <- summary(chinese_taiwanese
          p_value = `Pr(>|z|)`)
 
 croatian_instrument_data <- read_rds("norms/croatian/croatian_instrument_data.rds")
-croatian_interoceptive_model <- glm(as.factor(produces) ~ age + croatian_interoceptive_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_interoceptive_model <- glm(as.factor(produces) ~ age + croatian_interoceptive_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_interoceptive_effect <- ggpredict(croatian_interoceptive_model, terms = "croatian_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Croatian",
          variable_coefficient = croatian_interoceptive_model$coefficients[[3]])
@@ -107,7 +107,7 @@ croatian_interoceptive_summary <- summary(croatian_interoceptive_model)$coeffici
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-croatian_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * croatian_interoceptive_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * croatian_interoceptive_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_interoceptive_interaction_summary <- summary(croatian_interoceptive_interaction_model)$coefficients %>% as.data.frame() %>%
   filter(row.names(.) == "age:croatian_interoceptive_rating") %>%
   mutate(language = "croatian",
@@ -653,7 +653,7 @@ swedish_interoceptive_interaction_summary <- summary(swedish_interoceptive_inter
   mutate(language = "swedish")
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
-arabic_interoceptive_model <- glm(as.factor(produces) ~ age + arabic_interoceptive_rating + lexical_category, 
+arabic_interoceptive_model <- glm(as.factor(produces) ~ age + arabic_interoceptive_rating + arabic_freq_rating + lexical_category, 
                            data = arabic_instrument_data, family = "binomial")
 arabic_interoceptive_effect <- ggpredict(arabic_interoceptive_model, terms = "arabic_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
@@ -662,7 +662,7 @@ arabic_interoceptive_summary <- summary(arabic_interoceptive_model)$coefficients
   as.data.frame() %>%
   filter(row.names(.) == "arabic_interoceptive_rating") %>%
   mutate(language = "Arabic (Saudi)") 
-arabic_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * arabic_interoceptive_rating + lexical_category, 
+arabic_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * arabic_interoceptive_rating + arabic_freq_rating + lexical_category, 
                                        data = arabic_instrument_data, family = "binomial")
 arabic_interoceptive_interaction_summary <- summary(arabic_interoceptive_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -670,7 +670,7 @@ arabic_interoceptive_interaction_summary <- summary(arabic_interoceptive_interac
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_interoceptive_model <- glm(as.factor(produces) ~ age + catalan_interoceptive_rating + lexical_category, 
+catalan_interoceptive_model <- glm(as.factor(produces) ~ age + catalan_interoceptive_rating + catalan_freq_rating + lexical_category, 
                             data = catalan_instrument_data, family = "binomial")
 catalan_interoceptive_effect <- ggpredict(catalan_interoceptive_model, terms = "catalan_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -679,7 +679,7 @@ catalan_interoceptive_summary <- summary(catalan_interoceptive_model)$coefficien
   as.data.frame() %>%
   filter(row.names(.) == "catalan_interoceptive_rating") %>%
   mutate(language = "catalan") 
-catalan_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * catalan_interoceptive_rating  + lexical_category, 
+catalan_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * catalan_interoceptive_rating + catalan_freq_rating + lexical_category, 
                                         data = catalan_instrument_data, family = "binomial")
 catalan_interoceptive_interaction_summary <- summary(catalan_interoceptive_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -687,7 +687,7 @@ catalan_interoceptive_interaction_summary <- summary(catalan_interoceptive_inter
   mutate(language = "catalan") 
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
-estonian_interoceptive_model <- glm(as.factor(produces) ~ age + estonian_interoceptive_rating + lexical_category, 
+estonian_interoceptive_model <- glm(as.factor(produces) ~ age + estonian_interoceptive_rating + estonian_freq_rating + lexical_category, 
                              data = estonian_instrument_data, family = "binomial")
 estonian_interoceptive_effect <- ggpredict(estonian_interoceptive_model, terms = "estonian_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -696,7 +696,7 @@ estonian_interoceptive_summary <- summary(estonian_interoceptive_model)$coeffici
   as.data.frame() %>%
   filter(row.names(.) == "estonian_interoceptive_rating") %>%
   mutate(language = "estonian") 
-estonian_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * estonian_interoceptive_rating  + lexical_category, 
+estonian_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * estonian_interoceptive_rating + estonian_freq_rating  + lexical_category, 
                                          data = estonian_instrument_data, family = "binomial")
 estonian_interoceptive_interaction_summary <- summary(estonian_interoceptive_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -704,7 +704,7 @@ estonian_interoceptive_interaction_summary <- summary(estonian_interoceptive_int
   mutate(language = "estonian")
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
-japanese_interoceptive_model <- glm(as.factor(produces) ~ age + japanese_interoceptive_rating + lexical_category, 
+japanese_interoceptive_model <- glm(as.factor(produces) ~ age + japanese_interoceptive_rating+ japanese_freq_rating  + lexical_category, 
                              data = japanese_instrument_data, family = "binomial")
 japanese_interoceptive_effect <- ggpredict(japanese_interoceptive_model, terms = "japanese_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -713,7 +713,7 @@ japanese_interoceptive_summary <- summary(japanese_interoceptive_model)$coeffici
   as.data.frame() %>%
   filter(row.names(.) == "japanese_interoceptive_rating") %>%
   mutate(language = "japanese") 
-japanese_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * japanese_interoceptive_rating  + lexical_category, 
+japanese_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * japanese_interoceptive_rating+ japanese_freq_rating   + lexical_category, 
                                          data = japanese_instrument_data, family = "binomial")
 japanese_interoceptive_interaction_summary <- summary(japanese_interoceptive_interaction_model)$coefficients %>% 
   as.data.frame() %>%
