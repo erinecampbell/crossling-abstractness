@@ -178,5 +178,13 @@ CDI_mega_dictionary <- CDI_mega_dictionary %>%
                                                                           source_language = "en", 
                                                                           target_language = "tr")))                                   
 
+CDI_mega_dictionary <- CDI_mega_dictionary %>%
+  mutate(across(
+    starts_with("dictionary_"),
+    ~ .x %>%
+      tolower() %>%                                 
+      str_replace("\\s*\\([^\\)]+\\)", "") %>%      # remove " ( ... )"
+      str_squish()                                   # trim + remove extra spaces
+  ))
 
 write_csv(CDI_mega_dictionary, "norms/CDI_mega_dictionary.csv")
