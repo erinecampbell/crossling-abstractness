@@ -420,9 +420,24 @@ italian_concreteness_interaction_summary <- summary(italian_concreteness_interac
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
 
-# kigiriama_concreteness_model <- glm(produces ~ age + kigiriama_concreteness_rating, data = kigiriama_instrument_data, family = "binomial")
-# kigiriama_concreteness_effect <- ggeffect(kigiriama_concreteness_model, terms = "kigiriama_concreteness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Kigiriama")
+kigiriama_instrument_data <- read_rds("norms/kigiriama/kigiriama_instrument_data.rds")
+kigiriama_concreteness_model <- glm(produces ~ age + kigiriama_concreteness_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_concreteness_effect <- ggeffect(kigiriama_concreteness_model, terms = "kigiriama_concreteness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "kigiriama",
+         variable_coefficient = kigiriama_concreteness_model$coefficients[[3]])
+kigiriama_concreteness_summary <- summary(kigiriama_concreteness_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "kigiriama_concreteness_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+kigiriama_concreteness_interaction_model <- glm(produces ~ age * kigiriama_concreteness_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_concreteness_interaction_summary <- summary(kigiriama_concreteness_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:kigiriama_concreteness_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 kiswahili_instrument_data <- read_rds("norms/kiswahili/kiswahili_instrument_data.rds")
 kiswahili_concreteness_model <- glm(produces ~ age + kiswahili_concreteness_rating + kiswahili_freq_rating + lexical_category + word_length, data = kiswahili_instrument_data, family = "binomial")
@@ -518,10 +533,25 @@ persian_concreteness_interaction_summary <- summary(persian_concreteness_interac
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-# portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
-# portuguese_concreteness_model <- glm(produces ~ age + portuguese_concreteness_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
-# portuguese_concreteness_effect <- ggeffect(portuguese_concreteness_model, terms = "portuguese_concreteness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Portuguese (European)")
+
+portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
+portuguese_concreteness_model <- glm(produces ~ age + portuguese_concreteness_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_concreteness_effect <- ggeffect(portuguese_concreteness_model, terms = "portuguese_concreteness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Farsi",
+         variable_coefficient = portuguese_concreteness_model$coefficients[[3]])
+portuguese_concreteness_summary <- summary(portuguese_concreteness_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "portuguese_concreteness_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+portuguese_concreteness_interaction_model <- glm(produces ~ age * portuguese_concreteness_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_concreteness_interaction_summary <- summary(portuguese_concreteness_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:portuguese_concreteness_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 russian_instrument_data <- read_rds("norms/russian/russian_instrument_data.rds")
 russian_concreteness_model <- glm(produces ~ age + russian_concreteness_rating + russian_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
@@ -720,10 +750,24 @@ japanese_concreteness_interaction_summary <- summary(japanese_concreteness_inter
   filter(row.names(.) == "age:japanese_concreteness_rating") %>%
   mutate(language = "japanese")
 
-# turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
-# turkish_concreteness_model <- glm(produces ~ age + turkish_concreteness_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
-# turkish_concreteness_effect <- ggeffect(turkish_concreteness_model, terms = "turkish_concreteness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Turkish")
+turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
+turkish_concreteness_model <- glm(produces ~ age + turkish_concreteness_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
+turkish_concreteness_effect <- ggeffect(turkish_concreteness_model, terms = "turkish_concreteness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Farsi",
+         variable_coefficient = turkish_concreteness_model$coefficients[[3]])
+turkish_concreteness_summary <- summary(turkish_concreteness_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "turkish_concreteness_rating") %>%
+  mutate(language = "turkish",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+turkish_concreteness_interaction_model <- glm(produces ~ age * turkish_concreteness_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
+turkish_concreteness_interaction_summary <- summary(turkish_concreteness_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:turkish_concreteness_rating") %>%
+  mutate(language = "turkish",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 all_concreteness_effects <- bind_rows(asl_concreteness_effect,
                              bsl_concreteness_effect,
@@ -747,11 +791,13 @@ all_concreteness_effects <- bind_rows(asl_concreteness_effect,
                              hebrew_concreteness_effect,
                              hungarian_concreteness_effect,
                              irish_concreteness_effect,
+                             kigiriama_concreteness_effect,
                              kiswahili_concreteness_effect,
                              korean_concreteness_effect,
                              latvian_concreteness_effect,
                              norwegian_concreteness_effect,
                              persian_concreteness_effect,
+                             portuguese_concreteness_effect,
                              russian_concreteness_effect,
                              slovak_concreteness_effect,
                              spanish_argentinian_concreteness_effect,
@@ -763,12 +809,12 @@ all_concreteness_effects <- bind_rows(asl_concreteness_effect,
                              arabic_concreteness_effect,
                              catalan_concreteness_effect,
                              estonian_concreteness_effect,
-                             japanese_concreteness_effect
-                             # , turkish_concreteness_effect
+                             japanese_concreteness_effect, 
+                             turkish_concreteness_effect
 )
 write_rds(all_concreteness_effects, "models/effects/all_concreteness_effects.rds")
 
-all_concreteness_effects_plot <- ggplot(all_concreteness_effects %>% filter(language!="Kiswahili"))  + 
+all_concreteness_effects_plot <- ggplot(all_concreteness_effects)  + 
   geom_smooth(size = 1, aes(x=x, y=predicted,color=language)) +
   geom_ribbon(alpha = .3, aes(ymin= conf.low, ymax=conf.high,  fill=language, x=x, y=predicted)) +
   scale_y_continuous(limits=c(0,1)) +
@@ -800,11 +846,13 @@ all_concreteness_summaries <- bind_rows(asl_concreteness_summary,
                                hebrew_concreteness_summary,
                                hungarian_concreteness_summary,
                                irish_concreteness_summary,
+                               kigiriama_concreteness_summary,
                                kiswahili_concreteness_summary,
                                korean_concreteness_summary,
                                latvian_concreteness_summary,
                                norwegian_concreteness_summary,
                                persian_concreteness_summary,
+                               portuguese_concreteness_summary,
                                russian_concreteness_summary,
                                slovak_concreteness_summary,
                                spanish_argentinian_concreteness_summary,
@@ -816,8 +864,8 @@ all_concreteness_summaries <- bind_rows(asl_concreteness_summary,
                                arabic_concreteness_summary,
                                catalan_concreteness_summary,
                                estonian_concreteness_summary,
-                               japanese_concreteness_summary
-                               # , turkish_concreteness_summary
+                               japanese_concreteness_summary, 
+                               turkish_concreteness_summary
 ) %>%
   mutate(variable = "Concreteness",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",

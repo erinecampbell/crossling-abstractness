@@ -420,9 +420,27 @@ italian_boi_interaction_summary <- summary(italian_boi_interaction_model)$coeffi
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
 
-# kigiriama_boi_model <- glm(produces ~ age + kigiriama_boi_rating, data = kigiriama_instrument_data, family = "binomial")
-# kigiriama_boi_effect <- ggeffect(kigiriama_boi_model, terms = "kigiriama_boi_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Kigiriama")
+kigiriama_instrument_data <- read_rds("norms/kigiriama/kigiriama_instrument_data.rds")
+kigiriama_boi_model <- glm(produces ~ age + kigiriama_boi_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_boi_effect <- ggeffect(kigiriama_boi_model, terms = "kigiriama_boi_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "kigiriama",
+         variable_coefficient = kigiriama_boi_model$coefficients[[3]])
+kigiriama_boi_effect <- ggeffect(kigiriama_boi_model, terms = "kigiriama_boi_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "kigiriama",
+         variable_coefficient = kigiriama_boi_model$coefficients[[3]])
+kigiriama_boi_summary <- summary(kigiriama_boi_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "kigiriama_boi_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+kigiriama_boi_interaction_model <- glm(produces ~ age * kigiriama_boi_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_boi_interaction_summary <- summary(kigiriama_boi_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:kigiriama_boi_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 kiswahili_instrument_data <- read_rds("norms/kiswahili/kiswahili_instrument_data.rds")
 kiswahili_boi_model <- glm(produces ~ age + kiswahili_boi_rating + kiswahili_freq_rating + lexical_category + word_length, data = kiswahili_instrument_data, family = "binomial")
@@ -518,10 +536,25 @@ persian_boi_interaction_summary <- summary(persian_boi_interaction_model)$coeffi
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-# portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
-# portuguese_boi_model <- glm(produces ~ age + portuguese_boi_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
-# portuguese_boi_effect <- ggeffect(portuguese_boi_model, terms = "portuguese_boi_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Portuguese (European)")
+
+portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
+portuguese_boi_model <- glm(produces ~ age + portuguese_boi_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_boi_effect <- ggeffect(portuguese_boi_model, terms = "portuguese_boi_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Farsi",
+         variable_coefficient = portuguese_boi_model$coefficients[[3]])
+portuguese_boi_summary <- summary(portuguese_boi_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "portuguese_boi_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+portuguese_boi_interaction_model <- glm(produces ~ age * portuguese_boi_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_boi_interaction_summary <- summary(portuguese_boi_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:portuguese_boi_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 russian_instrument_data <- read_rds("norms/russian/russian_instrument_data.rds")
 russian_boi_model <- glm(produces ~ age + russian_boi_rating + russian_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
@@ -720,10 +753,22 @@ japanese_boi_interaction_summary <- summary(japanese_boi_interaction_model)$coef
   filter(row.names(.) == "age:japanese_boi_rating") %>%
   mutate(language = "japanese")
 
-# turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
-# turkish_boi_model <- glm(produces ~ age + turkish_boi_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
-# turkish_boi_effect <- ggeffect(turkish_boi_model, terms = "turkish_boi_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Turkish")
+turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
+turkish_boi_model <- glm(as.factor(produces) ~ age + turkish_boi_rating + turkish_freq_rating + lexical_category, 
+                          data = turkish_instrument_data, family = "binomial")
+turkish_boi_effect <- ggpredict(turkish_boi_model, terms = "turkish_boi_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "American Sign Language",
+         variable_coefficient = turkish_boi_model$coefficients[[3]])
+turkish_boi_summary <- summary(turkish_boi_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "turkish_boi_rating") %>%
+  mutate(language = "turkish") 
+turkish_boi_interaction_model <- glm(as.factor(produces) ~ age * turkish_boi_rating  + turkish_freq_rating + lexical_category, 
+                                      data = turkish_instrument_data, family = "binomial")
+turkish_boi_interaction_summary <- summary(turkish_boi_interaction_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "age:turkish_boi_rating") %>%
+  mutate(language = "turkish")
 
 all_boi_effects <- bind_rows(asl_boi_effect,
                                   bsl_boi_effect,
@@ -747,11 +792,13 @@ all_boi_effects <- bind_rows(asl_boi_effect,
                                   hebrew_boi_effect,
                                   hungarian_boi_effect,
                                   irish_boi_effect,
+                                  kigiriama_boi_effect,
                                   kiswahili_boi_effect,
                                   korean_boi_effect,
                                   latvian_boi_effect,
                                   norwegian_boi_effect,
                                   persian_boi_effect,
+                                  portuguese_boi_effect,
                                   russian_boi_effect,
                                   slovak_boi_effect,
                                   spanish_argentinian_boi_effect,
@@ -763,12 +810,12 @@ all_boi_effects <- bind_rows(asl_boi_effect,
                                   arabic_boi_effect,
                                   catalan_boi_effect,
                                   estonian_boi_effect,
-                                  japanese_boi_effect
-                                  # , turkish_boi_effect
+                                  japanese_boi_effect, 
+                                  turkish_boi_effect
 )
 write_rds(all_boi_effects, "models/effects/all_boi_effects.rds")
 
-all_boi_effects_plot <- ggplot(all_boi_effects %>% filter(language!="Kiswahili"))  + 
+all_boi_effects_plot <- ggplot(all_boi_effects)  + 
   geom_smooth(size = 1, aes(x=x, y=predicted,color=language)) +
   geom_ribbon(alpha = .3, aes(ymin= conf.low, ymax=conf.high,  fill=language, x=x, y=predicted)) +
   scale_y_continuous(limits=c(0,1)) +
@@ -800,11 +847,13 @@ all_boi_summaries <- bind_rows(asl_boi_summary,
                                     hebrew_boi_summary,
                                     hungarian_boi_summary,
                                     irish_boi_summary,
+                                    kigiriama_boi_summary,
                                     kiswahili_boi_summary,
                                     korean_boi_summary,
                                     latvian_boi_summary,
                                     norwegian_boi_summary,
                                     persian_boi_summary,
+                                    portuguese_boi_summary,
                                     russian_boi_summary,
                                     slovak_boi_summary,
                                     spanish_argentinian_boi_summary,
@@ -816,8 +865,8 @@ all_boi_summaries <- bind_rows(asl_boi_summary,
                                     arabic_boi_summary,
                                     catalan_boi_summary,
                                     estonian_boi_summary,
-                                    japanese_boi_summary
-                                    # , turkish_boi_summary
+                                    japanese_boi_summary, 
+                                    turkish_boi_summary
 ) %>%
   mutate(variable = "Body Object Interaction",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",
@@ -849,11 +898,13 @@ all_boi_interaction_summaries <- bind_rows(asl_boi_interaction_summary,
                                                 hebrew_boi_interaction_summary,
                                                 hungarian_boi_interaction_summary,
                                                 irish_boi_interaction_summary,
+                                                kigiriama_boi_interaction_summary,
                                                 kiswahili_boi_interaction_summary,
                                                 korean_boi_interaction_summary,
                                                 latvian_boi_interaction_summary,
                                                 norwegian_boi_interaction_summary,
                                                 persian_boi_interaction_summary,
+                                                portuguese_boi_interaction_summary,
                                                 russian_boi_interaction_summary,
                                                 slovak_boi_interaction_summary,
                                                 spanish_argentinian_boi_interaction_summary,
@@ -865,8 +916,8 @@ all_boi_interaction_summaries <- bind_rows(asl_boi_interaction_summary,
                                                 arabic_boi_interaction_summary,
                                                 catalan_boi_interaction_summary,
                                                 estonian_boi_interaction_summary,
-                                                japanese_boi_interaction_summary
-                                                # , turkish_boi_summary
+                                                japanese_boi_interaction_summary, 
+                                                turkish_boi_summary
 ) %>%
   mutate(variable = "Body Object Interaction",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",

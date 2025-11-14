@@ -535,24 +535,23 @@ persian_auditory_interaction_summary <- summary(persian_auditory_interaction_mod
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
 
-# portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
-# portuguese_auditory_model <- glm(produces ~ age + portuguese_auditory_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
-# portuguese_auditory_effect <- ggeffect(portuguese_auditory_model, terms = "portuguese_auditory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Portuguese (European)")
-# portuguese_auditory_summary <- summary(portuguese_auditory_model)$coefficients %>% as.data.frame() %>%
-#   filter(row.names(.) == "portuguese_auditory_rating") %>%
-#   mutate(language = "portuguese",
-#          effect_size = Estimate,
-#          standard_error = `Std. Error`,
-#          p_value = `Pr(>|z|)`)
-# portuguese_auditory_interaction_model <- glm(produces ~ age * portuguese_auditory_rating + portuguese_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
-# portuguese_auditory_interaction_summary <- summary(russian_auditory_interaction_model)$coefficients %>% as.data.frame() %>%
-#   filter(row.names(.) == "age:portuguese_auditory_rating") %>%
-#   mutate(language = "portuguese",
-#          effect_size = Estimate,
-#          standard_error = `Std. Error`,
-#          p_value = `Pr(>|z|)`)
-# Error in `contrasts<-`(`*tmp*`, value = contr.funs[1 + isOF[nn]]) : contrasts can be applied only to factors with 2 or more levels
+portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
+portuguese_auditory_model <- glm(produces ~ age + portuguese_auditory_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_auditory_effect <- ggeffect(portuguese_auditory_model, terms = "portuguese_auditory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Portuguese (European)")
+portuguese_auditory_summary <- summary(portuguese_auditory_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "portuguese_auditory_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+portuguese_auditory_interaction_model <- glm(produces ~ age * portuguese_auditory_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_auditory_interaction_summary <- summary(portuguese_auditory_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:portuguese_auditory_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 russian_instrument_data <- read_rds("norms/russian/russian_instrument_data.rds")
 russian_auditory_model <- glm(produces ~ age + russian_auditory_rating + russian_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
@@ -751,10 +750,20 @@ japanese_auditory_interaction_summary <- summary(japanese_auditory_interaction_m
   filter(row.names(.) == "age:japanese_auditory_rating") %>%
   mutate(language = "japanese")
 
-# turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
-# turkish_auditory_model <- glm(produces ~ age + turkish_auditory_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
-# turkish_auditory_effect <- ggeffect(turkish_auditory_model, terms = "turkish_auditory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Turkish")
+turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
+turkish_auditory_model <- glm(produces ~ age + turkish_auditory_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
+turkish_auditory_effect <- ggeffect(turkish_auditory_model, terms = "turkish_auditory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Turkish")
+turkish_auditory_summary <- summary(turkish_auditory_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "turkish_auditory_rating") %>%
+  mutate(language = "turkish") 
+turkish_auditory_interaction_model <- glm(as.factor(produces) ~ age * turkish_auditory_rating  + turkish_freq_rating + lexical_category, 
+                                           data = turkish_instrument_data, family = "binomial")
+turkish_auditory_interaction_summary <- summary(turkish_auditory_interaction_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "age:turkish_auditory_rating") %>%
+  mutate(language = "turkish")
 
 all_auditory_effects <- bind_rows(asl_auditory_effect,
                              bsl_auditory_effect,
@@ -783,6 +792,7 @@ all_auditory_effects <- bind_rows(asl_auditory_effect,
                              latvian_auditory_effect,
                              norwegian_auditory_effect,
                              persian_auditory_effect,
+                             portuguese_auditory_effect,
                              russian_auditory_effect,
                              slovak_auditory_effect,
                              spanish_argentinian_auditory_effect,
@@ -794,12 +804,12 @@ all_auditory_effects <- bind_rows(asl_auditory_effect,
                              arabic_auditory_effect,
                              catalan_auditory_effect,
                              estonian_auditory_effect,
-                             japanese_auditory_effect
-                             # , turkish_auditory_effect
+                             japanese_auditory_effect, 
+                             turkish_auditory_effect
 )
 write_rds(all_auditory_effects, "models/effects/all_auditory_effects.rds")
 
-all_auditory_effects_plot <- ggplot(all_auditory_effects %>% filter(language!="Kiswahili"))  + 
+all_auditory_effects_plot <- ggplot(all_auditory_effects)  + 
   geom_smooth(size = 1, aes(x=x, y=predicted,color=language)) +
   geom_ribbon(alpha = .3, aes(ymin= conf.low, ymax=conf.high,  fill=language, x=x, y=predicted)) +
   scale_y_continuous(limits=c(0,1)) +
@@ -832,10 +842,12 @@ all_auditory_summaries <- bind_rows(asl_auditory_summary,
                                hungarian_auditory_summary,
                                irish_auditory_summary,
                                kiswahili_auditory_summary,
+                               kigiriama_auditory_summary,
                                korean_auditory_summary,
                                latvian_auditory_summary,
                                norwegian_auditory_summary,
                                persian_auditory_summary,
+                               portuguese_auditory_summary,
                                russian_auditory_summary,
                                slovak_auditory_summary,
                                spanish_argentinian_auditory_summary,
@@ -847,8 +859,8 @@ all_auditory_summaries <- bind_rows(asl_auditory_summary,
                                arabic_auditory_summary,
                                catalan_auditory_summary,
                                estonian_auditory_summary,
-                               japanese_auditory_summary
-                               # , turkish_auditory_summary
+                               japanese_auditory_summary,
+                               turkish_auditory_summary
 ) %>%
   mutate(variable = "auditory",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",
@@ -881,10 +893,12 @@ all_auditory_interaction_summaries <- bind_rows(asl_auditory_interaction_summary
                                     hungarian_auditory_interaction_summary,
                                     irish_auditory_interaction_summary,
                                     kiswahili_auditory_interaction_summary,
+                                    kigiriama_auditory_interaction_summary,
                                     korean_auditory_interaction_summary,
                                     latvian_auditory_interaction_summary,
                                     norwegian_auditory_interaction_summary,
                                     persian_auditory_interaction_summary,
+                                    portuguese_auditory_interaction_summary,
                                     russian_auditory_interaction_summary,
                                     slovak_auditory_interaction_summary,
                                     spanish_argentinian_auditory_interaction_summary,
@@ -896,8 +910,8 @@ all_auditory_interaction_summaries <- bind_rows(asl_auditory_interaction_summary
                                     arabic_auditory_interaction_summary,
                                     catalan_auditory_interaction_summary,
                                     estonian_auditory_interaction_summary,
-                                    japanese_auditory_interaction_summary
-                                    # , turkish_auditory_summary
+                                    japanese_auditory_interaction_summary,
+                                    turkish_auditory_interaction_summary
 ) %>%
   mutate(variable = "age_auditory",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",

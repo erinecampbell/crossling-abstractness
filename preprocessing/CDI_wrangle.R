@@ -593,6 +593,7 @@ portuguese_instrument_data_WS <- get_instrument_data("Portuguese (European)", fo
 
 portuguese_instrument_data <- bind_rows(portuguese_instrument_data_WG, 
                                      portuguese_instrument_data_WS) %>%
+  mutate(item_definition = tolower(item_definition)) %>%
   left_join((portuguese_ratings_subset %>% distinct()), by = c("item_definition" = "Portuguese (European)"))%>%
   mutate(produces = as.factor(produces),
          word_length = str_length(item_definition)) %>%
@@ -746,6 +747,7 @@ turkish_instrument_data_WS <- get_instrument_data("Turkish", form = "WS", admini
 
 turkish_instrument_data <- bind_rows(turkish_instrument_data_WG, 
                                      turkish_instrument_data_WS) %>%
+  mutate(item_definition = tolower(item_definition)) %>%
   left_join((turkish_ratings_subset %>% distinct()), by = c("item_definition" = "Turkish")) %>%
   mutate(produces = as.factor(produces),
          word_length = str_length(item_definition)) %>%
@@ -1223,6 +1225,7 @@ portuguese_WS_aoas <- fit_aoa(
 )
 portuguese_aoas <- bind_rows(portuguese_WG_aoas,
                              portuguese_WS_aoas) %>%
+  mutate(item_definition = tolower(item_definition)) %>%
   left_join(portuguese_ratings_subset, by = c("item_definition" = "Portuguese (European)"))
 
 russian_WG_aoas <- fit_aoa(
