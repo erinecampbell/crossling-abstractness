@@ -2,8 +2,10 @@
 all_auditory_summaries <- read_rds("models/effects/all_auditory_summaries.rds") 
 all_boi_summaries <- read_rds("models/effects/all_boi_summaries.rds") 
 all_concreteness_summaries <- read_rds("models/effects/all_concreteness_summaries.rds")
+all_cognitiveness_summaries <- read_rds("models/effects/all_cognitiveness_summaries.rds")
 all_contextdiversity_summaries <- read_rds("models/effects/all_CD_summaries.rds") 
 all_emotionalarousal_summaries <- read_rds("models/effects/all_emotionalarousal_summaries.rds") 
+all_emotionalvalence_summaries <- read_rds("models/effects/all_emotionalvalence_summaries.rds") 
 all_gustatory_summaries <- read_rds("models/effects/all_gustatory_summaries.rds")
 all_haptic_summaries <- read_rds("models/effects/all_haptic_summaries.rds") 
 all_iconicity_summaries <- read_rds("models/effects/all_iconicity_summaries.rds") 
@@ -15,9 +17,11 @@ all_visual_summaries <- read_rds("models/effects/all_visual_summaries.rds")
 
 all_summaries <- bind_rows(all_auditory_summaries,
                          all_boi_summaries,
+                         all_cognitiveness_summaries,
                          all_concreteness_summaries,
                          all_contextdiversity_summaries,
                          all_emotionalarousal_summaries,
+                         all_emotionalvalence_summaries,
                          all_gustatory_summaries,
                          all_haptic_summaries,
                          all_iconicity_summaries,
@@ -27,12 +31,21 @@ all_summaries <- bind_rows(all_auditory_summaries,
                          all_socialness_summaries,
                          all_visual_summaries
                          ) %>%
-  mutate(variable_category = case_when(variable %in% c("auditory", "Body Object Interaction", "Concreteness", "Gustatory", "haptic", "imageability", "interoceptive", "olfactory", "visual") ~ "sensorimotor",
-                                       variable %in% c("Emotional Arousal", "socialness") ~ "social-emotional",
+  mutate(variable_category = case_when(variable %in% c("auditory", "Body Object Interaction", "Concreteness", "gustatory", "haptic", "imageability", "olfactory", "visual") ~ "sensorimotor",
+                                       variable %in% c("Emotional Arousal", "socialness","interoceptive", "Cognitiveness", "Emotional valence") ~ "social-emotional",
                                        variable == "iconicity" ~ "form-meaning relationship",
                                        variable == "contextdiversity" ~ "word usage"),
          effect_size = Estimate,
          standard_error = `Std. Error`)
+
+
+
+maineffect_outliers <- all_summaries %>%
+  group_by(variable) %>%
+  filter(Estimate == max(Estimate) | Estimate == min(Estimate)) %>%
+  ungroup()
+
+
 
 summary_of_maineffects <- ggplot(all_summaries, aes(y=reorder(variable, Estimate, FUN=mean), x=Estimate, color=variable_category, fill=variable_category)) +
   geom_vline(xintercept = 0)+
@@ -43,12 +56,18 @@ summary_of_maineffects <- ggplot(all_summaries, aes(y=reorder(variable, Estimate
   scale_shape_manual(values = c(significant = 19, ns = 1)) +
   theme_minimal() +
   ylab("") +
-  theme(text=element_text(size=14)) +
+  theme(text=element_text(size=14), legend.position = "none") +
   scale_color_manual(values = c("#3B9AB2","#CC0000", "#EBCC2A", "#081D58"))+
   scale_fill_manual(values = c("#3B9AB2","#CC0000", "#EBCC2A", "#081D58"))+
   stat_summary(fun.data = "mean_cl_boot", color = 'black') +
   ggtitle("Variable Effects in Each Language") + 
-  guides(shape="none")
+  guides(shape="none") +
+  geom_text(
+    data = maineffect_outliers,
+    aes(label = language),
+    vjust = -1.5, 
+    size = 3
+  )
   
 summary_of_maineffects
 ggsave(plot=summary_of_maineffects,filename="models/plots/summary_of_maineffects.png", device="png")
@@ -69,9 +88,11 @@ summaries_summary <- all_summaries %>%
 
 all_auditory_interaction_summaries <- read_rds("models/effects/all_auditory_interaction_summaries.rds") 
 all_boi_interaction_summaries <- read_rds("models/effects/all_boi_interaction_summaries.rds") 
+all_cognitiveness_interaction_summaries <- read_rds("models/effects/all_cognitiveness_interaction_summaries.rds")
 all_concreteness_interaction_summaries <- read_rds("models/effects/all_concreteness_interaction_summaries.rds")
 all_contextdiversity_interaction_summaries <- read_rds("models/effects/all_CD_interaction_summaries.rds") 
 all_emotionalarousal_interaction_summaries <- read_rds("models/effects/all_emotionalarousal_interaction_summaries.rds") 
+all_emotionalvalence_interaction_summaries <- read_rds("models/effects/all_emotionalvalence_interaction_summaries.rds") 
 all_gustatory_interaction_summaries <- read_rds("models/effects/all_gustatory_interaction_summaries.rds")
 all_haptic_interaction_summaries <- read_rds("models/effects/all_haptic_interaction_summaries.rds") 
 all_iconicity_interaction_summaries <- read_rds("models/effects/all_iconicity_interaction_summaries.rds") 
@@ -83,9 +104,11 @@ all_visual_interaction_summaries <- read_rds("models/effects/all_visual_interact
 
 all_interaction_summaries <- bind_rows(all_auditory_interaction_summaries,
                            all_boi_interaction_summaries,
+                           all_cognitiveness_interaction_summaries,
                            all_concreteness_interaction_summaries,
                            all_contextdiversity_interaction_summaries,
                            all_emotionalarousal_interaction_summaries,
+                           all_emotionalvalence_interaction_summaries,
                            all_gustatory_interaction_summaries,
                            all_haptic_interaction_summaries,
                            all_iconicity_interaction_summaries,
@@ -96,8 +119,8 @@ all_interaction_summaries <- bind_rows(all_auditory_interaction_summaries,
                            all_visual_interaction_summaries
 ) %>%
   mutate(variable = str_remove_all(variable, "age_"),
-    variable_category = case_when(variable %in% c("auditory", "Body Object Interaction", "Concreteness", "Gustatory", "haptic", "imageability", "interoceptive", "olfactory", "visual") ~ "sensorimotor",
-                                       variable %in% c("Emotional Arousal", "socialness") ~ "social-emotional",
+    variable_category = case_when(variable %in% c("auditory", "Body Object Interaction", "Concreteness", "gustatory", "haptic", "imageability", "olfactory", "visual") ~ "sensorimotor",
+                                       variable %in% c("Emotional Arousal", "socialness", "interoceptive", "Cognitiveness", "Emotional valence") ~ "social-emotional",
                                        variable == "iconicity" ~ "form-meaning relationship",
                                        variable == "contextdiversity" ~ "word usage"),
          effect_size = Estimate,
@@ -145,8 +168,6 @@ ggplot(all_summaries, aes(y=language, x=Estimate, color=variable)) +
   theme(text=element_text(size=14)) 
 
 by_language_effects
-by_language_effects +
-  facet_wrap(.~language)
 
 # what are our goals for this plot? ^
 #rank the variables within language
