@@ -420,9 +420,24 @@ italian_haptic_interaction_summary <- summary(italian_haptic_interaction_model)$
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
 
-# kigiriama_haptic_model <- glm(produces ~ age + kigiriama_haptic_rating, data = kigiriama_instrument_data, family = "binomial")
-# kigiriama_haptic_effect <- ggeffect(kigiriama_haptic_model, terms = "kigiriama_haptic_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Kigiriama")
+kigiriama_instrument_data <- read_rds("norms/kigiriama/kigiriama_instrument_data.rds")
+kigiriama_haptic_model <- glm(produces ~ age + kigiriama_haptic_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_haptic_effect <- ggeffect(kigiriama_haptic_model, terms = "kigiriama_haptic_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "kigiriama",
+         variable_coefficient = kigiriama_haptic_model$coefficients[[3]])
+kigiriama_haptic_summary <- summary(kigiriama_haptic_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "kigiriama_haptic_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+kigiriama_haptic_interaction_model <- glm(produces ~ age * kigiriama_haptic_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_haptic_interaction_summary <- summary(kigiriama_haptic_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:kigiriama_haptic_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 kiswahili_instrument_data <- read_rds("norms/kiswahili/kiswahili_instrument_data.rds")
 kiswahili_haptic_model <- glm(produces ~ age + kiswahili_haptic_rating + kiswahili_freq_rating + lexical_category + word_length, data = kiswahili_instrument_data, family = "binomial")
@@ -518,10 +533,25 @@ persian_haptic_interaction_summary <- summary(persian_haptic_interaction_model)$
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-# portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
-# portuguese_haptic_model <- glm(produces ~ age + portuguese_haptic_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
-# portuguese_haptic_effect <- ggeffect(portuguese_haptic_model, terms = "portuguese_haptic_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Portuguese (European)")
+
+portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
+portuguese_haptic_model <- glm(produces ~ age + portuguese_haptic_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_haptic_effect <- ggeffect(portuguese_haptic_model, terms = "portuguese_haptic_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Farsi",
+         variable_coefficient = portuguese_haptic_model$coefficients[[3]])
+portuguese_haptic_summary <- summary(portuguese_haptic_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "portuguese_haptic_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+portuguese_haptic_interaction_model <- glm(produces ~ age * portuguese_haptic_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_haptic_interaction_summary <- summary(portuguese_haptic_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:portuguese_haptic_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 russian_instrument_data <- read_rds("norms/russian/russian_instrument_data.rds")
 russian_haptic_model <- glm(produces ~ age + russian_haptic_rating + russian_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
@@ -670,7 +700,7 @@ arabic_haptic_interaction_summary <- summary(arabic_haptic_interaction_model)$co
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_haptic_model <- glm(as.factor(produces) ~ age + catalan_haptic_rating + catalan_freq_rating + lexical_category, 
+catalan_haptic_model <- glm(as.factor(produces) ~ age + catalan_haptic_rating + catalan_freq_rating+ lexical_category, 
                                data = catalan_instrument_data, family = "binomial")
 catalan_haptic_effect <- ggpredict(catalan_haptic_model, terms = "catalan_haptic_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
@@ -679,7 +709,7 @@ catalan_haptic_summary <- summary(catalan_haptic_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "catalan_haptic_rating") %>%
   mutate(language = "catalan") 
-catalan_haptic_interaction_model <- glm(as.factor(produces) ~ age * catalan_haptic_rating + catalan_freq_rating + lexical_category, 
+catalan_haptic_interaction_model <- glm(as.factor(produces) ~ age * catalan_haptic_rating +catalan_freq_rating  + lexical_category, 
                                            data = catalan_instrument_data, family = "binomial")
 catalan_haptic_interaction_summary <- summary(catalan_haptic_interaction_model)$coefficients %>% 
   as.data.frame() %>%
@@ -713,17 +743,29 @@ japanese_haptic_summary <- summary(japanese_haptic_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "japanese_haptic_rating") %>%
   mutate(language = "japanese") 
-japanese_haptic_interaction_model <- glm(as.factor(produces) ~ age * japanese_haptic_rating+ japanese_freq_rating   + lexical_category, 
+japanese_haptic_interaction_model <- glm(as.factor(produces) ~ age * japanese_haptic_rating + japanese_freq_rating  + lexical_category, 
                                             data = japanese_instrument_data, family = "binomial")
 japanese_haptic_interaction_summary <- summary(japanese_haptic_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:japanese_haptic_rating") %>%
   mutate(language = "japanese")
 
-# turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
-# turkish_haptic_model <- glm(produces ~ age + turkish_haptic_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
-# turkish_haptic_effect <- ggeffect(turkish_haptic_model, terms = "turkish_haptic_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Turkish")
+turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
+turkish_haptic_model <- glm(as.factor(produces) ~ age + turkish_haptic_rating+ turkish_freq_rating  + lexical_category, 
+                               data = turkish_instrument_data, family = "binomial")
+turkish_haptic_effect <- ggpredict(turkish_haptic_model, terms = "turkish_haptic_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "American Sign Language",
+         variable_coefficient = turkish_haptic_model$coefficients[[3]])
+turkish_haptic_summary <- summary(turkish_haptic_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "turkish_haptic_rating") %>%
+  mutate(language = "turkish") 
+turkish_haptic_interaction_model <- glm(as.factor(produces) ~ age * turkish_haptic_rating + turkish_freq_rating  + lexical_category, 
+                                           data = turkish_instrument_data, family = "binomial")
+turkish_haptic_interaction_summary <- summary(turkish_haptic_interaction_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "age:turkish_haptic_rating") %>%
+  mutate(language = "turkish")
 
 all_haptic_effects <- bind_rows(asl_haptic_effect,
                                    bsl_haptic_effect,
@@ -747,11 +789,13 @@ all_haptic_effects <- bind_rows(asl_haptic_effect,
                                    hebrew_haptic_effect,
                                    hungarian_haptic_effect,
                                    irish_haptic_effect,
+                                   kigiriama_haptic_effect,
                                    kiswahili_haptic_effect,
                                    korean_haptic_effect,
                                    latvian_haptic_effect,
                                    norwegian_haptic_effect,
                                    persian_haptic_effect,
+                                   portuguese_haptic_effect,
                                    russian_haptic_effect,
                                    slovak_haptic_effect,
                                    spanish_argentinian_haptic_effect,
@@ -763,8 +807,8 @@ all_haptic_effects <- bind_rows(asl_haptic_effect,
                                    arabic_haptic_effect,
                                    catalan_haptic_effect,
                                    estonian_haptic_effect,
-                                   japanese_haptic_effect
-                                   # , turkish_haptic_effect
+                                   japanese_haptic_effect, 
+                                   turkish_haptic_effect
 )
 write_rds(all_haptic_effects, "models/effects/all_haptic_effects.rds")
 
@@ -800,11 +844,13 @@ all_haptic_summaries <- bind_rows(asl_haptic_summary,
                                      hebrew_haptic_summary,
                                      hungarian_haptic_summary,
                                      irish_haptic_summary,
+                                     kigiriama_haptic_summary,
                                      kiswahili_haptic_summary,
                                      korean_haptic_summary,
                                      latvian_haptic_summary,
                                      norwegian_haptic_summary,
                                      persian_haptic_summary,
+                                     portuguese_haptic_summary,
                                      russian_haptic_summary,
                                      slovak_haptic_summary,
                                      spanish_argentinian_haptic_summary,
@@ -816,8 +862,8 @@ all_haptic_summaries <- bind_rows(asl_haptic_summary,
                                      arabic_haptic_summary,
                                      catalan_haptic_summary,
                                      estonian_haptic_summary,
-                                     japanese_haptic_summary
-                                     # , turkish_haptic_summary
+                                     japanese_haptic_summary, 
+                                     turkish_haptic_summary
 ) %>%
   mutate(variable = "haptic",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",
@@ -849,11 +895,13 @@ all_haptic_interaction_summaries <- bind_rows(asl_haptic_interaction_summary,
                                                  hebrew_haptic_interaction_summary,
                                                  hungarian_haptic_interaction_summary,
                                                  irish_haptic_interaction_summary,
+                                                 kigiriama_haptic_interaction_summary,
                                                  kiswahili_haptic_interaction_summary,
                                                  korean_haptic_interaction_summary,
                                                  latvian_haptic_interaction_summary,
                                                  norwegian_haptic_interaction_summary,
                                                  persian_haptic_interaction_summary,
+                                                 portuguese_haptic_interaction_summary,
                                                  russian_haptic_interaction_summary,
                                                  slovak_haptic_interaction_summary,
                                                  spanish_argentinian_haptic_interaction_summary,
@@ -865,8 +913,8 @@ all_haptic_interaction_summaries <- bind_rows(asl_haptic_interaction_summary,
                                                  arabic_haptic_interaction_summary,
                                                  catalan_haptic_interaction_summary,
                                                  estonian_haptic_interaction_summary,
-                                                 japanese_haptic_interaction_summary
-                                                 # , turkish_haptic_summary
+                                                 japanese_haptic_interaction_summary, 
+                                                 turkish_haptic_summary
 ) %>%
   mutate(variable = "haptic",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",

@@ -8,7 +8,7 @@ library(tidyverse)
 # imageability
 asl_instrument_data <- read_rds("norms/asl/asl_instrument_data.rds")
 asl_imageability_model <- glm(as.factor(produces) ~ age + asl_imageability_rating + asl_frequency_rating + asl_phoncomp_rating + lexical_category, 
-                        data = asl_instrument_data, family = "binomial")
+                            data = asl_instrument_data, family = "binomial")
 asl_imageability_effect <- ggpredict(asl_imageability_model, terms = "asl_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = asl_imageability_model$coefficients[[3]])
@@ -17,7 +17,7 @@ asl_imageability_summary <- summary(asl_imageability_model)$coefficients %>%
   filter(row.names(.) == "asl_imageability_rating") %>%
   mutate(language = "asl") 
 asl_imageability_interaction_model <- glm(as.factor(produces) ~ age * asl_imageability_rating + asl_frequency_rating + asl_phoncomp_rating + lexical_category, 
-                                    data = asl_instrument_data, family = "binomial")
+                                        data = asl_instrument_data, family = "binomial")
 asl_imageability_interaction_summary <- summary(asl_imageability_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:asl_imageability_rating") %>%
@@ -33,7 +33,7 @@ bsl_imageability_summary <- summary(bsl_imageability_model)$coefficients %>%
   filter(row.names(.) == "bsl_imageability_rating") %>%
   mutate(language = "bsl")
 bsl_imageability_interaction_model <- glm(as.factor(produces) ~ age * bsl_imageability_rating + lexical_category, 
-                                    data = bsl_instrument_data, family = "binomial")
+                                        data = bsl_instrument_data, family = "binomial")
 bsl_imageability_interaction_summary <- summary(bsl_imageability_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:bsl_imageability_rating") %>%
@@ -420,9 +420,24 @@ italian_imageability_interaction_summary <- summary(italian_imageability_interac
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
 
-# kigiriama_imageability_model <- glm(produces ~ age + kigiriama_imageability_rating, data = kigiriama_instrument_data, family = "binomial")
-# kigiriama_imageability_effect <- ggeffect(kigiriama_imageability_model, terms = "kigiriama_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Kigiriama")
+kigiriama_instrument_data <- read_rds("norms/kigiriama/kigiriama_instrument_data.rds")
+kigiriama_imageability_model <- glm(produces ~ age + kigiriama_imageability_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_imageability_effect <- ggeffect(kigiriama_imageability_model, terms = "kigiriama_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "kigiriama",
+         variable_coefficient = kigiriama_imageability_model$coefficients[[3]])
+kigiriama_imageability_summary <- summary(kigiriama_imageability_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "kigiriama_imageability_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+kigiriama_imageability_interaction_model <- glm(produces ~ age * kigiriama_imageability_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_imageability_interaction_summary <- summary(kigiriama_imageability_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:kigiriama_imageability_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 kiswahili_instrument_data <- read_rds("norms/kiswahili/kiswahili_instrument_data.rds")
 kiswahili_imageability_model <- glm(produces ~ age + kiswahili_imageability_rating + kiswahili_freq_rating + lexical_category + word_length, data = kiswahili_instrument_data, family = "binomial")
@@ -518,10 +533,25 @@ persian_imageability_interaction_summary <- summary(persian_imageability_interac
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-# portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
-# portuguese_imageability_model <- glm(produces ~ age + portuguese_imageability_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
-# portuguese_imageability_effect <- ggeffect(portuguese_imageability_model, terms = "portuguese_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Portuguese (European)")
+
+portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
+portuguese_imageability_model <- glm(produces ~ age + portuguese_imageability_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_imageability_effect <- ggeffect(portuguese_imageability_model, terms = "portuguese_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Farsi",
+         variable_coefficient = portuguese_imageability_model$coefficients[[3]])
+portuguese_imageability_summary <- summary(portuguese_imageability_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "portuguese_imageability_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+portuguese_imageability_interaction_model <- glm(produces ~ age * portuguese_imageability_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_imageability_interaction_summary <- summary(portuguese_imageability_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:portuguese_imageability_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 russian_instrument_data <- read_rds("norms/russian/russian_instrument_data.rds")
 russian_imageability_model <- glm(produces ~ age + russian_imageability_rating + russian_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
@@ -654,7 +684,7 @@ swedish_imageability_interaction_summary <- summary(swedish_imageability_interac
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
 arabic_imageability_model <- glm(as.factor(produces) ~ age + arabic_imageability_rating + arabic_freq_rating + lexical_category, 
-                           data = arabic_instrument_data, family = "binomial")
+                               data = arabic_instrument_data, family = "binomial")
 arabic_imageability_effect <- ggpredict(arabic_imageability_model, terms = "arabic_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
          variable_coefficient = arabic_imageability_model$coefficients[[3]])
@@ -663,15 +693,15 @@ arabic_imageability_summary <- summary(arabic_imageability_model)$coefficients %
   filter(row.names(.) == "arabic_imageability_rating") %>%
   mutate(language = "Arabic (Saudi)") 
 arabic_imageability_interaction_model <- glm(as.factor(produces) ~ age * arabic_imageability_rating + arabic_freq_rating + lexical_category, 
-                                       data = arabic_instrument_data, family = "binomial")
+                                           data = arabic_instrument_data, family = "binomial")
 arabic_imageability_interaction_summary <- summary(arabic_imageability_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:arabic_imageability_rating") %>%
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_imageability_model <- glm(as.factor(produces) ~ age + catalan_imageability_rating + catalan_freq_rating + lexical_category, 
-                            data = catalan_instrument_data, family = "binomial")
+catalan_imageability_model <- glm(as.factor(produces) ~ age + catalan_imageability_rating + catalan_freq_rating+ lexical_category, 
+                                data = catalan_instrument_data, family = "binomial")
 catalan_imageability_effect <- ggpredict(catalan_imageability_model, terms = "catalan_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = catalan_imageability_model$coefficients[[3]])
@@ -679,8 +709,8 @@ catalan_imageability_summary <- summary(catalan_imageability_model)$coefficients
   as.data.frame() %>%
   filter(row.names(.) == "catalan_imageability_rating") %>%
   mutate(language = "catalan") 
-catalan_imageability_interaction_model <- glm(as.factor(produces) ~ age * catalan_imageability_rating + catalan_freq_rating + lexical_category, 
-                                        data = catalan_instrument_data, family = "binomial")
+catalan_imageability_interaction_model <- glm(as.factor(produces) ~ age * catalan_imageability_rating +catalan_freq_rating  + lexical_category, 
+                                            data = catalan_instrument_data, family = "binomial")
 catalan_imageability_interaction_summary <- summary(catalan_imageability_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:catalan_imageability_rating") %>%
@@ -688,7 +718,7 @@ catalan_imageability_interaction_summary <- summary(catalan_imageability_interac
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
 estonian_imageability_model <- glm(as.factor(produces) ~ age + estonian_imageability_rating + estonian_freq_rating + lexical_category, 
-                             data = estonian_instrument_data, family = "binomial")
+                                 data = estonian_instrument_data, family = "binomial")
 estonian_imageability_effect <- ggpredict(estonian_imageability_model, terms = "estonian_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = estonian_imageability_model$coefficients[[3]])
@@ -697,7 +727,7 @@ estonian_imageability_summary <- summary(estonian_imageability_model)$coefficien
   filter(row.names(.) == "estonian_imageability_rating") %>%
   mutate(language = "estonian") 
 estonian_imageability_interaction_model <- glm(as.factor(produces) ~ age * estonian_imageability_rating + estonian_freq_rating  + lexical_category, 
-                                         data = estonian_instrument_data, family = "binomial")
+                                             data = estonian_instrument_data, family = "binomial")
 estonian_imageability_interaction_summary <- summary(estonian_imageability_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:estonian_imageability_rating") %>%
@@ -705,7 +735,7 @@ estonian_imageability_interaction_summary <- summary(estonian_imageability_inter
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
 japanese_imageability_model <- glm(as.factor(produces) ~ age + japanese_imageability_rating+ japanese_freq_rating  + lexical_category, 
-                             data = japanese_instrument_data, family = "binomial")
+                                 data = japanese_instrument_data, family = "binomial")
 japanese_imageability_effect <- ggpredict(japanese_imageability_model, terms = "japanese_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = japanese_imageability_model$coefficients[[3]])
@@ -713,58 +743,72 @@ japanese_imageability_summary <- summary(japanese_imageability_model)$coefficien
   as.data.frame() %>%
   filter(row.names(.) == "japanese_imageability_rating") %>%
   mutate(language = "japanese") 
-japanese_imageability_interaction_model <- glm(as.factor(produces) ~ age * japanese_imageability_rating+ japanese_freq_rating   + lexical_category, 
-                                         data = japanese_instrument_data, family = "binomial")
+japanese_imageability_interaction_model <- glm(as.factor(produces) ~ age * japanese_imageability_rating + japanese_freq_rating  + lexical_category, 
+                                             data = japanese_instrument_data, family = "binomial")
 japanese_imageability_interaction_summary <- summary(japanese_imageability_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:japanese_imageability_rating") %>%
   mutate(language = "japanese")
 
-# turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
-# turkish_imageability_model <- glm(produces ~ age + turkish_imageability_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
-# turkish_imageability_effect <- ggeffect(turkish_imageability_model, terms = "turkish_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Turkish")
+turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
+turkish_imageability_model <- glm(as.factor(produces) ~ age + turkish_imageability_rating+ turkish_freq_rating  + lexical_category, 
+                                data = turkish_instrument_data, family = "binomial")
+turkish_imageability_effect <- ggpredict(turkish_imageability_model, terms = "turkish_imageability_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "American Sign Language",
+         variable_coefficient = turkish_imageability_model$coefficients[[3]])
+turkish_imageability_summary <- summary(turkish_imageability_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "turkish_imageability_rating") %>%
+  mutate(language = "turkish") 
+turkish_imageability_interaction_model <- glm(as.factor(produces) ~ age * turkish_imageability_rating + turkish_freq_rating  + lexical_category, 
+                                            data = turkish_instrument_data, family = "binomial")
+turkish_imageability_interaction_summary <- summary(turkish_imageability_interaction_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "age:turkish_imageability_rating") %>%
+  mutate(language = "turkish")
 
 all_imageability_effects <- bind_rows(asl_imageability_effect,
-                                bsl_imageability_effect,
-                                chinese_beijing_imageability_effect,
-                                chinese_cantonese_imageability_effect,
-                                chinese_taiwanese_imageability_effect,
-                                croatian_imageability_effect,
-                                czech_imageability_effect,
-                                english_american_imageability_effect,
-                                english_australian_imageability_effect,
-                                english_british_imageability_effect,
-                                english_irish_imageability_effect,
-                                danish_imageability_effect,
-                                dutch_imageability_effect,
-                                italian_imageability_effect,
-                                finnish_imageability_effect,
-                                french_european_imageability_effect,
-                                french_quebecois_imageability_effect,
-                                german_imageability_effect,
-                                greek_imageability_effect,
-                                hebrew_imageability_effect,
-                                hungarian_imageability_effect,
-                                irish_imageability_effect,
-                                kiswahili_imageability_effect,
-                                korean_imageability_effect,
-                                latvian_imageability_effect,
-                                norwegian_imageability_effect,
-                                persian_imageability_effect,
-                                russian_imageability_effect,
-                                slovak_imageability_effect,
-                                spanish_argentinian_imageability_effect,
-                                spanish_chilean_imageability_effect,
-                                spanish_european_imageability_effect,
-                                spanish_mexican_imageability_effect,
-                                spanish_peruvian_imageability_effect,
-                                swedish_imageability_effect,
-                                arabic_imageability_effect,
-                                catalan_imageability_effect,
-                                estonian_imageability_effect,
-                                japanese_imageability_effect
-                                # , turkish_imageability_effect
+                                    bsl_imageability_effect,
+                                    chinese_beijing_imageability_effect,
+                                    chinese_cantonese_imageability_effect,
+                                    chinese_taiwanese_imageability_effect,
+                                    croatian_imageability_effect,
+                                    czech_imageability_effect,
+                                    english_american_imageability_effect,
+                                    english_australian_imageability_effect,
+                                    english_british_imageability_effect,
+                                    english_irish_imageability_effect,
+                                    danish_imageability_effect,
+                                    dutch_imageability_effect,
+                                    italian_imageability_effect,
+                                    finnish_imageability_effect,
+                                    french_european_imageability_effect,
+                                    french_quebecois_imageability_effect,
+                                    german_imageability_effect,
+                                    greek_imageability_effect,
+                                    hebrew_imageability_effect,
+                                    hungarian_imageability_effect,
+                                    irish_imageability_effect,
+                                    kigiriama_imageability_effect,
+                                    kiswahili_imageability_effect,
+                                    korean_imageability_effect,
+                                    latvian_imageability_effect,
+                                    norwegian_imageability_effect,
+                                    persian_imageability_effect,
+                                    portuguese_imageability_effect,
+                                    russian_imageability_effect,
+                                    slovak_imageability_effect,
+                                    spanish_argentinian_imageability_effect,
+                                    spanish_chilean_imageability_effect,
+                                    spanish_european_imageability_effect,
+                                    spanish_mexican_imageability_effect,
+                                    spanish_peruvian_imageability_effect,
+                                    swedish_imageability_effect,
+                                    arabic_imageability_effect,
+                                    catalan_imageability_effect,
+                                    estonian_imageability_effect,
+                                    japanese_imageability_effect, 
+                                    turkish_imageability_effect
 )
 write_rds(all_imageability_effects, "models/effects/all_imageability_effects.rds")
 
@@ -779,45 +823,47 @@ ggsave("models/plots/all_imageability_effects_plots.png", all_imageability_effec
 
 
 all_imageability_summaries <- bind_rows(asl_imageability_summary,
-                                  bsl_imageability_summary,
-                                  chinese_beijing_imageability_summary,
-                                  chinese_cantonese_imageability_summary,
-                                  chinese_taiwanese_imageability_summary,
-                                  croatian_imageability_summary,
-                                  czech_imageability_summary,
-                                  english_american_imageability_summary,
-                                  english_australian_imageability_summary,
-                                  english_british_imageability_summary,
-                                  english_irish_imageability_summary,
-                                  danish_imageability_summary,
-                                  dutch_imageability_summary,
-                                  italian_imageability_summary,
-                                  finnish_imageability_summary,
-                                  french_european_imageability_summary,
-                                  french_quebecois_imageability_summary,
-                                  german_imageability_summary,
-                                  greek_imageability_summary,
-                                  hebrew_imageability_summary,
-                                  hungarian_imageability_summary,
-                                  irish_imageability_summary,
-                                  kiswahili_imageability_summary,
-                                  korean_imageability_summary,
-                                  latvian_imageability_summary,
-                                  norwegian_imageability_summary,
-                                  persian_imageability_summary,
-                                  russian_imageability_summary,
-                                  slovak_imageability_summary,
-                                  spanish_argentinian_imageability_summary,
-                                  spanish_chilean_imageability_summary,
-                                  spanish_european_imageability_summary,
-                                  spanish_mexican_imageability_summary,
-                                  spanish_peruvian_imageability_summary,
-                                  swedish_imageability_summary,
-                                  arabic_imageability_summary,
-                                  catalan_imageability_summary,
-                                  estonian_imageability_summary,
-                                  japanese_imageability_summary
-                                  # , turkish_imageability_summary
+                                      bsl_imageability_summary,
+                                      chinese_beijing_imageability_summary,
+                                      chinese_cantonese_imageability_summary,
+                                      chinese_taiwanese_imageability_summary,
+                                      croatian_imageability_summary,
+                                      czech_imageability_summary,
+                                      english_american_imageability_summary,
+                                      english_australian_imageability_summary,
+                                      english_british_imageability_summary,
+                                      english_irish_imageability_summary,
+                                      danish_imageability_summary,
+                                      dutch_imageability_summary,
+                                      italian_imageability_summary,
+                                      finnish_imageability_summary,
+                                      french_european_imageability_summary,
+                                      french_quebecois_imageability_summary,
+                                      german_imageability_summary,
+                                      greek_imageability_summary,
+                                      hebrew_imageability_summary,
+                                      hungarian_imageability_summary,
+                                      irish_imageability_summary,
+                                      kigiriama_imageability_summary,
+                                      kiswahili_imageability_summary,
+                                      korean_imageability_summary,
+                                      latvian_imageability_summary,
+                                      norwegian_imageability_summary,
+                                      persian_imageability_summary,
+                                      portuguese_imageability_summary,
+                                      russian_imageability_summary,
+                                      slovak_imageability_summary,
+                                      spanish_argentinian_imageability_summary,
+                                      spanish_chilean_imageability_summary,
+                                      spanish_european_imageability_summary,
+                                      spanish_mexican_imageability_summary,
+                                      spanish_peruvian_imageability_summary,
+                                      swedish_imageability_summary,
+                                      arabic_imageability_summary,
+                                      catalan_imageability_summary,
+                                      estonian_imageability_summary,
+                                      japanese_imageability_summary, 
+                                      turkish_imageability_summary
 ) %>%
   mutate(variable = "imageability",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",
@@ -828,45 +874,47 @@ write_rds(all_imageability_summaries, "models/effects/all_imageability_summaries
 
 
 all_imageability_interaction_summaries <- bind_rows(asl_imageability_interaction_summary,
-                                              bsl_imageability_interaction_summary,
-                                              chinese_beijing_imageability_interaction_summary,
-                                              chinese_cantonese_imageability_interaction_summary,
-                                              chinese_taiwanese_imageability_interaction_summary,
-                                              croatian_imageability_interaction_summary,
-                                              czech_imageability_interaction_summary,
-                                              english_american_imageability_interaction_summary,
-                                              english_australian_imageability_interaction_summary,
-                                              english_british_imageability_interaction_summary,
-                                              english_irish_imageability_interaction_summary,
-                                              danish_imageability_interaction_summary,
-                                              dutch_imageability_interaction_summary,
-                                              italian_imageability_interaction_summary,
-                                              finnish_imageability_interaction_summary,
-                                              french_european_imageability_interaction_summary,
-                                              french_quebecois_imageability_interaction_summary,
-                                              german_imageability_interaction_summary,
-                                              greek_imageability_interaction_summary,
-                                              hebrew_imageability_interaction_summary,
-                                              hungarian_imageability_interaction_summary,
-                                              irish_imageability_interaction_summary,
-                                              kiswahili_imageability_interaction_summary,
-                                              korean_imageability_interaction_summary,
-                                              latvian_imageability_interaction_summary,
-                                              norwegian_imageability_interaction_summary,
-                                              persian_imageability_interaction_summary,
-                                              russian_imageability_interaction_summary,
-                                              slovak_imageability_interaction_summary,
-                                              spanish_argentinian_imageability_interaction_summary,
-                                              spanish_chilean_imageability_interaction_summary,
-                                              spanish_european_imageability_interaction_summary,
-                                              spanish_mexican_imageability_interaction_summary,
-                                              spanish_peruvian_imageability_interaction_summary,
-                                              swedish_imageability_interaction_summary,
-                                              arabic_imageability_interaction_summary,
-                                              catalan_imageability_interaction_summary,
-                                              estonian_imageability_interaction_summary,
-                                              japanese_imageability_interaction_summary
-                                              # , turkish_imageability_summary
+                                                  bsl_imageability_interaction_summary,
+                                                  chinese_beijing_imageability_interaction_summary,
+                                                  chinese_cantonese_imageability_interaction_summary,
+                                                  chinese_taiwanese_imageability_interaction_summary,
+                                                  croatian_imageability_interaction_summary,
+                                                  czech_imageability_interaction_summary,
+                                                  english_american_imageability_interaction_summary,
+                                                  english_australian_imageability_interaction_summary,
+                                                  english_british_imageability_interaction_summary,
+                                                  english_irish_imageability_interaction_summary,
+                                                  danish_imageability_interaction_summary,
+                                                  dutch_imageability_interaction_summary,
+                                                  italian_imageability_interaction_summary,
+                                                  finnish_imageability_interaction_summary,
+                                                  french_european_imageability_interaction_summary,
+                                                  french_quebecois_imageability_interaction_summary,
+                                                  german_imageability_interaction_summary,
+                                                  greek_imageability_interaction_summary,
+                                                  hebrew_imageability_interaction_summary,
+                                                  hungarian_imageability_interaction_summary,
+                                                  irish_imageability_interaction_summary,
+                                                  kigiriama_imageability_interaction_summary,
+                                                  kiswahili_imageability_interaction_summary,
+                                                  korean_imageability_interaction_summary,
+                                                  latvian_imageability_interaction_summary,
+                                                  norwegian_imageability_interaction_summary,
+                                                  persian_imageability_interaction_summary,
+                                                  portuguese_imageability_interaction_summary,
+                                                  russian_imageability_interaction_summary,
+                                                  slovak_imageability_interaction_summary,
+                                                  spanish_argentinian_imageability_interaction_summary,
+                                                  spanish_chilean_imageability_interaction_summary,
+                                                  spanish_european_imageability_interaction_summary,
+                                                  spanish_mexican_imageability_interaction_summary,
+                                                  spanish_peruvian_imageability_interaction_summary,
+                                                  swedish_imageability_interaction_summary,
+                                                  arabic_imageability_interaction_summary,
+                                                  catalan_imageability_interaction_summary,
+                                                  estonian_imageability_interaction_summary,
+                                                  japanese_imageability_interaction_summary, 
+                                                  turkish_imageability_summary
 ) %>%
   mutate(variable = "imageability",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",

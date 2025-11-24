@@ -420,9 +420,24 @@ italian_emotionalarousal_interaction_summary <- summary(italian_emotionalarousal
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
 
-# kigiriama_emotionalarousal_model <- glm(produces ~ age + kigiriama_emotionalarousal_rating, data = kigiriama_instrument_data, family = "binomial")
-# kigiriama_emotionalarousal_effect <- ggeffect(kigiriama_emotionalarousal_model, terms = "kigiriama_emotionalarousal_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Kigiriama")
+kigiriama_instrument_data <- read_rds("norms/kigiriama/kigiriama_instrument_data.rds")
+kigiriama_emotionalarousal_model <- glm(produces ~ age + kigiriama_emotionalarousal_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_emotionalarousal_effect <- ggeffect(kigiriama_emotionalarousal_model, terms = "kigiriama_emotionalarousal_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "kigiriama",
+         variable_coefficient = kigiriama_emotionalarousal_model$coefficients[[3]])
+kigiriama_emotionalarousal_summary <- summary(kigiriama_emotionalarousal_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "kigiriama_emotionalarousal_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+kigiriama_emotionalarousal_interaction_model <- glm(produces ~ age * kigiriama_emotionalarousal_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_emotionalarousal_interaction_summary <- summary(kigiriama_emotionalarousal_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:kigiriama_emotionalarousal_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 kiswahili_instrument_data <- read_rds("norms/kiswahili/kiswahili_instrument_data.rds")
 kiswahili_emotionalarousal_model <- glm(produces ~ age + kiswahili_emotionalarousal_rating + kiswahili_freq_rating + lexical_category + word_length, data = kiswahili_instrument_data, family = "binomial")
@@ -518,10 +533,25 @@ persian_emotionalarousal_interaction_summary <- summary(persian_emotionalarousal
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-# portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
-# portuguese_emotionalarousal_model <- glm(produces ~ age + portuguese_emotionalarousal_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
-# portuguese_emotionalarousal_effect <- ggeffect(portuguese_emotionalarousal_model, terms = "portuguese_emotionalarousal_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Portuguese (European)")
+
+portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
+portuguese_emotionalarousal_model <- glm(produces ~ age + portuguese_emotionalarousal_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_emotionalarousal_effect <- ggeffect(portuguese_emotionalarousal_model, terms = "portuguese_emotionalarousal_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Farsi",
+         variable_coefficient = portuguese_emotionalarousal_model$coefficients[[3]])
+portuguese_emotionalarousal_summary <- summary(portuguese_emotionalarousal_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "portuguese_emotionalarousal_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+portuguese_emotionalarousal_interaction_model <- glm(produces ~ age * portuguese_emotionalarousal_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_emotionalarousal_interaction_summary <- summary(portuguese_emotionalarousal_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:portuguese_emotionalarousal_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 russian_instrument_data <- read_rds("norms/russian/russian_instrument_data.rds")
 russian_emotionalarousal_model <- glm(produces ~ age + russian_emotionalarousal_rating + russian_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
@@ -720,10 +750,22 @@ japanese_emotionalarousal_interaction_summary <- summary(japanese_emotionalarous
   filter(row.names(.) == "age:japanese_emotionalarousal_rating") %>%
   mutate(language = "japanese")
 
-# turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
-# turkish_emotionalarousal_model <- glm(produces ~ age + turkish_emotionalarousal_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
-# turkish_emotionalarousal_effect <- ggeffect(turkish_emotionalarousal_model, terms = "turkish_emotionalarousal_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Turkish")
+turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
+turkish_emotionalarousal_model <- glm(as.factor(produces) ~ age + turkish_emotionalarousal_rating+ turkish_freq_rating  + lexical_category, 
+                                       data = turkish_instrument_data, family = "binomial")
+turkish_emotionalarousal_effect <- ggpredict(turkish_emotionalarousal_model, terms = "turkish_emotionalarousal_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "American Sign Language",
+         variable_coefficient = turkish_emotionalarousal_model$coefficients[[3]])
+turkish_emotionalarousal_summary <- summary(turkish_emotionalarousal_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "turkish_emotionalarousal_rating") %>%
+  mutate(language = "turkish") 
+turkish_emotionalarousal_interaction_model <- glm(as.factor(produces) ~ age * turkish_emotionalarousal_rating + turkish_freq_rating  + lexical_category, 
+                                                   data = turkish_instrument_data, family = "binomial")
+turkish_emotionalarousal_interaction_summary <- summary(turkish_emotionalarousal_interaction_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "age:turkish_emotionalarousal_rating") %>%
+  mutate(language = "turkish")
 
 all_emotionalarousal_effects <- bind_rows(asl_emotionalarousal_effect,
                                       bsl_emotionalarousal_effect,
@@ -747,11 +789,13 @@ all_emotionalarousal_effects <- bind_rows(asl_emotionalarousal_effect,
                                       hebrew_emotionalarousal_effect,
                                       hungarian_emotionalarousal_effect,
                                       irish_emotionalarousal_effect,
+                                      kigiriama_emotionalarousal_effect,
                                       kiswahili_emotionalarousal_effect,
                                       korean_emotionalarousal_effect,
                                       latvian_emotionalarousal_effect,
                                       norwegian_emotionalarousal_effect,
                                       persian_emotionalarousal_effect,
+                                      portuguese_emotionalarousal_effect,
                                       russian_emotionalarousal_effect,
                                       slovak_emotionalarousal_effect,
                                       spanish_argentinian_emotionalarousal_effect,
@@ -763,8 +807,8 @@ all_emotionalarousal_effects <- bind_rows(asl_emotionalarousal_effect,
                                       arabic_emotionalarousal_effect,
                                       catalan_emotionalarousal_effect,
                                       estonian_emotionalarousal_effect,
-                                      japanese_emotionalarousal_effect
-                                      # , turkish_emotionalarousal_effect
+                                      japanese_emotionalarousal_effect, 
+                                      turkish_emotionalarousal_effect
 )
 write_rds(all_emotionalarousal_effects, "models/effects/all_emotionalarousal_effects.rds")
 
@@ -800,11 +844,13 @@ all_emotionalarousal_summaries <- bind_rows(asl_emotionalarousal_summary,
                                         hebrew_emotionalarousal_summary,
                                         hungarian_emotionalarousal_summary,
                                         irish_emotionalarousal_summary,
+                                        kigiriama_emotionalarousal_summary,
                                         kiswahili_emotionalarousal_summary,
                                         korean_emotionalarousal_summary,
                                         latvian_emotionalarousal_summary,
                                         norwegian_emotionalarousal_summary,
                                         persian_emotionalarousal_summary,
+                                        portuguese_emotionalarousal_summary,
                                         russian_emotionalarousal_summary,
                                         slovak_emotionalarousal_summary,
                                         spanish_argentinian_emotionalarousal_summary,
@@ -816,8 +862,8 @@ all_emotionalarousal_summaries <- bind_rows(asl_emotionalarousal_summary,
                                         arabic_emotionalarousal_summary,
                                         catalan_emotionalarousal_summary,
                                         estonian_emotionalarousal_summary,
-                                        japanese_emotionalarousal_summary
-                                        # , turkish_emotionalarousal_summary
+                                        japanese_emotionalarousal_summary, 
+                                        turkish_emotionalarousal_summary
 ) %>%
   mutate(variable = "Emotional Arousal",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",
@@ -849,11 +895,13 @@ all_emotionalarousal_interaction_summaries <- bind_rows(asl_emotionalarousal_int
                                                     hebrew_emotionalarousal_interaction_summary,
                                                     hungarian_emotionalarousal_interaction_summary,
                                                     irish_emotionalarousal_interaction_summary,
+                                                    kigiriama_emotionalarousal_interaction_summary,
                                                     kiswahili_emotionalarousal_interaction_summary,
                                                     korean_emotionalarousal_interaction_summary,
                                                     latvian_emotionalarousal_interaction_summary,
                                                     norwegian_emotionalarousal_interaction_summary,
                                                     persian_emotionalarousal_interaction_summary,
+                                                    portuguese_emotionalarousal_interaction_summary,
                                                     russian_emotionalarousal_interaction_summary,
                                                     slovak_emotionalarousal_interaction_summary,
                                                     spanish_argentinian_emotionalarousal_interaction_summary,
@@ -865,8 +913,8 @@ all_emotionalarousal_interaction_summaries <- bind_rows(asl_emotionalarousal_int
                                                     arabic_emotionalarousal_interaction_summary,
                                                     catalan_emotionalarousal_interaction_summary,
                                                     estonian_emotionalarousal_interaction_summary,
-                                                    japanese_emotionalarousal_interaction_summary
-                                                    # , turkish_emotionalarousal_summary
+                                                    japanese_emotionalarousal_interaction_summary, 
+                                                    turkish_emotionalarousal_summary
 ) %>%
   mutate(variable = "Emotional Arousal",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",

@@ -799,6 +799,15 @@ arabic_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          arabic_socialness_rating = average_socialness_rating,
          arabic_cognitiveness_rating = average_cognitiveness_rating
   ) %>%
+  mutate(arabic_maxperceptual_rating = pmax(
+    arabic_visual_rating,
+    arabic_olfactory_rating,
+    arabic_haptic_rating,
+    arabic_gustatory_rating,
+    arabic_auditory_rating,
+    na.rm = TRUE
+  ),
+         arabic_avperceptual_rating = (arabic_visual_rating + arabic_olfactory_rating + arabic_haptic_rating + arabic_gustatory_rating + arabic_auditory_rating)/5) %>%
   filter(`Arabic (Saudi)` != "") %>%
   left_join(arabic_CD) 
 write_csv(arabic_ratings_subset, "norms/arabic/arabic_ratings_subset.csv")
@@ -833,6 +842,15 @@ asl_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          asl_visual_rating = average_visual_rating,
          asl_socialness_rating = average_socialness_rating,
          asl_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(asl_maxperceptual_rating = pmax(
+    asl_visual_rating,
+    asl_olfactory_rating,
+    asl_haptic_rating,
+    asl_gustatory_rating,
+    asl_auditory_rating,
+    na.rm = TRUE
+  ),
+  asl_avperceptual_rating = (asl_visual_rating + asl_olfactory_rating + asl_haptic_rating + asl_gustatory_rating + asl_auditory_rating)/5) %>%
   filter(`American Sign Language` != "") 
 write_csv(asl_ratings_subset, "norms/asl/asl_ratings_subset.csv")
 write_rds(asl_ratings_subset, "norms/asl/asl_ratings_subset.rds")
@@ -866,6 +884,16 @@ bsl_ratings_subset<- CDI_mega_word_list_with_averageratings %>%
          bsl_visual_rating = average_visual_rating,
          bsl_socialness_rating = average_socialness_rating,
          bsl_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(bsl_maxperceptual_rating = pmax(
+    bsl_visual_rating,
+    bsl_olfactory_rating,
+    bsl_haptic_rating,
+    bsl_gustatory_rating,
+    bsl_auditory_rating,
+    na.rm = TRUE
+  ),
+  bsl_avperceptual_rating = (bsl_visual_rating + bsl_olfactory_rating + bsl_haptic_rating + bsl_gustatory_rating + bsl_auditory_rating)/5) %>%
+  
   filter(`British Sign Language` != "")
 write_csv(bsl_ratings_subset, "norms/bsl/bsl_ratings_subset.csv")
 write_rds(bsl_ratings_subset, "norms/bsl/bsl_ratings_subset.rds")
@@ -898,6 +926,15 @@ catalan_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          catalan_visual_rating = average_visual_rating,
          catalan_socialness_rating = average_socialness_rating,
          catalan_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(catalan_maxperceptual_rating = pmax(
+    catalan_visual_rating,
+    catalan_olfactory_rating,
+    catalan_haptic_rating,
+    catalan_gustatory_rating,
+    catalan_auditory_rating,
+    na.rm = TRUE
+  ),
+  catalan_avperceptual_rating = (catalan_visual_rating + catalan_olfactory_rating + catalan_haptic_rating + catalan_gustatory_rating + catalan_auditory_rating)/5) %>%
   left_join(catalan_CD) %>%
   filter(Catalan != "")
 write_csv(catalan_ratings_subset, "norms/catalan/catalan_ratings_subset.csv")
@@ -945,6 +982,16 @@ chinese_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          chinese_socialness_rating = case_when(!is.na(chinese_socialness_rating) ~ chinese_socialness_rating,
                                                TRUE ~ average_socialness_rating),
          chinese_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(chinese_maxperceptual_rating = pmax(
+    chinese_visual_rating,
+    chinese_olfactory_rating,
+    chinese_haptic_rating,
+    chinese_gustatory_rating,
+    chinese_auditory_rating,
+    na.rm = TRUE
+  ),
+  chinese_avperceptual_rating = (chinese_visual_rating + chinese_olfactory_rating + chinese_haptic_rating + chinese_gustatory_rating + chinese_auditory_rating)/5) %>%
+  
   left_join(chinese_CD) %>%
   filter(`Chinese (all)` != "")
 write_csv(chinese_ratings_subset, "norms/chinese/chinese_ratings_subset.csv")
@@ -979,6 +1026,16 @@ croatian_ratings_subset<- CDI_mega_word_list_with_averageratings %>%
          croatian_visual_rating = average_visual_rating,
          croatian_socialness_rating = average_socialness_rating,
          croatian_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(croatian_maxperceptual_rating = pmax(
+    croatian_visual_rating,
+    croatian_olfactory_rating,
+    croatian_haptic_rating,
+    croatian_gustatory_rating,
+    croatian_auditory_rating,
+    na.rm = TRUE
+  ),
+  croatian_avperceptual_rating = (croatian_visual_rating + croatian_olfactory_rating + croatian_haptic_rating + croatian_gustatory_rating + croatian_auditory_rating)/5) %>%
+  
   left_join(croatian_CD) %>%
   filter(Croatian != "")
 write_csv(croatian_ratings_subset, "norms/croatian/croatian_ratings_subset.csv")
@@ -1009,6 +1066,16 @@ czech_ratings_subset<- CDI_mega_word_list_with_averageratings %>%
          czech_visual_rating = average_visual_rating,
          czech_socialness_rating = average_socialness_rating,
          czech_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(czech_maxperceptual_rating = pmax(
+    czech_visual_rating,
+    czech_olfactory_rating,
+    czech_haptic_rating,
+    czech_gustatory_rating,
+    czech_auditory_rating,
+    na.rm = TRUE
+  ),
+  czech_avperceptual_rating = (czech_visual_rating + czech_olfactory_rating + czech_haptic_rating + czech_gustatory_rating + czech_auditory_rating)/5) %>%
+  
   left_join(czech_CD) %>%
   filter(Czech != "")
 write_csv(czech_ratings_subset, "norms/czech/czech_ratings_subset.csv")
@@ -1040,6 +1107,16 @@ danish_ratings_subset<- CDI_mega_word_list_with_averageratings %>%
          danish_visual_rating = average_visual_rating,
          danish_socialness_rating = average_socialness_rating,
          danish_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(danish_maxperceptual_rating = pmax(
+    danish_visual_rating,
+    danish_olfactory_rating,
+    danish_haptic_rating,
+    danish_gustatory_rating,
+    danish_auditory_rating,
+    na.rm = TRUE
+  ),
+  danish_avperceptual_rating = (danish_visual_rating + danish_olfactory_rating + danish_haptic_rating + danish_gustatory_rating + danish_auditory_rating)/5) %>%
+  
   left_join(danish_CD) %>%
   filter(Danish != "")
 write_csv(danish_ratings_subset, "norms/danish/danish_ratings_subset.csv")
@@ -1079,6 +1156,16 @@ dutch_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
                                          TRUE ~ average_visual_rating),
          dutch_socialness_rating = average_socialness_rating,
          dutch_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(dutch_maxperceptual_rating = pmax(
+    dutch_visual_rating,
+    dutch_olfactory_rating,
+    dutch_haptic_rating,
+    dutch_gustatory_rating,
+    dutch_auditory_rating,
+    na.rm = TRUE
+  ),
+  dutch_avperceptual_rating = (dutch_visual_rating + dutch_olfactory_rating + dutch_haptic_rating + dutch_gustatory_rating + dutch_auditory_rating)/5) %>%
+  
   left_join(dutch_CD) %>%
   distinct() %>%
   filter(Dutch != "")
@@ -1125,6 +1212,16 @@ english_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
                                                 TRUE ~ average_socialness_rating),
          english_cognitiveness_rating = case_when(!is.na(english_cognitiveness_rating) ~ english_cognitiveness_rating,
                                                    TRUE ~ average_cognitiveness_rating)) %>%
+  mutate(english_maxperceptual_rating = pmax(
+    english_visual_rating,
+    english_olfactory_rating,
+    english_haptic_rating,
+    english_gustatory_rating,
+    english_auditory_rating,
+    na.rm = TRUE
+  ),
+  english_avperceptual_rating = (english_visual_rating + english_olfactory_rating + english_haptic_rating + english_gustatory_rating + english_auditory_rating)/5) %>%
+  
   left_join(english_CD) %>%
   filter(`English (all)` != "")
 write_csv(english_ratings_subset, "norms/english/english_ratings_subset.csv")
@@ -1164,6 +1261,16 @@ estonian_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
                                             TRUE ~ average_visual_rating),
          estonian_socialness_rating = average_socialness_rating,
          estonian_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(estonian_maxperceptual_rating = pmax(
+    estonian_visual_rating,
+    estonian_olfactory_rating,
+    estonian_haptic_rating,
+    estonian_gustatory_rating,
+    estonian_auditory_rating,
+    na.rm = TRUE
+  ),
+  estonian_avperceptual_rating = (estonian_visual_rating + estonian_olfactory_rating + estonian_haptic_rating + estonian_gustatory_rating + estonian_auditory_rating)/5) %>%
+  
   left_join(estonian_CD) %>%
   filter(Estonian != "")
 write_csv(estonian_ratings_subset, "norms/estonian/estonian_ratings_subset.csv")
@@ -1195,6 +1302,16 @@ finnish_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          finnish_visual_rating = average_visual_rating,
          finnish_socialness_rating = average_socialness_rating,
          finnish_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(finnish_maxperceptual_rating = pmax(
+    finnish_visual_rating,
+    finnish_olfactory_rating,
+    finnish_haptic_rating,
+    finnish_gustatory_rating,
+    finnish_auditory_rating,
+    na.rm = TRUE
+  ),
+  finnish_avperceptual_rating = (finnish_visual_rating + finnish_olfactory_rating + finnish_haptic_rating + finnish_gustatory_rating + finnish_auditory_rating)/5) %>%
+  
   left_join(finnish_CD) %>%
   filter(Finnish != "")
 write_csv(finnish_ratings_subset, "norms/finnish/finnish_ratings_subset.csv")
@@ -1239,6 +1356,16 @@ french_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
                                              TRUE ~ average_visual_rating),
          french_socialness_rating = average_socialness_rating,
          french_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(french_maxperceptual_rating = pmax(
+    french_visual_rating,
+    french_olfactory_rating,
+    french_haptic_rating,
+    french_gustatory_rating,
+    french_auditory_rating,
+    na.rm = TRUE
+  ),
+  french_avperceptual_rating = (french_visual_rating + french_olfactory_rating + french_haptic_rating + french_gustatory_rating + french_auditory_rating)/5) %>%
+  
   left_join(french_CD) %>%
   filter(`French (all)` != "")
 write_csv(french_ratings_subset, "norms/french/french_ratings_subset.csv")
@@ -1270,6 +1397,16 @@ german_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          german_visual_rating = average_visual_rating,
          german_socialness_rating = average_socialness_rating,
          german_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(german_maxperceptual_rating = pmax(
+    german_visual_rating,
+    german_olfactory_rating,
+    german_haptic_rating,
+    german_gustatory_rating,
+    german_auditory_rating,
+    na.rm = TRUE
+  ),
+  german_avperceptual_rating = (german_visual_rating + german_olfactory_rating + german_haptic_rating + german_gustatory_rating + german_auditory_rating)/5) %>%
+  
   left_join(german_CD) %>%
   filter(German != "")
 write_csv(german_ratings_subset, "norms/german/german_ratings_subset.csv")
@@ -1305,6 +1442,16 @@ greek_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          greek_visual_rating = average_visual_rating,
          greek_socialness_rating = average_socialness_rating,
          greek_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(greek_maxperceptual_rating = pmax(
+    greek_visual_rating,
+    greek_olfactory_rating,
+    greek_haptic_rating,
+    greek_gustatory_rating,
+    greek_auditory_rating,
+    na.rm = TRUE
+  ),
+  greek_avperceptual_rating = (greek_visual_rating + greek_olfactory_rating + greek_haptic_rating + greek_gustatory_rating + greek_auditory_rating)/5) %>%
+  
   left_join(greek_CD) %>%
   filter(`Greek (Cypriot)` != "")
 write_csv(greek_ratings_subset, "norms/greek/greek_ratings_subset.csv")
@@ -1336,6 +1483,16 @@ hebrew_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          hebrew_visual_rating = average_visual_rating,
          hebrew_socialness_rating = average_socialness_rating,
          hebrew_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(hebrew_maxperceptual_rating = pmax(
+    hebrew_visual_rating,
+    hebrew_olfactory_rating,
+    hebrew_haptic_rating,
+    hebrew_gustatory_rating,
+    hebrew_auditory_rating,
+    na.rm = TRUE
+  ),
+  hebrew_avperceptual_rating = (hebrew_visual_rating + hebrew_olfactory_rating + hebrew_haptic_rating + hebrew_gustatory_rating + hebrew_auditory_rating)/5) %>%
+  
   left_join(hebrew_CD) %>%
   filter(Hebrew != "")
 write_csv(hebrew_ratings_subset, "norms/hebrew/hebrew_ratings_subset.csv")
@@ -1368,6 +1525,16 @@ hungarian_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          hungarian_socialness_rating = average_socialness_rating,
          hungarian_cognitiveness_rating = average_cognitiveness_rating) %>%
   left_join(hungarian_CD) %>%
+  mutate(hungarian_maxperceptual_rating = pmax(
+    hungarian_visual_rating,
+    hungarian_olfactory_rating,
+    hungarian_haptic_rating,
+    hungarian_gustatory_rating,
+    hungarian_auditory_rating,
+    na.rm = TRUE
+  ),
+  hungarian_avperceptual_rating = (hungarian_visual_rating + hungarian_olfactory_rating + hungarian_haptic_rating + hungarian_gustatory_rating + hungarian_auditory_rating)/5) %>%
+  
   filter(Hungarian != "")
 write_csv(hungarian_ratings_subset, "norms/hungarian/hungarian_ratings_subset.csv")
 write_rds(hungarian_ratings_subset, "norms/hungarian/hungarian_ratings_subset.rds")
@@ -1399,6 +1566,16 @@ irish_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          irish_visual_rating = average_visual_rating,
          irish_socialness_rating = average_socialness_rating,
          irish_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(irish_maxperceptual_rating = pmax(
+    irish_visual_rating,
+    irish_olfactory_rating,
+    irish_haptic_rating,
+    irish_gustatory_rating,
+    irish_auditory_rating,
+    na.rm = TRUE
+  ),
+  irish_avperceptual_rating = (irish_visual_rating + irish_olfactory_rating + irish_haptic_rating + irish_gustatory_rating + irish_auditory_rating)/5) %>%
+  
   left_join(irish_CD) %>%
   filter(Irish != "")
 write_csv(irish_ratings_subset, "norms/irish/irish_ratings_subset.csv")
@@ -1437,6 +1614,16 @@ italian_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          italian_socialness_rating = average_socialness_rating,
          italian_cognitiveness_rating = average_cognitiveness_rating) %>%
   left_join(italian_CD) %>%
+  mutate(italian_maxperceptual_rating = pmax(
+    italian_visual_rating,
+    italian_olfactory_rating,
+    italian_haptic_rating,
+    italian_gustatory_rating,
+    italian_auditory_rating,
+    na.rm = TRUE
+  ),
+  italian_avperceptual_rating = (italian_visual_rating + italian_olfactory_rating + italian_haptic_rating + italian_gustatory_rating + italian_auditory_rating)/5) %>%
+  
   filter(Italian != "")
 write_csv(italian_ratings_subset, "norms/italian/italian_ratings_subset.csv")
 write_rds(italian_ratings_subset, "norms/italian/italian_ratings_subset.rds")
@@ -1468,6 +1655,16 @@ japanese_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          japanese_socialness_rating = average_socialness_rating,
          japanese_cognitiveness_rating = average_cognitiveness_rating) %>%
   left_join(japanese_CD) %>%
+  mutate(japanese_maxperceptual_rating = pmax(
+    japanese_visual_rating,
+    japanese_olfactory_rating,
+    japanese_haptic_rating,
+    japanese_gustatory_rating,
+    japanese_auditory_rating,
+    na.rm = TRUE
+  ),
+  japanese_avperceptual_rating = (japanese_visual_rating + japanese_olfactory_rating + japanese_haptic_rating + japanese_gustatory_rating + japanese_auditory_rating)/5) %>%
+  
   filter(Japanese != "")
 write_csv(japanese_ratings_subset, "norms/japanese/japanese_ratings_subset.csv")
 write_rds(japanese_ratings_subset, "norms/japanese/japanese_ratings_subset.rds")
@@ -1499,6 +1696,16 @@ kigiriama_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          kigiriama_visual_rating = average_visual_rating,
          kigiriama_socialness_rating = average_socialness_rating,
          kigiriama_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(kigiriama_maxperceptual_rating = pmax(
+    kigiriama_visual_rating,
+    kigiriama_olfactory_rating,
+    kigiriama_haptic_rating,
+    kigiriama_gustatory_rating,
+    kigiriama_auditory_rating,
+    na.rm = TRUE
+  ),
+  kigiriama_avperceptual_rating = (kigiriama_visual_rating + kigiriama_olfactory_rating + kigiriama_haptic_rating + kigiriama_gustatory_rating + kigiriama_auditory_rating)/5) %>%
+  
   filter(Kigiriama != "")
 write_csv(kigiriama_ratings_subset, "norms/kigiriama/kigiriama_ratings_subset.csv")
 write_rds(kigiriama_ratings_subset, "norms/kigiriama/kigiriama_ratings_subset.rds")
@@ -1531,6 +1738,16 @@ kiswahili_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          kiswahili_socialness_rating = average_socialness_rating,
          kiswahili_cognitiveness_rating = average_cognitiveness_rating) %>%
   left_join(kiswahili_CD) %>%
+  mutate(kiswahili_maxperceptual_rating = pmax(
+    kiswahili_visual_rating,
+    kiswahili_olfactory_rating,
+    kiswahili_haptic_rating,
+    kiswahili_gustatory_rating,
+    kiswahili_auditory_rating,
+    na.rm = TRUE
+  ),
+  kiswahili_avperceptual_rating = (kiswahili_visual_rating + kiswahili_olfactory_rating + kiswahili_haptic_rating + kiswahili_gustatory_rating + kiswahili_auditory_rating)/5) %>%
+  
   filter(Kiswahili != "")
 write_csv(kiswahili_ratings_subset, "norms/kiswahili/kiswahili_ratings_subset.csv")
 write_rds(kiswahili_ratings_subset, "norms/kiswahili/kiswahili_ratings_subset.rds")
@@ -1562,6 +1779,16 @@ korean_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          korean_visual_rating = average_visual_rating,
          korean_socialness_rating = average_socialness_rating,
          korean_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(korean_maxperceptual_rating = pmax(
+    korean_visual_rating,
+    korean_olfactory_rating,
+    korean_haptic_rating,
+    korean_gustatory_rating,
+    korean_auditory_rating,
+    na.rm = TRUE
+  ),
+  korean_avperceptual_rating = (korean_visual_rating + korean_olfactory_rating + korean_haptic_rating + korean_gustatory_rating + korean_auditory_rating)/5) %>%
+  
   left_join(korean_CD) %>%
   filter(Korean != "")
 write_csv(korean_ratings_subset, "norms/korean/korean_ratings_subset.csv")
@@ -1593,6 +1820,16 @@ latvian_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          latvian_visual_rating = average_visual_rating,
          latvian_socialness_rating = average_socialness_rating,
          latvian_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(latvian_maxperceptual_rating = pmax(
+    latvian_visual_rating,
+    latvian_olfactory_rating,
+    latvian_haptic_rating,
+    latvian_gustatory_rating,
+    latvian_auditory_rating,
+    na.rm = TRUE
+  ),
+  latvian_avperceptual_rating = (latvian_visual_rating + latvian_olfactory_rating + latvian_haptic_rating + latvian_gustatory_rating + latvian_auditory_rating)/5) %>%
+  
   left_join(latvian_CD) %>%
   filter(Latvian != "")
 write_csv(latvian_ratings_subset, "norms/latvian/latvian_ratings_subset.csv")
@@ -1626,6 +1863,16 @@ norwegian_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          norwegian_socialness_rating = average_socialness_rating,
          norwegian_cognitiveness_rating = average_cognitiveness_rating) %>%
   left_join(norwegian_CD) %>%
+  mutate(norwegian_maxperceptual_rating = pmax(
+    norwegian_visual_rating,
+    norwegian_olfactory_rating,
+    norwegian_haptic_rating,
+    norwegian_gustatory_rating,
+    norwegian_auditory_rating,
+    na.rm = TRUE
+  ),
+  norwegian_avperceptual_rating = (norwegian_visual_rating + norwegian_olfactory_rating + norwegian_haptic_rating + norwegian_gustatory_rating + norwegian_auditory_rating)/5) %>%
+  
   filter(Norwegian != "")
 write_csv(norwegian_ratings_subset, "norms/norwegian/norwegian_ratings_subset.csv")
 write_rds(norwegian_ratings_subset, "norms/norwegian/norwegian_ratings_subset.rds")
@@ -1656,6 +1903,16 @@ persian_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          persian_visual_rating = average_visual_rating,
          persian_socialness_rating = average_socialness_rating,
          persian_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(persian_maxperceptual_rating = pmax(
+    persian_visual_rating,
+    persian_olfactory_rating,
+    persian_haptic_rating,
+    persian_gustatory_rating,
+    persian_auditory_rating,
+    na.rm = TRUE
+  ),
+  persian_avperceptual_rating = (persian_visual_rating + persian_olfactory_rating + persian_haptic_rating + persian_gustatory_rating + persian_auditory_rating)/5) %>%
+  
   left_join(persian_CD) %>%
   filter(Persian != "")
 write_csv(persian_ratings_subset, "norms/persian/persian_ratings_subset.csv")
@@ -1689,6 +1946,16 @@ portuguese_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          portuguese_visual_rating = average_visual_rating,
          portuguese_socialness_rating = average_socialness_rating,
          portuguese_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(portuguese_maxperceptual_rating = pmax(
+    portuguese_visual_rating,
+    portuguese_olfactory_rating,
+    portuguese_haptic_rating,
+    portuguese_gustatory_rating,
+    portuguese_auditory_rating,
+    na.rm = TRUE
+  ),
+  portuguese_avperceptual_rating = (portuguese_visual_rating + portuguese_olfactory_rating + portuguese_haptic_rating + portuguese_gustatory_rating + portuguese_auditory_rating)/5) %>%
+  
   left_join(portuguese_CD) %>%
   filter(`Portuguese (European)` != "")
 write_csv(portuguese_ratings_subset, "norms/portuguese/portuguese_ratings_subset.csv")
@@ -1727,6 +1994,16 @@ russian_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
                                            TRUE ~ average_visual_rating),
          russian_socialness_rating = average_socialness_rating,
          russian_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(russian_maxperceptual_rating = pmax(
+    russian_visual_rating,
+    russian_olfactory_rating,
+    russian_haptic_rating,
+    russian_gustatory_rating,
+    russian_auditory_rating,
+    na.rm = TRUE
+  ),
+  russian_avperceptual_rating = (russian_visual_rating + russian_olfactory_rating + russian_haptic_rating + russian_gustatory_rating + russian_auditory_rating)/5) %>%
+  
   left_join(russian_CD) %>%
   filter(Russian != "")
 write_csv(russian_ratings_subset, "norms/russian/russian_ratings_subset.csv")
@@ -1758,6 +2035,16 @@ slovak_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          slovak_visual_rating = average_visual_rating,
          slovak_socialness_rating = average_socialness_rating,
          slovak_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(slovak_maxperceptual_rating = pmax(
+    slovak_visual_rating,
+    slovak_olfactory_rating,
+    slovak_haptic_rating,
+    slovak_gustatory_rating,
+    slovak_auditory_rating,
+    na.rm = TRUE
+  ),
+  slovak_avperceptual_rating = (slovak_visual_rating + slovak_olfactory_rating + slovak_haptic_rating + slovak_gustatory_rating + slovak_auditory_rating)/5) %>%
+  
   left_join(slovak_CD) %>%
   filter(Slovak != "")
 write_csv(slovak_ratings_subset, "norms/slovak/slovak_ratings_subset.csv")
@@ -1801,6 +2088,16 @@ spanish_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          spanish_visual_rating = average_visual_rating,
          spanish_socialness_rating = average_socialness_rating,
          spanish_cognitiveness_rating = average_cognitiveness_rating) %>%
+  mutate(spanish_maxperceptual_rating = pmax(
+    spanish_visual_rating,
+    spanish_olfactory_rating,
+    spanish_haptic_rating,
+    spanish_gustatory_rating,
+    spanish_auditory_rating,
+    na.rm = TRUE
+  ),
+  spanish_avperceptual_rating = (spanish_visual_rating + spanish_olfactory_rating + spanish_haptic_rating + spanish_gustatory_rating + spanish_auditory_rating)/5) %>%
+  
   left_join(spanish_CD) %>%
   filter(`Spanish (all)` != "")
 write_csv(spanish_ratings_subset, "norms/spanish/spanish_ratings_subset.csv")
@@ -1835,6 +2132,16 @@ swedish_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          swedish_socialness_rating = average_socialness_rating,
          swedish_cognitiveness_rating = average_cognitiveness_rating
   ) %>%
+  mutate(swedish_maxperceptual_rating = pmax(
+    swedish_visual_rating,
+    swedish_olfactory_rating,
+    swedish_haptic_rating,
+    swedish_gustatory_rating,
+    swedish_auditory_rating,
+    na.rm = TRUE
+  ),
+  swedish_avperceptual_rating = (swedish_visual_rating + swedish_olfactory_rating + swedish_haptic_rating + swedish_gustatory_rating + swedish_auditory_rating)/5) %>%
+  
   filter(`Swedish` != "") %>%
   left_join(swedish_CD) 
 write_csv(swedish_ratings_subset, "norms/swedish/swedish_ratings_subset.csv")
@@ -1871,6 +2178,17 @@ turkish_ratings_subset <- CDI_mega_word_list_with_averageratings %>%
          turkish_socialness_rating = average_socialness_rating,
          turkish_cognitiveness_rating = average_cognitiveness_rating
   ) %>%
+  mutate(turkish_maxperceptual_rating = pmax(
+    turkish_visual_rating,
+    turkish_olfactory_rating,
+    turkish_haptic_rating,
+    turkish_gustatory_rating,
+    turkish_auditory_rating,
+    na.rm = TRUE
+  ),
+  turkish_avperceptual_rating = (turkish_visual_rating + turkish_olfactory_rating + turkish_haptic_rating + turkish_gustatory_rating + turkish_auditory_rating)/5) %>%
+  
+  
   filter(`Turkish` != "") %>%
   left_join(turkish_CD) 
 write_csv(turkish_ratings_subset, "norms/turkish/turkish_ratings_subset.csv")

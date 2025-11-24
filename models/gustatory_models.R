@@ -8,7 +8,7 @@ library(tidyverse)
 # gustatory
 asl_instrument_data <- read_rds("norms/asl/asl_instrument_data.rds")
 asl_gustatory_model <- glm(as.factor(produces) ~ age + asl_gustatory_rating + asl_frequency_rating + asl_phoncomp_rating + lexical_category, 
-                                  data = asl_instrument_data, family = "binomial")
+                            data = asl_instrument_data, family = "binomial")
 asl_gustatory_effect <- ggpredict(asl_gustatory_model, terms = "asl_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = asl_gustatory_model$coefficients[[3]])
@@ -17,7 +17,7 @@ asl_gustatory_summary <- summary(asl_gustatory_model)$coefficients %>%
   filter(row.names(.) == "asl_gustatory_rating") %>%
   mutate(language = "asl") 
 asl_gustatory_interaction_model <- glm(as.factor(produces) ~ age * asl_gustatory_rating + asl_frequency_rating + asl_phoncomp_rating + lexical_category, 
-                                              data = asl_instrument_data, family = "binomial")
+                                        data = asl_instrument_data, family = "binomial")
 asl_gustatory_interaction_summary <- summary(asl_gustatory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:asl_gustatory_rating") %>%
@@ -33,7 +33,7 @@ bsl_gustatory_summary <- summary(bsl_gustatory_model)$coefficients %>%
   filter(row.names(.) == "bsl_gustatory_rating") %>%
   mutate(language = "bsl")
 bsl_gustatory_interaction_model <- glm(as.factor(produces) ~ age * bsl_gustatory_rating + lexical_category, 
-                                              data = bsl_instrument_data, family = "binomial")
+                                        data = bsl_instrument_data, family = "binomial")
 bsl_gustatory_interaction_summary <- summary(bsl_gustatory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:bsl_gustatory_rating") %>%
@@ -420,9 +420,24 @@ italian_gustatory_interaction_summary <- summary(italian_gustatory_interaction_m
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
 
-# kigiriama_gustatory_model <- glm(produces ~ age + kigiriama_gustatory_rating, data = kigiriama_instrument_data, family = "binomial")
-# kigiriama_gustatory_effect <- ggeffect(kigiriama_gustatory_model, terms = "kigiriama_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Kigiriama")
+kigiriama_instrument_data <- read_rds("norms/kigiriama/kigiriama_instrument_data.rds")
+kigiriama_gustatory_model <- glm(produces ~ age + kigiriama_gustatory_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_gustatory_effect <- ggeffect(kigiriama_gustatory_model, terms = "kigiriama_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "kigiriama",
+         variable_coefficient = kigiriama_gustatory_model$coefficients[[3]])
+kigiriama_gustatory_summary <- summary(kigiriama_gustatory_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "kigiriama_gustatory_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+kigiriama_gustatory_interaction_model <- glm(produces ~ age * kigiriama_gustatory_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_gustatory_interaction_summary <- summary(kigiriama_gustatory_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:kigiriama_gustatory_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 kiswahili_instrument_data <- read_rds("norms/kiswahili/kiswahili_instrument_data.rds")
 kiswahili_gustatory_model <- glm(produces ~ age + kiswahili_gustatory_rating + kiswahili_freq_rating + lexical_category + word_length, data = kiswahili_instrument_data, family = "binomial")
@@ -518,10 +533,25 @@ persian_gustatory_interaction_summary <- summary(persian_gustatory_interaction_m
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-# portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
-# portuguese_gustatory_model <- glm(produces ~ age + portuguese_gustatory_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
-# portuguese_gustatory_effect <- ggeffect(portuguese_gustatory_model, terms = "portuguese_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Portuguese (European)")
+
+portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
+portuguese_gustatory_model <- glm(produces ~ age + portuguese_gustatory_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_gustatory_effect <- ggeffect(portuguese_gustatory_model, terms = "portuguese_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Farsi",
+         variable_coefficient = portuguese_gustatory_model$coefficients[[3]])
+portuguese_gustatory_summary <- summary(portuguese_gustatory_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "portuguese_gustatory_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+portuguese_gustatory_interaction_model <- glm(produces ~ age * portuguese_gustatory_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_gustatory_interaction_summary <- summary(portuguese_gustatory_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:portuguese_gustatory_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 russian_instrument_data <- read_rds("norms/russian/russian_instrument_data.rds")
 russian_gustatory_model <- glm(produces ~ age + russian_gustatory_rating + russian_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
@@ -654,7 +684,7 @@ swedish_gustatory_interaction_summary <- summary(swedish_gustatory_interaction_m
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
 arabic_gustatory_model <- glm(as.factor(produces) ~ age + arabic_gustatory_rating + arabic_freq_rating + lexical_category, 
-                                     data = arabic_instrument_data, family = "binomial")
+                               data = arabic_instrument_data, family = "binomial")
 arabic_gustatory_effect <- ggpredict(arabic_gustatory_model, terms = "arabic_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
          variable_coefficient = arabic_gustatory_model$coefficients[[3]])
@@ -663,15 +693,15 @@ arabic_gustatory_summary <- summary(arabic_gustatory_model)$coefficients %>%
   filter(row.names(.) == "arabic_gustatory_rating") %>%
   mutate(language = "Arabic (Saudi)") 
 arabic_gustatory_interaction_model <- glm(as.factor(produces) ~ age * arabic_gustatory_rating + arabic_freq_rating + lexical_category, 
-                                                 data = arabic_instrument_data, family = "binomial")
+                                           data = arabic_instrument_data, family = "binomial")
 arabic_gustatory_interaction_summary <- summary(arabic_gustatory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:arabic_gustatory_rating") %>%
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_gustatory_model <- glm(as.factor(produces) ~ age + catalan_gustatory_rating + catalan_freq_rating + lexical_category, 
-                                      data = catalan_instrument_data, family = "binomial")
+catalan_gustatory_model <- glm(as.factor(produces) ~ age + catalan_gustatory_rating + catalan_freq_rating+ lexical_category, 
+                                data = catalan_instrument_data, family = "binomial")
 catalan_gustatory_effect <- ggpredict(catalan_gustatory_model, terms = "catalan_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = catalan_gustatory_model$coefficients[[3]])
@@ -679,8 +709,8 @@ catalan_gustatory_summary <- summary(catalan_gustatory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "catalan_gustatory_rating") %>%
   mutate(language = "catalan") 
-catalan_gustatory_interaction_model <- glm(as.factor(produces) ~ age * catalan_gustatory_rating + catalan_freq_rating + lexical_category, 
-                                                  data = catalan_instrument_data, family = "binomial")
+catalan_gustatory_interaction_model <- glm(as.factor(produces) ~ age * catalan_gustatory_rating +catalan_freq_rating  + lexical_category, 
+                                            data = catalan_instrument_data, family = "binomial")
 catalan_gustatory_interaction_summary <- summary(catalan_gustatory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:catalan_gustatory_rating") %>%
@@ -688,7 +718,7 @@ catalan_gustatory_interaction_summary <- summary(catalan_gustatory_interaction_m
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
 estonian_gustatory_model <- glm(as.factor(produces) ~ age + estonian_gustatory_rating + estonian_freq_rating + lexical_category, 
-                                       data = estonian_instrument_data, family = "binomial")
+                                 data = estonian_instrument_data, family = "binomial")
 estonian_gustatory_effect <- ggpredict(estonian_gustatory_model, terms = "estonian_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = estonian_gustatory_model$coefficients[[3]])
@@ -697,7 +727,7 @@ estonian_gustatory_summary <- summary(estonian_gustatory_model)$coefficients %>%
   filter(row.names(.) == "estonian_gustatory_rating") %>%
   mutate(language = "estonian") 
 estonian_gustatory_interaction_model <- glm(as.factor(produces) ~ age * estonian_gustatory_rating + estonian_freq_rating  + lexical_category, 
-                                                   data = estonian_instrument_data, family = "binomial")
+                                             data = estonian_instrument_data, family = "binomial")
 estonian_gustatory_interaction_summary <- summary(estonian_gustatory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:estonian_gustatory_rating") %>%
@@ -705,7 +735,7 @@ estonian_gustatory_interaction_summary <- summary(estonian_gustatory_interaction
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
 japanese_gustatory_model <- glm(as.factor(produces) ~ age + japanese_gustatory_rating+ japanese_freq_rating  + lexical_category, 
-                                       data = japanese_instrument_data, family = "binomial")
+                                 data = japanese_instrument_data, family = "binomial")
 japanese_gustatory_effect <- ggpredict(japanese_gustatory_model, terms = "japanese_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = japanese_gustatory_model$coefficients[[3]])
@@ -713,58 +743,72 @@ japanese_gustatory_summary <- summary(japanese_gustatory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "japanese_gustatory_rating") %>%
   mutate(language = "japanese") 
-japanese_gustatory_interaction_model <- glm(as.factor(produces) ~ age * japanese_gustatory_rating+ japanese_freq_rating   + lexical_category, 
-                                                   data = japanese_instrument_data, family = "binomial")
+japanese_gustatory_interaction_model <- glm(as.factor(produces) ~ age * japanese_gustatory_rating + japanese_freq_rating  + lexical_category, 
+                                             data = japanese_instrument_data, family = "binomial")
 japanese_gustatory_interaction_summary <- summary(japanese_gustatory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:japanese_gustatory_rating") %>%
   mutate(language = "japanese")
 
-# turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
-# turkish_gustatory_model <- glm(produces ~ age + turkish_gustatory_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
-# turkish_gustatory_effect <- ggeffect(turkish_gustatory_model, terms = "turkish_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Turkish")
+turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
+turkish_gustatory_model <- glm(as.factor(produces) ~ age + turkish_gustatory_rating+ turkish_freq_rating  + lexical_category, 
+                                data = turkish_instrument_data, family = "binomial")
+turkish_gustatory_effect <- ggpredict(turkish_gustatory_model, terms = "turkish_gustatory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "American Sign Language",
+         variable_coefficient = turkish_gustatory_model$coefficients[[3]])
+turkish_gustatory_summary <- summary(turkish_gustatory_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "turkish_gustatory_rating") %>%
+  mutate(language = "turkish") 
+turkish_gustatory_interaction_model <- glm(as.factor(produces) ~ age * turkish_gustatory_rating + turkish_freq_rating  + lexical_category, 
+                                            data = turkish_instrument_data, family = "binomial")
+turkish_gustatory_interaction_summary <- summary(turkish_gustatory_interaction_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "age:turkish_gustatory_rating") %>%
+  mutate(language = "turkish")
 
 all_gustatory_effects <- bind_rows(asl_gustatory_effect,
-                                          bsl_gustatory_effect,
-                                          chinese_beijing_gustatory_effect,
-                                          chinese_cantonese_gustatory_effect,
-                                          chinese_taiwanese_gustatory_effect,
-                                          croatian_gustatory_effect,
-                                          czech_gustatory_effect,
-                                          english_american_gustatory_effect,
-                                          english_australian_gustatory_effect,
-                                          english_british_gustatory_effect,
-                                          english_irish_gustatory_effect,
-                                          danish_gustatory_effect,
-                                          dutch_gustatory_effect,
-                                          italian_gustatory_effect,
-                                          finnish_gustatory_effect,
-                                          french_european_gustatory_effect,
-                                          french_quebecois_gustatory_effect,
-                                          german_gustatory_effect,
-                                          greek_gustatory_effect,
-                                          hebrew_gustatory_effect,
-                                          hungarian_gustatory_effect,
-                                          irish_gustatory_effect,
-                                          kiswahili_gustatory_effect,
-                                          korean_gustatory_effect,
-                                          latvian_gustatory_effect,
-                                          norwegian_gustatory_effect,
-                                          persian_gustatory_effect,
-                                          russian_gustatory_effect,
-                                          slovak_gustatory_effect,
-                                          spanish_argentinian_gustatory_effect,
-                                          spanish_chilean_gustatory_effect,
-                                          spanish_european_gustatory_effect,
-                                          spanish_mexican_gustatory_effect,
-                                          spanish_peruvian_gustatory_effect,
-                                          swedish_gustatory_effect,
-                                          arabic_gustatory_effect,
-                                          catalan_gustatory_effect,
-                                          estonian_gustatory_effect,
-                                          japanese_gustatory_effect
-                                          # , turkish_gustatory_effect
+                                    bsl_gustatory_effect,
+                                    chinese_beijing_gustatory_effect,
+                                    chinese_cantonese_gustatory_effect,
+                                    chinese_taiwanese_gustatory_effect,
+                                    croatian_gustatory_effect,
+                                    czech_gustatory_effect,
+                                    english_american_gustatory_effect,
+                                    english_australian_gustatory_effect,
+                                    english_british_gustatory_effect,
+                                    english_irish_gustatory_effect,
+                                    danish_gustatory_effect,
+                                    dutch_gustatory_effect,
+                                    italian_gustatory_effect,
+                                    finnish_gustatory_effect,
+                                    french_european_gustatory_effect,
+                                    french_quebecois_gustatory_effect,
+                                    german_gustatory_effect,
+                                    greek_gustatory_effect,
+                                    hebrew_gustatory_effect,
+                                    hungarian_gustatory_effect,
+                                    irish_gustatory_effect,
+                                    kigiriama_gustatory_effect,
+                                    kiswahili_gustatory_effect,
+                                    korean_gustatory_effect,
+                                    latvian_gustatory_effect,
+                                    norwegian_gustatory_effect,
+                                    persian_gustatory_effect,
+                                    portuguese_gustatory_effect,
+                                    russian_gustatory_effect,
+                                    slovak_gustatory_effect,
+                                    spanish_argentinian_gustatory_effect,
+                                    spanish_chilean_gustatory_effect,
+                                    spanish_european_gustatory_effect,
+                                    spanish_mexican_gustatory_effect,
+                                    spanish_peruvian_gustatory_effect,
+                                    swedish_gustatory_effect,
+                                    arabic_gustatory_effect,
+                                    catalan_gustatory_effect,
+                                    estonian_gustatory_effect,
+                                    japanese_gustatory_effect, 
+                                    turkish_gustatory_effect
 )
 write_rds(all_gustatory_effects, "models/effects/all_gustatory_effects.rds")
 
@@ -779,47 +823,49 @@ ggsave("models/plots/all_gustatory_effects_plots.png", all_gustatory_effects_plo
 
 
 all_gustatory_summaries <- bind_rows(asl_gustatory_summary,
-                                            bsl_gustatory_summary,
-                                            chinese_beijing_gustatory_summary,
-                                            chinese_cantonese_gustatory_summary,
-                                            chinese_taiwanese_gustatory_summary,
-                                            croatian_gustatory_summary,
-                                            czech_gustatory_summary,
-                                            english_american_gustatory_summary,
-                                            english_australian_gustatory_summary,
-                                            english_british_gustatory_summary,
-                                            english_irish_gustatory_summary,
-                                            danish_gustatory_summary,
-                                            dutch_gustatory_summary,
-                                            italian_gustatory_summary,
-                                            finnish_gustatory_summary,
-                                            french_european_gustatory_summary,
-                                            french_quebecois_gustatory_summary,
-                                            german_gustatory_summary,
-                                            greek_gustatory_summary,
-                                            hebrew_gustatory_summary,
-                                            hungarian_gustatory_summary,
-                                            irish_gustatory_summary,
-                                            kiswahili_gustatory_summary,
-                                            korean_gustatory_summary,
-                                            latvian_gustatory_summary,
-                                            norwegian_gustatory_summary,
-                                            persian_gustatory_summary,
-                                            russian_gustatory_summary,
-                                            slovak_gustatory_summary,
-                                            spanish_argentinian_gustatory_summary,
-                                            spanish_chilean_gustatory_summary,
-                                            spanish_european_gustatory_summary,
-                                            spanish_mexican_gustatory_summary,
-                                            spanish_peruvian_gustatory_summary,
-                                            swedish_gustatory_summary,
-                                            arabic_gustatory_summary,
-                                            catalan_gustatory_summary,
-                                            estonian_gustatory_summary,
-                                            japanese_gustatory_summary
-                                            # , turkish_gustatory_summary
+                                      bsl_gustatory_summary,
+                                      chinese_beijing_gustatory_summary,
+                                      chinese_cantonese_gustatory_summary,
+                                      chinese_taiwanese_gustatory_summary,
+                                      croatian_gustatory_summary,
+                                      czech_gustatory_summary,
+                                      english_american_gustatory_summary,
+                                      english_australian_gustatory_summary,
+                                      english_british_gustatory_summary,
+                                      english_irish_gustatory_summary,
+                                      danish_gustatory_summary,
+                                      dutch_gustatory_summary,
+                                      italian_gustatory_summary,
+                                      finnish_gustatory_summary,
+                                      french_european_gustatory_summary,
+                                      french_quebecois_gustatory_summary,
+                                      german_gustatory_summary,
+                                      greek_gustatory_summary,
+                                      hebrew_gustatory_summary,
+                                      hungarian_gustatory_summary,
+                                      irish_gustatory_summary,
+                                      kigiriama_gustatory_summary,
+                                      kiswahili_gustatory_summary,
+                                      korean_gustatory_summary,
+                                      latvian_gustatory_summary,
+                                      norwegian_gustatory_summary,
+                                      persian_gustatory_summary,
+                                      portuguese_gustatory_summary,
+                                      russian_gustatory_summary,
+                                      slovak_gustatory_summary,
+                                      spanish_argentinian_gustatory_summary,
+                                      spanish_chilean_gustatory_summary,
+                                      spanish_european_gustatory_summary,
+                                      spanish_mexican_gustatory_summary,
+                                      spanish_peruvian_gustatory_summary,
+                                      swedish_gustatory_summary,
+                                      arabic_gustatory_summary,
+                                      catalan_gustatory_summary,
+                                      estonian_gustatory_summary,
+                                      japanese_gustatory_summary, 
+                                      turkish_gustatory_summary
 ) %>%
-  mutate(variable = "Gustatory",
+  mutate(variable = "gustatory",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",
                                  TRUE ~ "ns")) 
 
@@ -828,47 +874,49 @@ write_rds(all_gustatory_summaries, "models/effects/all_gustatory_summaries.rds")
 
 
 all_gustatory_interaction_summaries <- bind_rows(asl_gustatory_interaction_summary,
-                                                        bsl_gustatory_interaction_summary,
-                                                        chinese_beijing_gustatory_interaction_summary,
-                                                        chinese_cantonese_gustatory_interaction_summary,
-                                                        chinese_taiwanese_gustatory_interaction_summary,
-                                                        croatian_gustatory_interaction_summary,
-                                                        czech_gustatory_interaction_summary,
-                                                        english_american_gustatory_interaction_summary,
-                                                        english_australian_gustatory_interaction_summary,
-                                                        english_british_gustatory_interaction_summary,
-                                                        english_irish_gustatory_interaction_summary,
-                                                        danish_gustatory_interaction_summary,
-                                                        dutch_gustatory_interaction_summary,
-                                                        italian_gustatory_interaction_summary,
-                                                        finnish_gustatory_interaction_summary,
-                                                        french_european_gustatory_interaction_summary,
-                                                        french_quebecois_gustatory_interaction_summary,
-                                                        german_gustatory_interaction_summary,
-                                                        greek_gustatory_interaction_summary,
-                                                        hebrew_gustatory_interaction_summary,
-                                                        hungarian_gustatory_interaction_summary,
-                                                        irish_gustatory_interaction_summary,
-                                                        kiswahili_gustatory_interaction_summary,
-                                                        korean_gustatory_interaction_summary,
-                                                        latvian_gustatory_interaction_summary,
-                                                        norwegian_gustatory_interaction_summary,
-                                                        persian_gustatory_interaction_summary,
-                                                        russian_gustatory_interaction_summary,
-                                                        slovak_gustatory_interaction_summary,
-                                                        spanish_argentinian_gustatory_interaction_summary,
-                                                        spanish_chilean_gustatory_interaction_summary,
-                                                        spanish_european_gustatory_interaction_summary,
-                                                        spanish_mexican_gustatory_interaction_summary,
-                                                        spanish_peruvian_gustatory_interaction_summary,
-                                                        swedish_gustatory_interaction_summary,
-                                                        arabic_gustatory_interaction_summary,
-                                                        catalan_gustatory_interaction_summary,
-                                                        estonian_gustatory_interaction_summary,
-                                                        japanese_gustatory_interaction_summary
-                                                        # , turkish_gustatory_summary
+                                                  bsl_gustatory_interaction_summary,
+                                                  chinese_beijing_gustatory_interaction_summary,
+                                                  chinese_cantonese_gustatory_interaction_summary,
+                                                  chinese_taiwanese_gustatory_interaction_summary,
+                                                  croatian_gustatory_interaction_summary,
+                                                  czech_gustatory_interaction_summary,
+                                                  english_american_gustatory_interaction_summary,
+                                                  english_australian_gustatory_interaction_summary,
+                                                  english_british_gustatory_interaction_summary,
+                                                  english_irish_gustatory_interaction_summary,
+                                                  danish_gustatory_interaction_summary,
+                                                  dutch_gustatory_interaction_summary,
+                                                  italian_gustatory_interaction_summary,
+                                                  finnish_gustatory_interaction_summary,
+                                                  french_european_gustatory_interaction_summary,
+                                                  french_quebecois_gustatory_interaction_summary,
+                                                  german_gustatory_interaction_summary,
+                                                  greek_gustatory_interaction_summary,
+                                                  hebrew_gustatory_interaction_summary,
+                                                  hungarian_gustatory_interaction_summary,
+                                                  irish_gustatory_interaction_summary,
+                                                  kigiriama_gustatory_interaction_summary,
+                                                  kiswahili_gustatory_interaction_summary,
+                                                  korean_gustatory_interaction_summary,
+                                                  latvian_gustatory_interaction_summary,
+                                                  norwegian_gustatory_interaction_summary,
+                                                  persian_gustatory_interaction_summary,
+                                                  portuguese_gustatory_interaction_summary,
+                                                  russian_gustatory_interaction_summary,
+                                                  slovak_gustatory_interaction_summary,
+                                                  spanish_argentinian_gustatory_interaction_summary,
+                                                  spanish_chilean_gustatory_interaction_summary,
+                                                  spanish_european_gustatory_interaction_summary,
+                                                  spanish_mexican_gustatory_interaction_summary,
+                                                  spanish_peruvian_gustatory_interaction_summary,
+                                                  swedish_gustatory_interaction_summary,
+                                                  arabic_gustatory_interaction_summary,
+                                                  catalan_gustatory_interaction_summary,
+                                                  estonian_gustatory_interaction_summary,
+                                                  japanese_gustatory_interaction_summary, 
+                                                  turkish_gustatory_summary
 ) %>%
-  mutate(variable = "Gustatory",
+  mutate(variable = "gustatory",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",
                                  TRUE ~ "ns")) 
 

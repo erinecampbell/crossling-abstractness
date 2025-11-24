@@ -8,7 +8,7 @@ library(tidyverse)
 # visual
 asl_instrument_data <- read_rds("norms/asl/asl_instrument_data.rds")
 asl_visual_model <- glm(as.factor(produces) ~ age + asl_visual_rating + asl_frequency_rating + asl_phoncomp_rating + lexical_category, 
-                        data = asl_instrument_data, family = "binomial")
+                           data = asl_instrument_data, family = "binomial")
 asl_visual_effect <- ggpredict(asl_visual_model, terms = "asl_visual_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = asl_visual_model$coefficients[[3]])
@@ -17,7 +17,7 @@ asl_visual_summary <- summary(asl_visual_model)$coefficients %>%
   filter(row.names(.) == "asl_visual_rating") %>%
   mutate(language = "asl") 
 asl_visual_interaction_model <- glm(as.factor(produces) ~ age * asl_visual_rating + asl_frequency_rating + asl_phoncomp_rating + lexical_category, 
-                                    data = asl_instrument_data, family = "binomial")
+                                       data = asl_instrument_data, family = "binomial")
 asl_visual_interaction_summary <- summary(asl_visual_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:asl_visual_rating") %>%
@@ -33,7 +33,7 @@ bsl_visual_summary <- summary(bsl_visual_model)$coefficients %>%
   filter(row.names(.) == "bsl_visual_rating") %>%
   mutate(language = "bsl")
 bsl_visual_interaction_model <- glm(as.factor(produces) ~ age * bsl_visual_rating + lexical_category, 
-                                    data = bsl_instrument_data, family = "binomial")
+                                       data = bsl_instrument_data, family = "binomial")
 bsl_visual_interaction_summary <- summary(bsl_visual_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:bsl_visual_rating") %>%
@@ -420,9 +420,24 @@ italian_visual_interaction_summary <- summary(italian_visual_interaction_model)$
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
 
-# kigiriama_visual_model <- glm(produces ~ age + kigiriama_visual_rating, data = kigiriama_instrument_data, family = "binomial")
-# kigiriama_visual_effect <- ggeffect(kigiriama_visual_model, terms = "kigiriama_visual_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Kigiriama")
+kigiriama_instrument_data <- read_rds("norms/kigiriama/kigiriama_instrument_data.rds")
+kigiriama_visual_model <- glm(produces ~ age + kigiriama_visual_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_visual_effect <- ggeffect(kigiriama_visual_model, terms = "kigiriama_visual_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "kigiriama",
+         variable_coefficient = kigiriama_visual_model$coefficients[[3]])
+kigiriama_visual_summary <- summary(kigiriama_visual_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "kigiriama_visual_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+kigiriama_visual_interaction_model <- glm(produces ~ age * kigiriama_visual_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_visual_interaction_summary <- summary(kigiriama_visual_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:kigiriama_visual_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 kiswahili_instrument_data <- read_rds("norms/kiswahili/kiswahili_instrument_data.rds")
 kiswahili_visual_model <- glm(produces ~ age + kiswahili_visual_rating + kiswahili_freq_rating + lexical_category + word_length, data = kiswahili_instrument_data, family = "binomial")
@@ -518,10 +533,25 @@ persian_visual_interaction_summary <- summary(persian_visual_interaction_model)$
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-# portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
-# portuguese_visual_model <- glm(produces ~ age + portuguese_visual_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
-# portuguese_visual_effect <- ggeffect(portuguese_visual_model, terms = "portuguese_visual_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Portuguese (European)")
+
+portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
+portuguese_visual_model <- glm(produces ~ age + portuguese_visual_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_visual_effect <- ggeffect(portuguese_visual_model, terms = "portuguese_visual_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Farsi",
+         variable_coefficient = portuguese_visual_model$coefficients[[3]])
+portuguese_visual_summary <- summary(portuguese_visual_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "portuguese_visual_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+portuguese_visual_interaction_model <- glm(produces ~ age * portuguese_visual_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_visual_interaction_summary <- summary(portuguese_visual_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:portuguese_visual_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 russian_instrument_data <- read_rds("norms/russian/russian_instrument_data.rds")
 russian_visual_model <- glm(produces ~ age + russian_visual_rating + russian_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
@@ -654,7 +684,7 @@ swedish_visual_interaction_summary <- summary(swedish_visual_interaction_model)$
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
 arabic_visual_model <- glm(as.factor(produces) ~ age + arabic_visual_rating + arabic_freq_rating + lexical_category, 
-                           data = arabic_instrument_data, family = "binomial")
+                              data = arabic_instrument_data, family = "binomial")
 arabic_visual_effect <- ggpredict(arabic_visual_model, terms = "arabic_visual_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
          variable_coefficient = arabic_visual_model$coefficients[[3]])
@@ -663,15 +693,15 @@ arabic_visual_summary <- summary(arabic_visual_model)$coefficients %>%
   filter(row.names(.) == "arabic_visual_rating") %>%
   mutate(language = "Arabic (Saudi)") 
 arabic_visual_interaction_model <- glm(as.factor(produces) ~ age * arabic_visual_rating + arabic_freq_rating + lexical_category, 
-                                       data = arabic_instrument_data, family = "binomial")
+                                          data = arabic_instrument_data, family = "binomial")
 arabic_visual_interaction_summary <- summary(arabic_visual_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:arabic_visual_rating") %>%
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_visual_model <- glm(as.factor(produces) ~ age + catalan_visual_rating + catalan_freq_rating + lexical_category, 
-                            data = catalan_instrument_data, family = "binomial")
+catalan_visual_model <- glm(as.factor(produces) ~ age + catalan_visual_rating + catalan_freq_rating+ lexical_category, 
+                               data = catalan_instrument_data, family = "binomial")
 catalan_visual_effect <- ggpredict(catalan_visual_model, terms = "catalan_visual_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = catalan_visual_model$coefficients[[3]])
@@ -679,8 +709,8 @@ catalan_visual_summary <- summary(catalan_visual_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "catalan_visual_rating") %>%
   mutate(language = "catalan") 
-catalan_visual_interaction_model <- glm(as.factor(produces) ~ age * catalan_visual_rating + catalan_freq_rating + lexical_category, 
-                                        data = catalan_instrument_data, family = "binomial")
+catalan_visual_interaction_model <- glm(as.factor(produces) ~ age * catalan_visual_rating +catalan_freq_rating  + lexical_category, 
+                                           data = catalan_instrument_data, family = "binomial")
 catalan_visual_interaction_summary <- summary(catalan_visual_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:catalan_visual_rating") %>%
@@ -688,7 +718,7 @@ catalan_visual_interaction_summary <- summary(catalan_visual_interaction_model)$
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
 estonian_visual_model <- glm(as.factor(produces) ~ age + estonian_visual_rating + estonian_freq_rating + lexical_category, 
-                             data = estonian_instrument_data, family = "binomial")
+                                data = estonian_instrument_data, family = "binomial")
 estonian_visual_effect <- ggpredict(estonian_visual_model, terms = "estonian_visual_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = estonian_visual_model$coefficients[[3]])
@@ -697,7 +727,7 @@ estonian_visual_summary <- summary(estonian_visual_model)$coefficients %>%
   filter(row.names(.) == "estonian_visual_rating") %>%
   mutate(language = "estonian") 
 estonian_visual_interaction_model <- glm(as.factor(produces) ~ age * estonian_visual_rating + estonian_freq_rating  + lexical_category, 
-                                         data = estonian_instrument_data, family = "binomial")
+                                            data = estonian_instrument_data, family = "binomial")
 estonian_visual_interaction_summary <- summary(estonian_visual_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:estonian_visual_rating") %>%
@@ -705,7 +735,7 @@ estonian_visual_interaction_summary <- summary(estonian_visual_interaction_model
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
 japanese_visual_model <- glm(as.factor(produces) ~ age + japanese_visual_rating+ japanese_freq_rating  + lexical_category, 
-                             data = japanese_instrument_data, family = "binomial")
+                                data = japanese_instrument_data, family = "binomial")
 japanese_visual_effect <- ggpredict(japanese_visual_model, terms = "japanese_visual_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = japanese_visual_model$coefficients[[3]])
@@ -713,58 +743,72 @@ japanese_visual_summary <- summary(japanese_visual_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "japanese_visual_rating") %>%
   mutate(language = "japanese") 
-japanese_visual_interaction_model <- glm(as.factor(produces) ~ age * japanese_visual_rating  + japanese_freq_rating + lexical_category, 
-                                         data = japanese_instrument_data, family = "binomial")
+japanese_visual_interaction_model <- glm(as.factor(produces) ~ age * japanese_visual_rating + japanese_freq_rating  + lexical_category, 
+                                            data = japanese_instrument_data, family = "binomial")
 japanese_visual_interaction_summary <- summary(japanese_visual_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:japanese_visual_rating") %>%
   mutate(language = "japanese")
 
-# turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
-# turkish_visual_model <- glm(produces ~ age + turkish_visual_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
-# turkish_visual_effect <- ggeffect(turkish_visual_model, terms = "turkish_visual_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Turkish")
+turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
+turkish_visual_model <- glm(as.factor(produces) ~ age + turkish_visual_rating+ turkish_freq_rating  + lexical_category, 
+                               data = turkish_instrument_data, family = "binomial")
+turkish_visual_effect <- ggpredict(turkish_visual_model, terms = "turkish_visual_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "American Sign Language",
+         variable_coefficient = turkish_visual_model$coefficients[[3]])
+turkish_visual_summary <- summary(turkish_visual_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "turkish_visual_rating") %>%
+  mutate(language = "turkish") 
+turkish_visual_interaction_model <- glm(as.factor(produces) ~ age * turkish_visual_rating + turkish_freq_rating  + lexical_category, 
+                                           data = turkish_instrument_data, family = "binomial")
+turkish_visual_interaction_summary <- summary(turkish_visual_interaction_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "age:turkish_visual_rating") %>%
+  mutate(language = "turkish")
 
 all_visual_effects <- bind_rows(asl_visual_effect,
-                                bsl_visual_effect,
-                                chinese_beijing_visual_effect,
-                                chinese_cantonese_visual_effect,
-                                chinese_taiwanese_visual_effect,
-                                croatian_visual_effect,
-                                czech_visual_effect,
-                                english_american_visual_effect,
-                                english_australian_visual_effect,
-                                english_british_visual_effect,
-                                english_irish_visual_effect,
-                                danish_visual_effect,
-                                dutch_visual_effect,
-                                italian_visual_effect,
-                                finnish_visual_effect,
-                                french_european_visual_effect,
-                                french_quebecois_visual_effect,
-                                german_visual_effect,
-                                greek_visual_effect,
-                                hebrew_visual_effect,
-                                hungarian_visual_effect,
-                                irish_visual_effect,
-                                kiswahili_visual_effect,
-                                korean_visual_effect,
-                                latvian_visual_effect,
-                                norwegian_visual_effect,
-                                persian_visual_effect,
-                                russian_visual_effect,
-                                slovak_visual_effect,
-                                spanish_argentinian_visual_effect,
-                                spanish_chilean_visual_effect,
-                                spanish_european_visual_effect,
-                                spanish_mexican_visual_effect,
-                                spanish_peruvian_visual_effect,
-                                swedish_visual_effect,
-                                arabic_visual_effect,
-                                catalan_visual_effect,
-                                estonian_visual_effect,
-                                japanese_visual_effect
-                                # , turkish_visual_effect
+                                   bsl_visual_effect,
+                                   chinese_beijing_visual_effect,
+                                   chinese_cantonese_visual_effect,
+                                   chinese_taiwanese_visual_effect,
+                                   croatian_visual_effect,
+                                   czech_visual_effect,
+                                   english_american_visual_effect,
+                                   english_australian_visual_effect,
+                                   english_british_visual_effect,
+                                   english_irish_visual_effect,
+                                   danish_visual_effect,
+                                   dutch_visual_effect,
+                                   italian_visual_effect,
+                                   finnish_visual_effect,
+                                   french_european_visual_effect,
+                                   french_quebecois_visual_effect,
+                                   german_visual_effect,
+                                   greek_visual_effect,
+                                   hebrew_visual_effect,
+                                   hungarian_visual_effect,
+                                   irish_visual_effect,
+                                   kigiriama_visual_effect,
+                                   kiswahili_visual_effect,
+                                   korean_visual_effect,
+                                   latvian_visual_effect,
+                                   norwegian_visual_effect,
+                                   persian_visual_effect,
+                                   portuguese_visual_effect,
+                                   russian_visual_effect,
+                                   slovak_visual_effect,
+                                   spanish_argentinian_visual_effect,
+                                   spanish_chilean_visual_effect,
+                                   spanish_european_visual_effect,
+                                   spanish_mexican_visual_effect,
+                                   spanish_peruvian_visual_effect,
+                                   swedish_visual_effect,
+                                   arabic_visual_effect,
+                                   catalan_visual_effect,
+                                   estonian_visual_effect,
+                                   japanese_visual_effect, 
+                                   turkish_visual_effect
 )
 write_rds(all_visual_effects, "models/effects/all_visual_effects.rds")
 
@@ -779,45 +823,47 @@ ggsave("models/plots/all_visual_effects_plots.png", all_visual_effects_plot, hei
 
 
 all_visual_summaries <- bind_rows(asl_visual_summary,
-                                  bsl_visual_summary,
-                                  chinese_beijing_visual_summary,
-                                  chinese_cantonese_visual_summary,
-                                  chinese_taiwanese_visual_summary,
-                                  croatian_visual_summary,
-                                  czech_visual_summary,
-                                  english_american_visual_summary,
-                                  english_australian_visual_summary,
-                                  english_british_visual_summary,
-                                  english_irish_visual_summary,
-                                  danish_visual_summary,
-                                  dutch_visual_summary,
-                                  italian_visual_summary,
-                                  finnish_visual_summary,
-                                  french_european_visual_summary,
-                                  french_quebecois_visual_summary,
-                                  german_visual_summary,
-                                  greek_visual_summary,
-                                  hebrew_visual_summary,
-                                  hungarian_visual_summary,
-                                  irish_visual_summary,
-                                  kiswahili_visual_summary,
-                                  korean_visual_summary,
-                                  latvian_visual_summary,
-                                  norwegian_visual_summary,
-                                  persian_visual_summary,
-                                  russian_visual_summary,
-                                  slovak_visual_summary,
-                                  spanish_argentinian_visual_summary,
-                                  spanish_chilean_visual_summary,
-                                  spanish_european_visual_summary,
-                                  spanish_mexican_visual_summary,
-                                  spanish_peruvian_visual_summary,
-                                  swedish_visual_summary,
-                                  arabic_visual_summary,
-                                  catalan_visual_summary,
-                                  estonian_visual_summary,
-                                  japanese_visual_summary
-                                  # , turkish_visual_summary
+                                     bsl_visual_summary,
+                                     chinese_beijing_visual_summary,
+                                     chinese_cantonese_visual_summary,
+                                     chinese_taiwanese_visual_summary,
+                                     croatian_visual_summary,
+                                     czech_visual_summary,
+                                     english_american_visual_summary,
+                                     english_australian_visual_summary,
+                                     english_british_visual_summary,
+                                     english_irish_visual_summary,
+                                     danish_visual_summary,
+                                     dutch_visual_summary,
+                                     italian_visual_summary,
+                                     finnish_visual_summary,
+                                     french_european_visual_summary,
+                                     french_quebecois_visual_summary,
+                                     german_visual_summary,
+                                     greek_visual_summary,
+                                     hebrew_visual_summary,
+                                     hungarian_visual_summary,
+                                     irish_visual_summary,
+                                     kigiriama_visual_summary,
+                                     kiswahili_visual_summary,
+                                     korean_visual_summary,
+                                     latvian_visual_summary,
+                                     norwegian_visual_summary,
+                                     persian_visual_summary,
+                                     portuguese_visual_summary,
+                                     russian_visual_summary,
+                                     slovak_visual_summary,
+                                     spanish_argentinian_visual_summary,
+                                     spanish_chilean_visual_summary,
+                                     spanish_european_visual_summary,
+                                     spanish_mexican_visual_summary,
+                                     spanish_peruvian_visual_summary,
+                                     swedish_visual_summary,
+                                     arabic_visual_summary,
+                                     catalan_visual_summary,
+                                     estonian_visual_summary,
+                                     japanese_visual_summary, 
+                                     turkish_visual_summary
 ) %>%
   mutate(variable = "visual",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",
@@ -828,45 +874,47 @@ write_rds(all_visual_summaries, "models/effects/all_visual_summaries.rds")
 
 
 all_visual_interaction_summaries <- bind_rows(asl_visual_interaction_summary,
-                                              bsl_visual_interaction_summary,
-                                              chinese_beijing_visual_interaction_summary,
-                                              chinese_cantonese_visual_interaction_summary,
-                                              chinese_taiwanese_visual_interaction_summary,
-                                              croatian_visual_interaction_summary,
-                                              czech_visual_interaction_summary,
-                                              english_american_visual_interaction_summary,
-                                              english_australian_visual_interaction_summary,
-                                              english_british_visual_interaction_summary,
-                                              english_irish_visual_interaction_summary,
-                                              danish_visual_interaction_summary,
-                                              dutch_visual_interaction_summary,
-                                              italian_visual_interaction_summary,
-                                              finnish_visual_interaction_summary,
-                                              french_european_visual_interaction_summary,
-                                              french_quebecois_visual_interaction_summary,
-                                              german_visual_interaction_summary,
-                                              greek_visual_interaction_summary,
-                                              hebrew_visual_interaction_summary,
-                                              hungarian_visual_interaction_summary,
-                                              irish_visual_interaction_summary,
-                                              kiswahili_visual_interaction_summary,
-                                              korean_visual_interaction_summary,
-                                              latvian_visual_interaction_summary,
-                                              norwegian_visual_interaction_summary,
-                                              persian_visual_interaction_summary,
-                                              russian_visual_interaction_summary,
-                                              slovak_visual_interaction_summary,
-                                              spanish_argentinian_visual_interaction_summary,
-                                              spanish_chilean_visual_interaction_summary,
-                                              spanish_european_visual_interaction_summary,
-                                              spanish_mexican_visual_interaction_summary,
-                                              spanish_peruvian_visual_interaction_summary,
-                                              swedish_visual_interaction_summary,
-                                              arabic_visual_interaction_summary,
-                                              catalan_visual_interaction_summary,
-                                              estonian_visual_interaction_summary,
-                                              japanese_visual_interaction_summary
-                                              # , turkish_visual_summary
+                                                 bsl_visual_interaction_summary,
+                                                 chinese_beijing_visual_interaction_summary,
+                                                 chinese_cantonese_visual_interaction_summary,
+                                                 chinese_taiwanese_visual_interaction_summary,
+                                                 croatian_visual_interaction_summary,
+                                                 czech_visual_interaction_summary,
+                                                 english_american_visual_interaction_summary,
+                                                 english_australian_visual_interaction_summary,
+                                                 english_british_visual_interaction_summary,
+                                                 english_irish_visual_interaction_summary,
+                                                 danish_visual_interaction_summary,
+                                                 dutch_visual_interaction_summary,
+                                                 italian_visual_interaction_summary,
+                                                 finnish_visual_interaction_summary,
+                                                 french_european_visual_interaction_summary,
+                                                 french_quebecois_visual_interaction_summary,
+                                                 german_visual_interaction_summary,
+                                                 greek_visual_interaction_summary,
+                                                 hebrew_visual_interaction_summary,
+                                                 hungarian_visual_interaction_summary,
+                                                 irish_visual_interaction_summary,
+                                                 kigiriama_visual_interaction_summary,
+                                                 kiswahili_visual_interaction_summary,
+                                                 korean_visual_interaction_summary,
+                                                 latvian_visual_interaction_summary,
+                                                 norwegian_visual_interaction_summary,
+                                                 persian_visual_interaction_summary,
+                                                 portuguese_visual_interaction_summary,
+                                                 russian_visual_interaction_summary,
+                                                 slovak_visual_interaction_summary,
+                                                 spanish_argentinian_visual_interaction_summary,
+                                                 spanish_chilean_visual_interaction_summary,
+                                                 spanish_european_visual_interaction_summary,
+                                                 spanish_mexican_visual_interaction_summary,
+                                                 spanish_peruvian_visual_interaction_summary,
+                                                 swedish_visual_interaction_summary,
+                                                 arabic_visual_interaction_summary,
+                                                 catalan_visual_interaction_summary,
+                                                 estonian_visual_interaction_summary,
+                                                 japanese_visual_interaction_summary, 
+                                                 turkish_visual_summary
 ) %>%
   mutate(variable = "visual",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",

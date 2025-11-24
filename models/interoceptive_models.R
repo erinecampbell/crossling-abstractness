@@ -8,7 +8,7 @@ library(tidyverse)
 # interoceptive
 asl_instrument_data <- read_rds("norms/asl/asl_instrument_data.rds")
 asl_interoceptive_model <- glm(as.factor(produces) ~ age + asl_interoceptive_rating + asl_frequency_rating + asl_phoncomp_rating + lexical_category, 
-                        data = asl_instrument_data, family = "binomial")
+                              data = asl_instrument_data, family = "binomial")
 asl_interoceptive_effect <- ggpredict(asl_interoceptive_model, terms = "asl_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = asl_interoceptive_model$coefficients[[3]])
@@ -17,7 +17,7 @@ asl_interoceptive_summary <- summary(asl_interoceptive_model)$coefficients %>%
   filter(row.names(.) == "asl_interoceptive_rating") %>%
   mutate(language = "asl") 
 asl_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * asl_interoceptive_rating + asl_frequency_rating + asl_phoncomp_rating + lexical_category, 
-                                    data = asl_instrument_data, family = "binomial")
+                                          data = asl_instrument_data, family = "binomial")
 asl_interoceptive_interaction_summary <- summary(asl_interoceptive_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:asl_interoceptive_rating") %>%
@@ -33,7 +33,7 @@ bsl_interoceptive_summary <- summary(bsl_interoceptive_model)$coefficients %>%
   filter(row.names(.) == "bsl_interoceptive_rating") %>%
   mutate(language = "bsl")
 bsl_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * bsl_interoceptive_rating + lexical_category, 
-                                    data = bsl_instrument_data, family = "binomial")
+                                          data = bsl_instrument_data, family = "binomial")
 bsl_interoceptive_interaction_summary <- summary(bsl_interoceptive_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:bsl_interoceptive_rating") %>%
@@ -420,9 +420,24 @@ italian_interoceptive_interaction_summary <- summary(italian_interoceptive_inter
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
 
-# kigiriama_interoceptive_model <- glm(produces ~ age + kigiriama_interoceptive_rating, data = kigiriama_instrument_data, family = "binomial")
-# kigiriama_interoceptive_effect <- ggeffect(kigiriama_interoceptive_model, terms = "kigiriama_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Kigiriama")
+kigiriama_instrument_data <- read_rds("norms/kigiriama/kigiriama_instrument_data.rds")
+kigiriama_interoceptive_model <- glm(produces ~ age + kigiriama_interoceptive_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_interoceptive_effect <- ggeffect(kigiriama_interoceptive_model, terms = "kigiriama_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "kigiriama",
+         variable_coefficient = kigiriama_interoceptive_model$coefficients[[3]])
+kigiriama_interoceptive_summary <- summary(kigiriama_interoceptive_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "kigiriama_interoceptive_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+kigiriama_interoceptive_interaction_model <- glm(produces ~ age * kigiriama_interoceptive_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_interoceptive_interaction_summary <- summary(kigiriama_interoceptive_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:kigiriama_interoceptive_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 kiswahili_instrument_data <- read_rds("norms/kiswahili/kiswahili_instrument_data.rds")
 kiswahili_interoceptive_model <- glm(produces ~ age + kiswahili_interoceptive_rating + kiswahili_freq_rating + lexical_category + word_length, data = kiswahili_instrument_data, family = "binomial")
@@ -518,10 +533,25 @@ persian_interoceptive_interaction_summary <- summary(persian_interoceptive_inter
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-# portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
-# portuguese_interoceptive_model <- glm(produces ~ age + portuguese_interoceptive_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
-# portuguese_interoceptive_effect <- ggeffect(portuguese_interoceptive_model, terms = "portuguese_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Portuguese (European)")
+
+portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
+portuguese_interoceptive_model <- glm(produces ~ age + portuguese_interoceptive_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_interoceptive_effect <- ggeffect(portuguese_interoceptive_model, terms = "portuguese_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Farsi",
+         variable_coefficient = portuguese_interoceptive_model$coefficients[[3]])
+portuguese_interoceptive_summary <- summary(portuguese_interoceptive_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "portuguese_interoceptive_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+portuguese_interoceptive_interaction_model <- glm(produces ~ age * portuguese_interoceptive_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_interoceptive_interaction_summary <- summary(portuguese_interoceptive_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:portuguese_interoceptive_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 russian_instrument_data <- read_rds("norms/russian/russian_instrument_data.rds")
 russian_interoceptive_model <- glm(produces ~ age + russian_interoceptive_rating + russian_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
@@ -654,7 +684,7 @@ swedish_interoceptive_interaction_summary <- summary(swedish_interoceptive_inter
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
 arabic_interoceptive_model <- glm(as.factor(produces) ~ age + arabic_interoceptive_rating + arabic_freq_rating + lexical_category, 
-                           data = arabic_instrument_data, family = "binomial")
+                                 data = arabic_instrument_data, family = "binomial")
 arabic_interoceptive_effect <- ggpredict(arabic_interoceptive_model, terms = "arabic_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
          variable_coefficient = arabic_interoceptive_model$coefficients[[3]])
@@ -663,15 +693,15 @@ arabic_interoceptive_summary <- summary(arabic_interoceptive_model)$coefficients
   filter(row.names(.) == "arabic_interoceptive_rating") %>%
   mutate(language = "Arabic (Saudi)") 
 arabic_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * arabic_interoceptive_rating + arabic_freq_rating + lexical_category, 
-                                       data = arabic_instrument_data, family = "binomial")
+                                             data = arabic_instrument_data, family = "binomial")
 arabic_interoceptive_interaction_summary <- summary(arabic_interoceptive_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:arabic_interoceptive_rating") %>%
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_interoceptive_model <- glm(as.factor(produces) ~ age + catalan_interoceptive_rating + catalan_freq_rating + lexical_category, 
-                            data = catalan_instrument_data, family = "binomial")
+catalan_interoceptive_model <- glm(as.factor(produces) ~ age + catalan_interoceptive_rating + catalan_freq_rating+ lexical_category, 
+                                  data = catalan_instrument_data, family = "binomial")
 catalan_interoceptive_effect <- ggpredict(catalan_interoceptive_model, terms = "catalan_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = catalan_interoceptive_model$coefficients[[3]])
@@ -679,8 +709,8 @@ catalan_interoceptive_summary <- summary(catalan_interoceptive_model)$coefficien
   as.data.frame() %>%
   filter(row.names(.) == "catalan_interoceptive_rating") %>%
   mutate(language = "catalan") 
-catalan_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * catalan_interoceptive_rating + catalan_freq_rating + lexical_category, 
-                                        data = catalan_instrument_data, family = "binomial")
+catalan_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * catalan_interoceptive_rating +catalan_freq_rating  + lexical_category, 
+                                              data = catalan_instrument_data, family = "binomial")
 catalan_interoceptive_interaction_summary <- summary(catalan_interoceptive_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:catalan_interoceptive_rating") %>%
@@ -688,7 +718,7 @@ catalan_interoceptive_interaction_summary <- summary(catalan_interoceptive_inter
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
 estonian_interoceptive_model <- glm(as.factor(produces) ~ age + estonian_interoceptive_rating + estonian_freq_rating + lexical_category, 
-                             data = estonian_instrument_data, family = "binomial")
+                                   data = estonian_instrument_data, family = "binomial")
 estonian_interoceptive_effect <- ggpredict(estonian_interoceptive_model, terms = "estonian_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = estonian_interoceptive_model$coefficients[[3]])
@@ -697,7 +727,7 @@ estonian_interoceptive_summary <- summary(estonian_interoceptive_model)$coeffici
   filter(row.names(.) == "estonian_interoceptive_rating") %>%
   mutate(language = "estonian") 
 estonian_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * estonian_interoceptive_rating + estonian_freq_rating  + lexical_category, 
-                                         data = estonian_instrument_data, family = "binomial")
+                                               data = estonian_instrument_data, family = "binomial")
 estonian_interoceptive_interaction_summary <- summary(estonian_interoceptive_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:estonian_interoceptive_rating") %>%
@@ -705,7 +735,7 @@ estonian_interoceptive_interaction_summary <- summary(estonian_interoceptive_int
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
 japanese_interoceptive_model <- glm(as.factor(produces) ~ age + japanese_interoceptive_rating+ japanese_freq_rating  + lexical_category, 
-                             data = japanese_instrument_data, family = "binomial")
+                                   data = japanese_instrument_data, family = "binomial")
 japanese_interoceptive_effect <- ggpredict(japanese_interoceptive_model, terms = "japanese_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = japanese_interoceptive_model$coefficients[[3]])
@@ -713,58 +743,72 @@ japanese_interoceptive_summary <- summary(japanese_interoceptive_model)$coeffici
   as.data.frame() %>%
   filter(row.names(.) == "japanese_interoceptive_rating") %>%
   mutate(language = "japanese") 
-japanese_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * japanese_interoceptive_rating+ japanese_freq_rating   + lexical_category, 
-                                         data = japanese_instrument_data, family = "binomial")
+japanese_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * japanese_interoceptive_rating + japanese_freq_rating  + lexical_category, 
+                                               data = japanese_instrument_data, family = "binomial")
 japanese_interoceptive_interaction_summary <- summary(japanese_interoceptive_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:japanese_interoceptive_rating") %>%
   mutate(language = "japanese")
 
-# turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
-# turkish_interoceptive_model <- glm(produces ~ age + turkish_interoceptive_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
-# turkish_interoceptive_effect <- ggeffect(turkish_interoceptive_model, terms = "turkish_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Turkish")
+turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
+turkish_interoceptive_model <- glm(as.factor(produces) ~ age + turkish_interoceptive_rating+ turkish_freq_rating  + lexical_category, 
+                                  data = turkish_instrument_data, family = "binomial")
+turkish_interoceptive_effect <- ggpredict(turkish_interoceptive_model, terms = "turkish_interoceptive_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "American Sign Language",
+         variable_coefficient = turkish_interoceptive_model$coefficients[[3]])
+turkish_interoceptive_summary <- summary(turkish_interoceptive_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "turkish_interoceptive_rating") %>%
+  mutate(language = "turkish") 
+turkish_interoceptive_interaction_model <- glm(as.factor(produces) ~ age * turkish_interoceptive_rating + turkish_freq_rating  + lexical_category, 
+                                              data = turkish_instrument_data, family = "binomial")
+turkish_interoceptive_interaction_summary <- summary(turkish_interoceptive_interaction_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "age:turkish_interoceptive_rating") %>%
+  mutate(language = "turkish")
 
 all_interoceptive_effects <- bind_rows(asl_interoceptive_effect,
-                                bsl_interoceptive_effect,
-                                chinese_beijing_interoceptive_effect,
-                                chinese_cantonese_interoceptive_effect,
-                                chinese_taiwanese_interoceptive_effect,
-                                croatian_interoceptive_effect,
-                                czech_interoceptive_effect,
-                                english_american_interoceptive_effect,
-                                english_australian_interoceptive_effect,
-                                english_british_interoceptive_effect,
-                                english_irish_interoceptive_effect,
-                                danish_interoceptive_effect,
-                                dutch_interoceptive_effect,
-                                italian_interoceptive_effect,
-                                finnish_interoceptive_effect,
-                                french_european_interoceptive_effect,
-                                french_quebecois_interoceptive_effect,
-                                german_interoceptive_effect,
-                                greek_interoceptive_effect,
-                                hebrew_interoceptive_effect,
-                                hungarian_interoceptive_effect,
-                                irish_interoceptive_effect,
-                                kiswahili_interoceptive_effect,
-                                korean_interoceptive_effect,
-                                latvian_interoceptive_effect,
-                                norwegian_interoceptive_effect,
-                                persian_interoceptive_effect,
-                                russian_interoceptive_effect,
-                                slovak_interoceptive_effect,
-                                spanish_argentinian_interoceptive_effect,
-                                spanish_chilean_interoceptive_effect,
-                                spanish_european_interoceptive_effect,
-                                spanish_mexican_interoceptive_effect,
-                                spanish_peruvian_interoceptive_effect,
-                                swedish_interoceptive_effect,
-                                arabic_interoceptive_effect,
-                                catalan_interoceptive_effect,
-                                estonian_interoceptive_effect,
-                                japanese_interoceptive_effect
-                                # , turkish_interoceptive_effect
+                                      bsl_interoceptive_effect,
+                                      chinese_beijing_interoceptive_effect,
+                                      chinese_cantonese_interoceptive_effect,
+                                      chinese_taiwanese_interoceptive_effect,
+                                      croatian_interoceptive_effect,
+                                      czech_interoceptive_effect,
+                                      english_american_interoceptive_effect,
+                                      english_australian_interoceptive_effect,
+                                      english_british_interoceptive_effect,
+                                      english_irish_interoceptive_effect,
+                                      danish_interoceptive_effect,
+                                      dutch_interoceptive_effect,
+                                      italian_interoceptive_effect,
+                                      finnish_interoceptive_effect,
+                                      french_european_interoceptive_effect,
+                                      french_quebecois_interoceptive_effect,
+                                      german_interoceptive_effect,
+                                      greek_interoceptive_effect,
+                                      hebrew_interoceptive_effect,
+                                      hungarian_interoceptive_effect,
+                                      irish_interoceptive_effect,
+                                      kigiriama_interoceptive_effect,
+                                      kiswahili_interoceptive_effect,
+                                      korean_interoceptive_effect,
+                                      latvian_interoceptive_effect,
+                                      norwegian_interoceptive_effect,
+                                      persian_interoceptive_effect,
+                                      portuguese_interoceptive_effect,
+                                      russian_interoceptive_effect,
+                                      slovak_interoceptive_effect,
+                                      spanish_argentinian_interoceptive_effect,
+                                      spanish_chilean_interoceptive_effect,
+                                      spanish_european_interoceptive_effect,
+                                      spanish_mexican_interoceptive_effect,
+                                      spanish_peruvian_interoceptive_effect,
+                                      swedish_interoceptive_effect,
+                                      arabic_interoceptive_effect,
+                                      catalan_interoceptive_effect,
+                                      estonian_interoceptive_effect,
+                                      japanese_interoceptive_effect, 
+                                      turkish_interoceptive_effect
 )
 write_rds(all_interoceptive_effects, "models/effects/all_interoceptive_effects.rds")
 
@@ -779,45 +823,47 @@ ggsave("models/plots/all_interoceptive_effects_plots.png", all_interoceptive_eff
 
 
 all_interoceptive_summaries <- bind_rows(asl_interoceptive_summary,
-                                  bsl_interoceptive_summary,
-                                  chinese_beijing_interoceptive_summary,
-                                  chinese_cantonese_interoceptive_summary,
-                                  chinese_taiwanese_interoceptive_summary,
-                                  croatian_interoceptive_summary,
-                                  czech_interoceptive_summary,
-                                  english_american_interoceptive_summary,
-                                  english_australian_interoceptive_summary,
-                                  english_british_interoceptive_summary,
-                                  english_irish_interoceptive_summary,
-                                  danish_interoceptive_summary,
-                                  dutch_interoceptive_summary,
-                                  italian_interoceptive_summary,
-                                  finnish_interoceptive_summary,
-                                  french_european_interoceptive_summary,
-                                  french_quebecois_interoceptive_summary,
-                                  german_interoceptive_summary,
-                                  greek_interoceptive_summary,
-                                  hebrew_interoceptive_summary,
-                                  hungarian_interoceptive_summary,
-                                  irish_interoceptive_summary,
-                                  kiswahili_interoceptive_summary,
-                                  korean_interoceptive_summary,
-                                  latvian_interoceptive_summary,
-                                  norwegian_interoceptive_summary,
-                                  persian_interoceptive_summary,
-                                  russian_interoceptive_summary,
-                                  slovak_interoceptive_summary,
-                                  spanish_argentinian_interoceptive_summary,
-                                  spanish_chilean_interoceptive_summary,
-                                  spanish_european_interoceptive_summary,
-                                  spanish_mexican_interoceptive_summary,
-                                  spanish_peruvian_interoceptive_summary,
-                                  swedish_interoceptive_summary,
-                                  arabic_interoceptive_summary,
-                                  catalan_interoceptive_summary,
-                                  estonian_interoceptive_summary,
-                                  japanese_interoceptive_summary
-                                  # , turkish_interoceptive_summary
+                                        bsl_interoceptive_summary,
+                                        chinese_beijing_interoceptive_summary,
+                                        chinese_cantonese_interoceptive_summary,
+                                        chinese_taiwanese_interoceptive_summary,
+                                        croatian_interoceptive_summary,
+                                        czech_interoceptive_summary,
+                                        english_american_interoceptive_summary,
+                                        english_australian_interoceptive_summary,
+                                        english_british_interoceptive_summary,
+                                        english_irish_interoceptive_summary,
+                                        danish_interoceptive_summary,
+                                        dutch_interoceptive_summary,
+                                        italian_interoceptive_summary,
+                                        finnish_interoceptive_summary,
+                                        french_european_interoceptive_summary,
+                                        french_quebecois_interoceptive_summary,
+                                        german_interoceptive_summary,
+                                        greek_interoceptive_summary,
+                                        hebrew_interoceptive_summary,
+                                        hungarian_interoceptive_summary,
+                                        irish_interoceptive_summary,
+                                        kigiriama_interoceptive_summary,
+                                        kiswahili_interoceptive_summary,
+                                        korean_interoceptive_summary,
+                                        latvian_interoceptive_summary,
+                                        norwegian_interoceptive_summary,
+                                        persian_interoceptive_summary,
+                                        portuguese_interoceptive_summary,
+                                        russian_interoceptive_summary,
+                                        slovak_interoceptive_summary,
+                                        spanish_argentinian_interoceptive_summary,
+                                        spanish_chilean_interoceptive_summary,
+                                        spanish_european_interoceptive_summary,
+                                        spanish_mexican_interoceptive_summary,
+                                        spanish_peruvian_interoceptive_summary,
+                                        swedish_interoceptive_summary,
+                                        arabic_interoceptive_summary,
+                                        catalan_interoceptive_summary,
+                                        estonian_interoceptive_summary,
+                                        japanese_interoceptive_summary, 
+                                        turkish_interoceptive_summary
 ) %>%
   mutate(variable = "interoceptive",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",
@@ -828,45 +874,47 @@ write_rds(all_interoceptive_summaries, "models/effects/all_interoceptive_summari
 
 
 all_interoceptive_interaction_summaries <- bind_rows(asl_interoceptive_interaction_summary,
-                                              bsl_interoceptive_interaction_summary,
-                                              chinese_beijing_interoceptive_interaction_summary,
-                                              chinese_cantonese_interoceptive_interaction_summary,
-                                              chinese_taiwanese_interoceptive_interaction_summary,
-                                              croatian_interoceptive_interaction_summary,
-                                              czech_interoceptive_interaction_summary,
-                                              english_american_interoceptive_interaction_summary,
-                                              english_australian_interoceptive_interaction_summary,
-                                              english_british_interoceptive_interaction_summary,
-                                              english_irish_interoceptive_interaction_summary,
-                                              danish_interoceptive_interaction_summary,
-                                              dutch_interoceptive_interaction_summary,
-                                              italian_interoceptive_interaction_summary,
-                                              finnish_interoceptive_interaction_summary,
-                                              french_european_interoceptive_interaction_summary,
-                                              french_quebecois_interoceptive_interaction_summary,
-                                              german_interoceptive_interaction_summary,
-                                              greek_interoceptive_interaction_summary,
-                                              hebrew_interoceptive_interaction_summary,
-                                              hungarian_interoceptive_interaction_summary,
-                                              irish_interoceptive_interaction_summary,
-                                              kiswahili_interoceptive_interaction_summary,
-                                              korean_interoceptive_interaction_summary,
-                                              latvian_interoceptive_interaction_summary,
-                                              norwegian_interoceptive_interaction_summary,
-                                              persian_interoceptive_interaction_summary,
-                                              russian_interoceptive_interaction_summary,
-                                              slovak_interoceptive_interaction_summary,
-                                              spanish_argentinian_interoceptive_interaction_summary,
-                                              spanish_chilean_interoceptive_interaction_summary,
-                                              spanish_european_interoceptive_interaction_summary,
-                                              spanish_mexican_interoceptive_interaction_summary,
-                                              spanish_peruvian_interoceptive_interaction_summary,
-                                              swedish_interoceptive_interaction_summary,
-                                              arabic_interoceptive_interaction_summary,
-                                              catalan_interoceptive_interaction_summary,
-                                              estonian_interoceptive_interaction_summary,
-                                              japanese_interoceptive_interaction_summary
-                                              # , turkish_interoceptive_summary
+                                                    bsl_interoceptive_interaction_summary,
+                                                    chinese_beijing_interoceptive_interaction_summary,
+                                                    chinese_cantonese_interoceptive_interaction_summary,
+                                                    chinese_taiwanese_interoceptive_interaction_summary,
+                                                    croatian_interoceptive_interaction_summary,
+                                                    czech_interoceptive_interaction_summary,
+                                                    english_american_interoceptive_interaction_summary,
+                                                    english_australian_interoceptive_interaction_summary,
+                                                    english_british_interoceptive_interaction_summary,
+                                                    english_irish_interoceptive_interaction_summary,
+                                                    danish_interoceptive_interaction_summary,
+                                                    dutch_interoceptive_interaction_summary,
+                                                    italian_interoceptive_interaction_summary,
+                                                    finnish_interoceptive_interaction_summary,
+                                                    french_european_interoceptive_interaction_summary,
+                                                    french_quebecois_interoceptive_interaction_summary,
+                                                    german_interoceptive_interaction_summary,
+                                                    greek_interoceptive_interaction_summary,
+                                                    hebrew_interoceptive_interaction_summary,
+                                                    hungarian_interoceptive_interaction_summary,
+                                                    irish_interoceptive_interaction_summary,
+                                                    kigiriama_interoceptive_interaction_summary,
+                                                    kiswahili_interoceptive_interaction_summary,
+                                                    korean_interoceptive_interaction_summary,
+                                                    latvian_interoceptive_interaction_summary,
+                                                    norwegian_interoceptive_interaction_summary,
+                                                    persian_interoceptive_interaction_summary,
+                                                    portuguese_interoceptive_interaction_summary,
+                                                    russian_interoceptive_interaction_summary,
+                                                    slovak_interoceptive_interaction_summary,
+                                                    spanish_argentinian_interoceptive_interaction_summary,
+                                                    spanish_chilean_interoceptive_interaction_summary,
+                                                    spanish_european_interoceptive_interaction_summary,
+                                                    spanish_mexican_interoceptive_interaction_summary,
+                                                    spanish_peruvian_interoceptive_interaction_summary,
+                                                    swedish_interoceptive_interaction_summary,
+                                                    arabic_interoceptive_interaction_summary,
+                                                    catalan_interoceptive_interaction_summary,
+                                                    estonian_interoceptive_interaction_summary,
+                                                    japanese_interoceptive_interaction_summary, 
+                                                    turkish_interoceptive_summary
 ) %>%
   mutate(variable = "interoceptive",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",

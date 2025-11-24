@@ -913,8 +913,8 @@ all_concreteness_interaction_summaries <- bind_rows(asl_concreteness_interaction
                                            arabic_concreteness_interaction_summary,
                                            catalan_concreteness_interaction_summary,
                                            estonian_concreteness_interaction_summary,
-                                           japanese_concreteness_interaction_summary
-                                           # , turkish_concreteness_summary
+                                           japanese_concreteness_interaction_summary, 
+                                           turkish_concreteness_summary
 ) %>%
   mutate(variable = "Concreteness",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",

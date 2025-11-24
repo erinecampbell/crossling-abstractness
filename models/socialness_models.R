@@ -8,7 +8,7 @@ library(tidyverse)
 # socialness
 asl_instrument_data <- read_rds("norms/asl/asl_instrument_data.rds")
 asl_socialness_model <- glm(as.factor(produces) ~ age + asl_socialness_rating + asl_frequency_rating + asl_phoncomp_rating + lexical_category, 
-                        data = asl_instrument_data, family = "binomial")
+                               data = asl_instrument_data, family = "binomial")
 asl_socialness_effect <- ggpredict(asl_socialness_model, terms = "asl_socialness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = asl_socialness_model$coefficients[[3]])
@@ -17,7 +17,7 @@ asl_socialness_summary <- summary(asl_socialness_model)$coefficients %>%
   filter(row.names(.) == "asl_socialness_rating") %>%
   mutate(language = "asl") 
 asl_socialness_interaction_model <- glm(as.factor(produces) ~ age * asl_socialness_rating + asl_frequency_rating + asl_phoncomp_rating + lexical_category, 
-                                    data = asl_instrument_data, family = "binomial")
+                                           data = asl_instrument_data, family = "binomial")
 asl_socialness_interaction_summary <- summary(asl_socialness_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:asl_socialness_rating") %>%
@@ -33,7 +33,7 @@ bsl_socialness_summary <- summary(bsl_socialness_model)$coefficients %>%
   filter(row.names(.) == "bsl_socialness_rating") %>%
   mutate(language = "bsl")
 bsl_socialness_interaction_model <- glm(as.factor(produces) ~ age * bsl_socialness_rating + lexical_category, 
-                                    data = bsl_instrument_data, family = "binomial")
+                                           data = bsl_instrument_data, family = "binomial")
 bsl_socialness_interaction_summary <- summary(bsl_socialness_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:bsl_socialness_rating") %>%
@@ -97,7 +97,7 @@ chinese_taiwanese_socialness_interaction_summary <- summary(chinese_taiwanese_so
          p_value = `Pr(>|z|)`)
 
 croatian_instrument_data <- read_rds("norms/croatian/croatian_instrument_data.rds")
-croatian_socialness_model <- glm(as.factor(produces) ~ age + croatian_socialness_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_socialness_model <- glm(as.factor(produces) ~ age + croatian_socialness_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_socialness_effect <- ggpredict(croatian_socialness_model, terms = "croatian_socialness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Croatian",
          variable_coefficient = croatian_socialness_model$coefficients[[3]])
@@ -107,7 +107,7 @@ croatian_socialness_summary <- summary(croatian_socialness_model)$coefficients %
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-croatian_socialness_interaction_model <- glm(as.factor(produces) ~ age * croatian_socialness_rating + croatian_frequency_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
+croatian_socialness_interaction_model <- glm(as.factor(produces) ~ age * croatian_socialness_rating + croatian_freq_rating + lexical_category + word_length, data = croatian_instrument_data, family = "binomial")
 croatian_socialness_interaction_summary <- summary(croatian_socialness_interaction_model)$coefficients %>% as.data.frame() %>%
   filter(row.names(.) == "age:croatian_socialness_rating") %>%
   mutate(language = "croatian",
@@ -420,9 +420,24 @@ italian_socialness_interaction_summary <- summary(italian_socialness_interaction
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
 
-# kigiriama_socialness_model <- glm(produces ~ age + kigiriama_socialness_rating, data = kigiriama_instrument_data, family = "binomial")
-# kigiriama_socialness_effect <- ggeffect(kigiriama_socialness_model, terms = "kigiriama_socialness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Kigiriama")
+kigiriama_instrument_data <- read_rds("norms/kigiriama/kigiriama_instrument_data.rds")
+kigiriama_socialness_model <- glm(produces ~ age + kigiriama_socialness_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_socialness_effect <- ggeffect(kigiriama_socialness_model, terms = "kigiriama_socialness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "kigiriama",
+         variable_coefficient = kigiriama_socialness_model$coefficients[[3]])
+kigiriama_socialness_summary <- summary(kigiriama_socialness_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "kigiriama_socialness_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+kigiriama_socialness_interaction_model <- glm(produces ~ age * kigiriama_socialness_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_socialness_interaction_summary <- summary(kigiriama_socialness_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:kigiriama_socialness_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 kiswahili_instrument_data <- read_rds("norms/kiswahili/kiswahili_instrument_data.rds")
 kiswahili_socialness_model <- glm(produces ~ age + kiswahili_socialness_rating + kiswahili_freq_rating + lexical_category + word_length, data = kiswahili_instrument_data, family = "binomial")
@@ -518,10 +533,25 @@ persian_socialness_interaction_summary <- summary(persian_socialness_interaction
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-# portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
-# portuguese_socialness_model <- glm(produces ~ age + portuguese_socialness_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
-# portuguese_socialness_effect <- ggeffect(portuguese_socialness_model, terms = "portuguese_socialness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Portuguese (European)")
+
+portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
+portuguese_socialness_model <- glm(produces ~ age + portuguese_socialness_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_socialness_effect <- ggeffect(portuguese_socialness_model, terms = "portuguese_socialness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Farsi",
+         variable_coefficient = portuguese_socialness_model$coefficients[[3]])
+portuguese_socialness_summary <- summary(portuguese_socialness_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "portuguese_socialness_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+portuguese_socialness_interaction_model <- glm(produces ~ age * portuguese_socialness_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_socialness_interaction_summary <- summary(portuguese_socialness_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:portuguese_socialness_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 russian_instrument_data <- read_rds("norms/russian/russian_instrument_data.rds")
 russian_socialness_model <- glm(produces ~ age + russian_socialness_rating + russian_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
@@ -653,8 +683,8 @@ swedish_socialness_interaction_summary <- summary(swedish_socialness_interaction
   mutate(language = "swedish")
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
-arabic_socialness_model <- glm(as.factor(produces) ~ age + arabic_socialness_rating + lexical_category, 
-                           data = arabic_instrument_data, family = "binomial")
+arabic_socialness_model <- glm(as.factor(produces) ~ age + arabic_socialness_rating + arabic_freq_rating + lexical_category, 
+                                  data = arabic_instrument_data, family = "binomial")
 arabic_socialness_effect <- ggpredict(arabic_socialness_model, terms = "arabic_socialness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
          variable_coefficient = arabic_socialness_model$coefficients[[3]])
@@ -662,16 +692,16 @@ arabic_socialness_summary <- summary(arabic_socialness_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "arabic_socialness_rating") %>%
   mutate(language = "Arabic (Saudi)") 
-arabic_socialness_interaction_model <- glm(as.factor(produces) ~ age * arabic_socialness_rating + lexical_category, 
-                                       data = arabic_instrument_data, family = "binomial")
+arabic_socialness_interaction_model <- glm(as.factor(produces) ~ age * arabic_socialness_rating + arabic_freq_rating + lexical_category, 
+                                              data = arabic_instrument_data, family = "binomial")
 arabic_socialness_interaction_summary <- summary(arabic_socialness_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:arabic_socialness_rating") %>%
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_socialness_model <- glm(as.factor(produces) ~ age + catalan_socialness_rating + lexical_category, 
-                            data = catalan_instrument_data, family = "binomial")
+catalan_socialness_model <- glm(as.factor(produces) ~ age + catalan_socialness_rating + catalan_freq_rating+ lexical_category, 
+                                   data = catalan_instrument_data, family = "binomial")
 catalan_socialness_effect <- ggpredict(catalan_socialness_model, terms = "catalan_socialness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = catalan_socialness_model$coefficients[[3]])
@@ -679,16 +709,16 @@ catalan_socialness_summary <- summary(catalan_socialness_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "catalan_socialness_rating") %>%
   mutate(language = "catalan") 
-catalan_socialness_interaction_model <- glm(as.factor(produces) ~ age * catalan_socialness_rating  + lexical_category, 
-                                        data = catalan_instrument_data, family = "binomial")
+catalan_socialness_interaction_model <- glm(as.factor(produces) ~ age * catalan_socialness_rating +catalan_freq_rating  + lexical_category, 
+                                               data = catalan_instrument_data, family = "binomial")
 catalan_socialness_interaction_summary <- summary(catalan_socialness_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:catalan_socialness_rating") %>%
   mutate(language = "catalan") 
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
-estonian_socialness_model <- glm(as.factor(produces) ~ age + estonian_socialness_rating + lexical_category, 
-                             data = estonian_instrument_data, family = "binomial")
+estonian_socialness_model <- glm(as.factor(produces) ~ age + estonian_socialness_rating + estonian_freq_rating + lexical_category, 
+                                    data = estonian_instrument_data, family = "binomial")
 estonian_socialness_effect <- ggpredict(estonian_socialness_model, terms = "estonian_socialness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = estonian_socialness_model$coefficients[[3]])
@@ -696,16 +726,16 @@ estonian_socialness_summary <- summary(estonian_socialness_model)$coefficients %
   as.data.frame() %>%
   filter(row.names(.) == "estonian_socialness_rating") %>%
   mutate(language = "estonian") 
-estonian_socialness_interaction_model <- glm(as.factor(produces) ~ age * estonian_socialness_rating  + lexical_category, 
-                                         data = estonian_instrument_data, family = "binomial")
+estonian_socialness_interaction_model <- glm(as.factor(produces) ~ age * estonian_socialness_rating + estonian_freq_rating  + lexical_category, 
+                                                data = estonian_instrument_data, family = "binomial")
 estonian_socialness_interaction_summary <- summary(estonian_socialness_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:estonian_socialness_rating") %>%
   mutate(language = "estonian")
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
-japanese_socialness_model <- glm(as.factor(produces) ~ age + japanese_socialness_rating + lexical_category, 
-                             data = japanese_instrument_data, family = "binomial")
+japanese_socialness_model <- glm(as.factor(produces) ~ age + japanese_socialness_rating+ japanese_freq_rating  + lexical_category, 
+                                    data = japanese_instrument_data, family = "binomial")
 japanese_socialness_effect <- ggpredict(japanese_socialness_model, terms = "japanese_socialness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = japanese_socialness_model$coefficients[[3]])
@@ -713,58 +743,72 @@ japanese_socialness_summary <- summary(japanese_socialness_model)$coefficients %
   as.data.frame() %>%
   filter(row.names(.) == "japanese_socialness_rating") %>%
   mutate(language = "japanese") 
-japanese_socialness_interaction_model <- glm(as.factor(produces) ~ age * japanese_socialness_rating  + lexical_category, 
-                                         data = japanese_instrument_data, family = "binomial")
+japanese_socialness_interaction_model <- glm(as.factor(produces) ~ age * japanese_socialness_rating + japanese_freq_rating  + lexical_category, 
+                                                data = japanese_instrument_data, family = "binomial")
 japanese_socialness_interaction_summary <- summary(japanese_socialness_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:japanese_socialness_rating") %>%
   mutate(language = "japanese")
 
-# turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
-# turkish_socialness_model <- glm(produces ~ age + turkish_socialness_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
-# turkish_socialness_effect <- ggeffect(turkish_socialness_model, terms = "turkish_socialness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Turkish")
+turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
+turkish_socialness_model <- glm(as.factor(produces) ~ age + turkish_socialness_rating+ turkish_freq_rating  + lexical_category, 
+                                   data = turkish_instrument_data, family = "binomial")
+turkish_socialness_effect <- ggpredict(turkish_socialness_model, terms = "turkish_socialness_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "American Sign Language",
+         variable_coefficient = turkish_socialness_model$coefficients[[3]])
+turkish_socialness_summary <- summary(turkish_socialness_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "turkish_socialness_rating") %>%
+  mutate(language = "turkish") 
+turkish_socialness_interaction_model <- glm(as.factor(produces) ~ age * turkish_socialness_rating + turkish_freq_rating  + lexical_category, 
+                                               data = turkish_instrument_data, family = "binomial")
+turkish_socialness_interaction_summary <- summary(turkish_socialness_interaction_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "age:turkish_socialness_rating") %>%
+  mutate(language = "turkish")
 
 all_socialness_effects <- bind_rows(asl_socialness_effect,
-                                bsl_socialness_effect,
-                                chinese_beijing_socialness_effect,
-                                chinese_cantonese_socialness_effect,
-                                chinese_taiwanese_socialness_effect,
-                                croatian_socialness_effect,
-                                czech_socialness_effect,
-                                english_american_socialness_effect,
-                                english_australian_socialness_effect,
-                                english_british_socialness_effect,
-                                english_irish_socialness_effect,
-                                danish_socialness_effect,
-                                dutch_socialness_effect,
-                                italian_socialness_effect,
-                                finnish_socialness_effect,
-                                french_european_socialness_effect,
-                                french_quebecois_socialness_effect,
-                                german_socialness_effect,
-                                greek_socialness_effect,
-                                hebrew_socialness_effect,
-                                hungarian_socialness_effect,
-                                irish_socialness_effect,
-                                kiswahili_socialness_effect,
-                                korean_socialness_effect,
-                                latvian_socialness_effect,
-                                norwegian_socialness_effect,
-                                persian_socialness_effect,
-                                russian_socialness_effect,
-                                slovak_socialness_effect,
-                                spanish_argentinian_socialness_effect,
-                                spanish_chilean_socialness_effect,
-                                spanish_european_socialness_effect,
-                                spanish_mexican_socialness_effect,
-                                spanish_peruvian_socialness_effect,
-                                swedish_socialness_effect,
-                                arabic_socialness_effect,
-                                catalan_socialness_effect,
-                                estonian_socialness_effect,
-                                japanese_socialness_effect
-                                # , turkish_socialness_effect
+                                       bsl_socialness_effect,
+                                       chinese_beijing_socialness_effect,
+                                       chinese_cantonese_socialness_effect,
+                                       chinese_taiwanese_socialness_effect,
+                                       croatian_socialness_effect,
+                                       czech_socialness_effect,
+                                       english_american_socialness_effect,
+                                       english_australian_socialness_effect,
+                                       english_british_socialness_effect,
+                                       english_irish_socialness_effect,
+                                       danish_socialness_effect,
+                                       dutch_socialness_effect,
+                                       italian_socialness_effect,
+                                       finnish_socialness_effect,
+                                       french_european_socialness_effect,
+                                       french_quebecois_socialness_effect,
+                                       german_socialness_effect,
+                                       greek_socialness_effect,
+                                       hebrew_socialness_effect,
+                                       hungarian_socialness_effect,
+                                       irish_socialness_effect,
+                                       kigiriama_socialness_effect,
+                                       kiswahili_socialness_effect,
+                                       korean_socialness_effect,
+                                       latvian_socialness_effect,
+                                       norwegian_socialness_effect,
+                                       persian_socialness_effect,
+                                       portuguese_socialness_effect,
+                                       russian_socialness_effect,
+                                       slovak_socialness_effect,
+                                       spanish_argentinian_socialness_effect,
+                                       spanish_chilean_socialness_effect,
+                                       spanish_european_socialness_effect,
+                                       spanish_mexican_socialness_effect,
+                                       spanish_peruvian_socialness_effect,
+                                       swedish_socialness_effect,
+                                       arabic_socialness_effect,
+                                       catalan_socialness_effect,
+                                       estonian_socialness_effect,
+                                       japanese_socialness_effect, 
+                                       turkish_socialness_effect
 )
 write_rds(all_socialness_effects, "models/effects/all_socialness_effects.rds")
 
@@ -779,45 +823,47 @@ ggsave("models/plots/all_socialness_effects_plots.png", all_socialness_effects_p
 
 
 all_socialness_summaries <- bind_rows(asl_socialness_summary,
-                                  bsl_socialness_summary,
-                                  chinese_beijing_socialness_summary,
-                                  chinese_cantonese_socialness_summary,
-                                  chinese_taiwanese_socialness_summary,
-                                  croatian_socialness_summary,
-                                  czech_socialness_summary,
-                                  english_american_socialness_summary,
-                                  english_australian_socialness_summary,
-                                  english_british_socialness_summary,
-                                  english_irish_socialness_summary,
-                                  danish_socialness_summary,
-                                  dutch_socialness_summary,
-                                  italian_socialness_summary,
-                                  finnish_socialness_summary,
-                                  french_european_socialness_summary,
-                                  french_quebecois_socialness_summary,
-                                  german_socialness_summary,
-                                  greek_socialness_summary,
-                                  hebrew_socialness_summary,
-                                  hungarian_socialness_summary,
-                                  irish_socialness_summary,
-                                  kiswahili_socialness_summary,
-                                  korean_socialness_summary,
-                                  latvian_socialness_summary,
-                                  norwegian_socialness_summary,
-                                  persian_socialness_summary,
-                                  russian_socialness_summary,
-                                  slovak_socialness_summary,
-                                  spanish_argentinian_socialness_summary,
-                                  spanish_chilean_socialness_summary,
-                                  spanish_european_socialness_summary,
-                                  spanish_mexican_socialness_summary,
-                                  spanish_peruvian_socialness_summary,
-                                  swedish_socialness_summary,
-                                  arabic_socialness_summary,
-                                  catalan_socialness_summary,
-                                  estonian_socialness_summary,
-                                  japanese_socialness_summary
-                                  # , turkish_socialness_summary
+                                         bsl_socialness_summary,
+                                         chinese_beijing_socialness_summary,
+                                         chinese_cantonese_socialness_summary,
+                                         chinese_taiwanese_socialness_summary,
+                                         croatian_socialness_summary,
+                                         czech_socialness_summary,
+                                         english_american_socialness_summary,
+                                         english_australian_socialness_summary,
+                                         english_british_socialness_summary,
+                                         english_irish_socialness_summary,
+                                         danish_socialness_summary,
+                                         dutch_socialness_summary,
+                                         italian_socialness_summary,
+                                         finnish_socialness_summary,
+                                         french_european_socialness_summary,
+                                         french_quebecois_socialness_summary,
+                                         german_socialness_summary,
+                                         greek_socialness_summary,
+                                         hebrew_socialness_summary,
+                                         hungarian_socialness_summary,
+                                         irish_socialness_summary,
+                                         kigiriama_socialness_summary,
+                                         kiswahili_socialness_summary,
+                                         korean_socialness_summary,
+                                         latvian_socialness_summary,
+                                         norwegian_socialness_summary,
+                                         persian_socialness_summary,
+                                         portuguese_socialness_summary,
+                                         russian_socialness_summary,
+                                         slovak_socialness_summary,
+                                         spanish_argentinian_socialness_summary,
+                                         spanish_chilean_socialness_summary,
+                                         spanish_european_socialness_summary,
+                                         spanish_mexican_socialness_summary,
+                                         spanish_peruvian_socialness_summary,
+                                         swedish_socialness_summary,
+                                         arabic_socialness_summary,
+                                         catalan_socialness_summary,
+                                         estonian_socialness_summary,
+                                         japanese_socialness_summary, 
+                                         turkish_socialness_summary
 ) %>%
   mutate(variable = "socialness",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",
@@ -828,45 +874,47 @@ write_rds(all_socialness_summaries, "models/effects/all_socialness_summaries.rds
 
 
 all_socialness_interaction_summaries <- bind_rows(asl_socialness_interaction_summary,
-                                              bsl_socialness_interaction_summary,
-                                              chinese_beijing_socialness_interaction_summary,
-                                              chinese_cantonese_socialness_interaction_summary,
-                                              chinese_taiwanese_socialness_interaction_summary,
-                                              croatian_socialness_interaction_summary,
-                                              czech_socialness_interaction_summary,
-                                              english_american_socialness_interaction_summary,
-                                              english_australian_socialness_interaction_summary,
-                                              english_british_socialness_interaction_summary,
-                                              english_irish_socialness_interaction_summary,
-                                              danish_socialness_interaction_summary,
-                                              dutch_socialness_interaction_summary,
-                                              italian_socialness_interaction_summary,
-                                              finnish_socialness_interaction_summary,
-                                              french_european_socialness_interaction_summary,
-                                              french_quebecois_socialness_interaction_summary,
-                                              german_socialness_interaction_summary,
-                                              greek_socialness_interaction_summary,
-                                              hebrew_socialness_interaction_summary,
-                                              hungarian_socialness_interaction_summary,
-                                              irish_socialness_interaction_summary,
-                                              kiswahili_socialness_interaction_summary,
-                                              korean_socialness_interaction_summary,
-                                              latvian_socialness_interaction_summary,
-                                              norwegian_socialness_interaction_summary,
-                                              persian_socialness_interaction_summary,
-                                              russian_socialness_interaction_summary,
-                                              slovak_socialness_interaction_summary,
-                                              spanish_argentinian_socialness_interaction_summary,
-                                              spanish_chilean_socialness_interaction_summary,
-                                              spanish_european_socialness_interaction_summary,
-                                              spanish_mexican_socialness_interaction_summary,
-                                              spanish_peruvian_socialness_interaction_summary,
-                                              swedish_socialness_interaction_summary,
-                                              arabic_socialness_interaction_summary,
-                                              catalan_socialness_interaction_summary,
-                                              estonian_socialness_interaction_summary,
-                                              japanese_socialness_interaction_summary
-                                              # , turkish_socialness_summary
+                                                     bsl_socialness_interaction_summary,
+                                                     chinese_beijing_socialness_interaction_summary,
+                                                     chinese_cantonese_socialness_interaction_summary,
+                                                     chinese_taiwanese_socialness_interaction_summary,
+                                                     croatian_socialness_interaction_summary,
+                                                     czech_socialness_interaction_summary,
+                                                     english_american_socialness_interaction_summary,
+                                                     english_australian_socialness_interaction_summary,
+                                                     english_british_socialness_interaction_summary,
+                                                     english_irish_socialness_interaction_summary,
+                                                     danish_socialness_interaction_summary,
+                                                     dutch_socialness_interaction_summary,
+                                                     italian_socialness_interaction_summary,
+                                                     finnish_socialness_interaction_summary,
+                                                     french_european_socialness_interaction_summary,
+                                                     french_quebecois_socialness_interaction_summary,
+                                                     german_socialness_interaction_summary,
+                                                     greek_socialness_interaction_summary,
+                                                     hebrew_socialness_interaction_summary,
+                                                     hungarian_socialness_interaction_summary,
+                                                     irish_socialness_interaction_summary,
+                                                     kigiriama_socialness_interaction_summary,
+                                                     kiswahili_socialness_interaction_summary,
+                                                     korean_socialness_interaction_summary,
+                                                     latvian_socialness_interaction_summary,
+                                                     norwegian_socialness_interaction_summary,
+                                                     persian_socialness_interaction_summary,
+                                                     portuguese_socialness_interaction_summary,
+                                                     russian_socialness_interaction_summary,
+                                                     slovak_socialness_interaction_summary,
+                                                     spanish_argentinian_socialness_interaction_summary,
+                                                     spanish_chilean_socialness_interaction_summary,
+                                                     spanish_european_socialness_interaction_summary,
+                                                     spanish_mexican_socialness_interaction_summary,
+                                                     spanish_peruvian_socialness_interaction_summary,
+                                                     swedish_socialness_interaction_summary,
+                                                     arabic_socialness_interaction_summary,
+                                                     catalan_socialness_interaction_summary,
+                                                     estonian_socialness_interaction_summary,
+                                                     japanese_socialness_interaction_summary, 
+                                                     turkish_socialness_summary
 ) %>%
   mutate(variable = "socialness",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",

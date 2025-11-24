@@ -23,23 +23,23 @@ bsl_instrument_data <- read_rds("norms/bsl/bsl_instrument_data.rds")
 bsl_iconicity_model <- glm(as.factor(produces) ~ age + bsl_iconicity_rating + lexical_category, 
                            data = bsl_instrument_data, family = "binomial")
 bsl_iconicity_effect <- ggpredict(bsl_iconicity_model, terms = "bsl_iconicity_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-  mutate(language = "British Sign Language")
+  mutate(language = "bsl")
 bsl_iconicity_summary <- summary(bsl_iconicity_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "bsl_iconicity_rating") %>%
-  mutate(language = "British Sign Language") 
+  mutate(language = "bsl") 
 bsl_iconicity_interaction_model <- glm(as.factor(produces) ~ age * bsl_iconicity_rating + lexical_category, 
                                        data = bsl_instrument_data, family = "binomial")
 bsl_iconicity_interaction_summary <- summary(bsl_iconicity_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:bsl_iconicity_rating") %>%
-  mutate(language = "British Sign Language") 
+  mutate(language = "bsl") 
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
 japanese_iconicity_model <- glm(as.factor(produces) ~ age + japanese_iconicity_rating + japanese_freq_rating + word_length + lexical_category, 
                            data = japanese_instrument_data, family = "binomial")
 japanese_iconicity_effect <- ggpredict(japanese_iconicity_model, terms = "japanese_iconicity_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-  mutate(language = "Japanese")
+  mutate(language = "japanese")
 japanese_iconicity_summary <- summary(japanese_iconicity_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "japanese_iconicity_rating") %>%
@@ -49,7 +49,7 @@ japanese_iconicity_interaction_model <- glm(as.factor(produces) ~ age * japanese
 japanese_iconicity_interaction_summary <- summary(japanese_iconicity_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:japanese_iconicity_rating") %>%
-  mutate(language = "Japanese") 
+  mutate(language = "japanese") 
 
 american_english_instrument_data <- read_rds("norms/english/american_english_instrument_data.rds")
 english_american_iconicity_model <- glm(produces ~ age + english_iconicity_rating + english_freq_rating + lexical_category + word_length, data = american_english_instrument_data, family = "binomial")

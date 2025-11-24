@@ -8,7 +8,7 @@ library(tidyverse)
 # olfactory
 asl_instrument_data <- read_rds("norms/asl/asl_instrument_data.rds")
 asl_olfactory_model <- glm(as.factor(produces) ~ age + asl_olfactory_rating + asl_frequency_rating + asl_phoncomp_rating + lexical_category, 
-                        data = asl_instrument_data, family = "binomial")
+                              data = asl_instrument_data, family = "binomial")
 asl_olfactory_effect <- ggpredict(asl_olfactory_model, terms = "asl_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = asl_olfactory_model$coefficients[[3]])
@@ -17,7 +17,7 @@ asl_olfactory_summary <- summary(asl_olfactory_model)$coefficients %>%
   filter(row.names(.) == "asl_olfactory_rating") %>%
   mutate(language = "asl") 
 asl_olfactory_interaction_model <- glm(as.factor(produces) ~ age * asl_olfactory_rating + asl_frequency_rating + asl_phoncomp_rating + lexical_category, 
-                                    data = asl_instrument_data, family = "binomial")
+                                          data = asl_instrument_data, family = "binomial")
 asl_olfactory_interaction_summary <- summary(asl_olfactory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:asl_olfactory_rating") %>%
@@ -33,7 +33,7 @@ bsl_olfactory_summary <- summary(bsl_olfactory_model)$coefficients %>%
   filter(row.names(.) == "bsl_olfactory_rating") %>%
   mutate(language = "bsl")
 bsl_olfactory_interaction_model <- glm(as.factor(produces) ~ age * bsl_olfactory_rating + lexical_category, 
-                                    data = bsl_instrument_data, family = "binomial")
+                                          data = bsl_instrument_data, family = "binomial")
 bsl_olfactory_interaction_summary <- summary(bsl_olfactory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:bsl_olfactory_rating") %>%
@@ -420,9 +420,24 @@ italian_olfactory_interaction_summary <- summary(italian_olfactory_interaction_m
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
 
-# kigiriama_olfactory_model <- glm(produces ~ age + kigiriama_olfactory_rating, data = kigiriama_instrument_data, family = "binomial")
-# kigiriama_olfactory_effect <- ggeffect(kigiriama_olfactory_model, terms = "kigiriama_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Kigiriama")
+kigiriama_instrument_data <- read_rds("norms/kigiriama/kigiriama_instrument_data.rds")
+kigiriama_olfactory_model <- glm(produces ~ age + kigiriama_olfactory_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_olfactory_effect <- ggeffect(kigiriama_olfactory_model, terms = "kigiriama_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "kigiriama",
+         variable_coefficient = kigiriama_olfactory_model$coefficients[[3]])
+kigiriama_olfactory_summary <- summary(kigiriama_olfactory_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "kigiriama_olfactory_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+kigiriama_olfactory_interaction_model <- glm(produces ~ age * kigiriama_olfactory_rating + lexical_category + word_length, data = kigiriama_instrument_data, family = "binomial")
+kigiriama_olfactory_interaction_summary <- summary(kigiriama_olfactory_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:kigiriama_olfactory_rating") %>%
+  mutate(language = "kigiriama",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 kiswahili_instrument_data <- read_rds("norms/kiswahili/kiswahili_instrument_data.rds")
 kiswahili_olfactory_model <- glm(produces ~ age + kiswahili_olfactory_rating + kiswahili_freq_rating + lexical_category + word_length, data = kiswahili_instrument_data, family = "binomial")
@@ -518,10 +533,25 @@ persian_olfactory_interaction_summary <- summary(persian_olfactory_interaction_m
          effect_size = Estimate,
          standard_error = `Std. Error`,
          p_value = `Pr(>|z|)`)
-# portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
-# portuguese_olfactory_model <- glm(produces ~ age + portuguese_olfactory_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
-# portuguese_olfactory_effect <- ggeffect(portuguese_olfactory_model, terms = "portuguese_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Portuguese (European)")
+
+portuguese_instrument_data <- read_rds("norms/portuguese/portuguese_instrument_data.rds")
+portuguese_olfactory_model <- glm(produces ~ age + portuguese_olfactory_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_olfactory_effect <- ggeffect(portuguese_olfactory_model, terms = "portuguese_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "Farsi",
+         variable_coefficient = portuguese_olfactory_model$coefficients[[3]])
+portuguese_olfactory_summary <- summary(portuguese_olfactory_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "portuguese_olfactory_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
+portuguese_olfactory_interaction_model <- glm(produces ~ age * portuguese_olfactory_rating + portuguese_freq_rating + lexical_category + word_length, data = portuguese_instrument_data, family = "binomial")
+portuguese_olfactory_interaction_summary <- summary(portuguese_olfactory_interaction_model)$coefficients %>% as.data.frame() %>%
+  filter(row.names(.) == "age:portuguese_olfactory_rating") %>%
+  mutate(language = "portuguese",
+         effect_size = Estimate,
+         standard_error = `Std. Error`,
+         p_value = `Pr(>|z|)`)
 
 russian_instrument_data <- read_rds("norms/russian/russian_instrument_data.rds")
 russian_olfactory_model <- glm(produces ~ age + russian_olfactory_rating + russian_freq_rating + lexical_category + word_length, data = russian_instrument_data, family = "binomial")
@@ -654,7 +684,7 @@ swedish_olfactory_interaction_summary <- summary(swedish_olfactory_interaction_m
 
 arabic_instrument_data <- read_rds("norms/arabic/arabic_instrument_data.rds")
 arabic_olfactory_model <- glm(as.factor(produces) ~ age + arabic_olfactory_rating + arabic_freq_rating + lexical_category, 
-                           data = arabic_instrument_data, family = "binomial")
+                                 data = arabic_instrument_data, family = "binomial")
 arabic_olfactory_effect <- ggpredict(arabic_olfactory_model, terms = "arabic_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "Arabic (Saudi)",
          variable_coefficient = arabic_olfactory_model$coefficients[[3]])
@@ -663,15 +693,15 @@ arabic_olfactory_summary <- summary(arabic_olfactory_model)$coefficients %>%
   filter(row.names(.) == "arabic_olfactory_rating") %>%
   mutate(language = "Arabic (Saudi)") 
 arabic_olfactory_interaction_model <- glm(as.factor(produces) ~ age * arabic_olfactory_rating + arabic_freq_rating + lexical_category, 
-                                       data = arabic_instrument_data, family = "binomial")
+                                             data = arabic_instrument_data, family = "binomial")
 arabic_olfactory_interaction_summary <- summary(arabic_olfactory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:arabic_olfactory_rating") %>%
   mutate(language = "Arabic (Saudi)") 
 
 catalan_instrument_data <- read_rds("norms/catalan/catalan_instrument_data.rds")
-catalan_olfactory_model <- glm(as.factor(produces) ~ age + catalan_olfactory_rating + catalan_freq_rating + lexical_category, 
-                            data = catalan_instrument_data, family = "binomial")
+catalan_olfactory_model <- glm(as.factor(produces) ~ age + catalan_olfactory_rating + catalan_freq_rating+ lexical_category, 
+                                  data = catalan_instrument_data, family = "binomial")
 catalan_olfactory_effect <- ggpredict(catalan_olfactory_model, terms = "catalan_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = catalan_olfactory_model$coefficients[[3]])
@@ -679,8 +709,8 @@ catalan_olfactory_summary <- summary(catalan_olfactory_model)$coefficients %>%
   as.data.frame() %>%
   filter(row.names(.) == "catalan_olfactory_rating") %>%
   mutate(language = "catalan") 
-catalan_olfactory_interaction_model <- glm(as.factor(produces) ~ age * catalan_olfactory_rating  + catalan_freq_rating + lexical_category, 
-                                        data = catalan_instrument_data, family = "binomial")
+catalan_olfactory_interaction_model <- glm(as.factor(produces) ~ age * catalan_olfactory_rating +catalan_freq_rating  + lexical_category, 
+                                              data = catalan_instrument_data, family = "binomial")
 catalan_olfactory_interaction_summary <- summary(catalan_olfactory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:catalan_olfactory_rating") %>%
@@ -688,7 +718,7 @@ catalan_olfactory_interaction_summary <- summary(catalan_olfactory_interaction_m
 
 estonian_instrument_data <- read_rds("norms/estonian/estonian_instrument_data.rds")
 estonian_olfactory_model <- glm(as.factor(produces) ~ age + estonian_olfactory_rating + estonian_freq_rating + lexical_category, 
-                             data = estonian_instrument_data, family = "binomial")
+                                   data = estonian_instrument_data, family = "binomial")
 estonian_olfactory_effect <- ggpredict(estonian_olfactory_model, terms = "estonian_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = estonian_olfactory_model$coefficients[[3]])
@@ -697,15 +727,15 @@ estonian_olfactory_summary <- summary(estonian_olfactory_model)$coefficients %>%
   filter(row.names(.) == "estonian_olfactory_rating") %>%
   mutate(language = "estonian") 
 estonian_olfactory_interaction_model <- glm(as.factor(produces) ~ age * estonian_olfactory_rating + estonian_freq_rating  + lexical_category, 
-                                         data = estonian_instrument_data, family = "binomial")
+                                               data = estonian_instrument_data, family = "binomial")
 estonian_olfactory_interaction_summary <- summary(estonian_olfactory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:estonian_olfactory_rating") %>%
   mutate(language = "estonian")
 
 japanese_instrument_data <- read_rds("norms/japanese/japanese_instrument_data.rds")
-japanese_olfactory_model <- glm(as.factor(produces) ~ age + japanese_olfactory_rating+ japanese_freq_rating  + lexical_category , 
-                             data = japanese_instrument_data, family = "binomial")
+japanese_olfactory_model <- glm(as.factor(produces) ~ age + japanese_olfactory_rating+ japanese_freq_rating  + lexical_category, 
+                                   data = japanese_instrument_data, family = "binomial")
 japanese_olfactory_effect <- ggpredict(japanese_olfactory_model, terms = "japanese_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
   mutate(language = "American Sign Language",
          variable_coefficient = japanese_olfactory_model$coefficients[[3]])
@@ -714,57 +744,71 @@ japanese_olfactory_summary <- summary(japanese_olfactory_model)$coefficients %>%
   filter(row.names(.) == "japanese_olfactory_rating") %>%
   mutate(language = "japanese") 
 japanese_olfactory_interaction_model <- glm(as.factor(produces) ~ age * japanese_olfactory_rating + japanese_freq_rating  + lexical_category, 
-                                         data = japanese_instrument_data, family = "binomial")
+                                               data = japanese_instrument_data, family = "binomial")
 japanese_olfactory_interaction_summary <- summary(japanese_olfactory_interaction_model)$coefficients %>% 
   as.data.frame() %>%
   filter(row.names(.) == "age:japanese_olfactory_rating") %>%
   mutate(language = "japanese")
 
-# turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
-# turkish_olfactory_model <- glm(produces ~ age + turkish_olfactory_rating + turkish_freq_rating + lexical_category + word_length, data = turkish_instrument_data, family = "binomial")
-# turkish_olfactory_effect <- ggeffect(turkish_olfactory_model, terms = "turkish_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
-#   mutate(language = "Turkish")
+turkish_instrument_data <- read_rds("norms/turkish/turkish_instrument_data.rds")
+turkish_olfactory_model <- glm(as.factor(produces) ~ age + turkish_olfactory_rating+ turkish_freq_rating  + lexical_category, 
+                                  data = turkish_instrument_data, family = "binomial")
+turkish_olfactory_effect <- ggpredict(turkish_olfactory_model, terms = "turkish_olfactory_rating", ci.lvl = 0.95, verbose = TRUE) %>%
+  mutate(language = "American Sign Language",
+         variable_coefficient = turkish_olfactory_model$coefficients[[3]])
+turkish_olfactory_summary <- summary(turkish_olfactory_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "turkish_olfactory_rating") %>%
+  mutate(language = "turkish") 
+turkish_olfactory_interaction_model <- glm(as.factor(produces) ~ age * turkish_olfactory_rating + turkish_freq_rating  + lexical_category, 
+                                              data = turkish_instrument_data, family = "binomial")
+turkish_olfactory_interaction_summary <- summary(turkish_olfactory_interaction_model)$coefficients %>% 
+  as.data.frame() %>%
+  filter(row.names(.) == "age:turkish_olfactory_rating") %>%
+  mutate(language = "turkish")
 
 all_olfactory_effects <- bind_rows(asl_olfactory_effect,
-                                bsl_olfactory_effect,
-                                chinese_beijing_olfactory_effect,
-                                chinese_cantonese_olfactory_effect,
-                                chinese_taiwanese_olfactory_effect,
-                                croatian_olfactory_effect,
-                                czech_olfactory_effect,
-                                english_american_olfactory_effect,
-                                english_australian_olfactory_effect,
-                                english_british_olfactory_effect,
-                                english_irish_olfactory_effect,
-                                danish_olfactory_effect,
-                                dutch_olfactory_effect,
-                                italian_olfactory_effect,
-                                finnish_olfactory_effect,
-                                french_european_olfactory_effect,
-                                french_quebecois_olfactory_effect,
-                                german_olfactory_effect,
-                                greek_olfactory_effect,
-                                hebrew_olfactory_effect,
-                                hungarian_olfactory_effect,
-                                irish_olfactory_effect,
-                                kiswahili_olfactory_effect,
-                                korean_olfactory_effect,
-                                latvian_olfactory_effect,
-                                norwegian_olfactory_effect,
-                                persian_olfactory_effect,
-                                russian_olfactory_effect,
-                                slovak_olfactory_effect,
-                                spanish_argentinian_olfactory_effect,
-                                spanish_chilean_olfactory_effect,
-                                spanish_european_olfactory_effect,
-                                spanish_mexican_olfactory_effect,
-                                spanish_peruvian_olfactory_effect,
-                                swedish_olfactory_effect,
-                                arabic_olfactory_effect,
-                                catalan_olfactory_effect,
-                                estonian_olfactory_effect,
-                                japanese_olfactory_effect
-                                # , turkish_olfactory_effect
+                                      bsl_olfactory_effect,
+                                      chinese_beijing_olfactory_effect,
+                                      chinese_cantonese_olfactory_effect,
+                                      chinese_taiwanese_olfactory_effect,
+                                      croatian_olfactory_effect,
+                                      czech_olfactory_effect,
+                                      english_american_olfactory_effect,
+                                      english_australian_olfactory_effect,
+                                      english_british_olfactory_effect,
+                                      english_irish_olfactory_effect,
+                                      danish_olfactory_effect,
+                                      dutch_olfactory_effect,
+                                      italian_olfactory_effect,
+                                      finnish_olfactory_effect,
+                                      french_european_olfactory_effect,
+                                      french_quebecois_olfactory_effect,
+                                      german_olfactory_effect,
+                                      greek_olfactory_effect,
+                                      hebrew_olfactory_effect,
+                                      hungarian_olfactory_effect,
+                                      irish_olfactory_effect,
+                                      kigiriama_olfactory_effect,
+                                      kiswahili_olfactory_effect,
+                                      korean_olfactory_effect,
+                                      latvian_olfactory_effect,
+                                      norwegian_olfactory_effect,
+                                      persian_olfactory_effect,
+                                      portuguese_olfactory_effect,
+                                      russian_olfactory_effect,
+                                      slovak_olfactory_effect,
+                                      spanish_argentinian_olfactory_effect,
+                                      spanish_chilean_olfactory_effect,
+                                      spanish_european_olfactory_effect,
+                                      spanish_mexican_olfactory_effect,
+                                      spanish_peruvian_olfactory_effect,
+                                      swedish_olfactory_effect,
+                                      arabic_olfactory_effect,
+                                      catalan_olfactory_effect,
+                                      estonian_olfactory_effect,
+                                      japanese_olfactory_effect, 
+                                      turkish_olfactory_effect
 )
 write_rds(all_olfactory_effects, "models/effects/all_olfactory_effects.rds")
 
@@ -779,45 +823,47 @@ ggsave("models/plots/all_olfactory_effects_plots.png", all_olfactory_effects_plo
 
 
 all_olfactory_summaries <- bind_rows(asl_olfactory_summary,
-                                  bsl_olfactory_summary,
-                                  chinese_beijing_olfactory_summary,
-                                  chinese_cantonese_olfactory_summary,
-                                  chinese_taiwanese_olfactory_summary,
-                                  croatian_olfactory_summary,
-                                  czech_olfactory_summary,
-                                  english_american_olfactory_summary,
-                                  english_australian_olfactory_summary,
-                                  english_british_olfactory_summary,
-                                  english_irish_olfactory_summary,
-                                  danish_olfactory_summary,
-                                  dutch_olfactory_summary,
-                                  italian_olfactory_summary,
-                                  finnish_olfactory_summary,
-                                  french_european_olfactory_summary,
-                                  french_quebecois_olfactory_summary,
-                                  german_olfactory_summary,
-                                  greek_olfactory_summary,
-                                  hebrew_olfactory_summary,
-                                  hungarian_olfactory_summary,
-                                  irish_olfactory_summary,
-                                  kiswahili_olfactory_summary,
-                                  korean_olfactory_summary,
-                                  latvian_olfactory_summary,
-                                  norwegian_olfactory_summary,
-                                  persian_olfactory_summary,
-                                  russian_olfactory_summary,
-                                  slovak_olfactory_summary,
-                                  spanish_argentinian_olfactory_summary,
-                                  spanish_chilean_olfactory_summary,
-                                  spanish_european_olfactory_summary,
-                                  spanish_mexican_olfactory_summary,
-                                  spanish_peruvian_olfactory_summary,
-                                  swedish_olfactory_summary,
-                                  arabic_olfactory_summary,
-                                  catalan_olfactory_summary,
-                                  estonian_olfactory_summary,
-                                  japanese_olfactory_summary
-                                  # , turkish_olfactory_summary
+                                        bsl_olfactory_summary,
+                                        chinese_beijing_olfactory_summary,
+                                        chinese_cantonese_olfactory_summary,
+                                        chinese_taiwanese_olfactory_summary,
+                                        croatian_olfactory_summary,
+                                        czech_olfactory_summary,
+                                        english_american_olfactory_summary,
+                                        english_australian_olfactory_summary,
+                                        english_british_olfactory_summary,
+                                        english_irish_olfactory_summary,
+                                        danish_olfactory_summary,
+                                        dutch_olfactory_summary,
+                                        italian_olfactory_summary,
+                                        finnish_olfactory_summary,
+                                        french_european_olfactory_summary,
+                                        french_quebecois_olfactory_summary,
+                                        german_olfactory_summary,
+                                        greek_olfactory_summary,
+                                        hebrew_olfactory_summary,
+                                        hungarian_olfactory_summary,
+                                        irish_olfactory_summary,
+                                        kigiriama_olfactory_summary,
+                                        kiswahili_olfactory_summary,
+                                        korean_olfactory_summary,
+                                        latvian_olfactory_summary,
+                                        norwegian_olfactory_summary,
+                                        persian_olfactory_summary,
+                                        portuguese_olfactory_summary,
+                                        russian_olfactory_summary,
+                                        slovak_olfactory_summary,
+                                        spanish_argentinian_olfactory_summary,
+                                        spanish_chilean_olfactory_summary,
+                                        spanish_european_olfactory_summary,
+                                        spanish_mexican_olfactory_summary,
+                                        spanish_peruvian_olfactory_summary,
+                                        swedish_olfactory_summary,
+                                        arabic_olfactory_summary,
+                                        catalan_olfactory_summary,
+                                        estonian_olfactory_summary,
+                                        japanese_olfactory_summary, 
+                                        turkish_olfactory_summary
 ) %>%
   mutate(variable = "olfactory",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",
@@ -828,45 +874,47 @@ write_rds(all_olfactory_summaries, "models/effects/all_olfactory_summaries.rds")
 
 
 all_olfactory_interaction_summaries <- bind_rows(asl_olfactory_interaction_summary,
-                                              bsl_olfactory_interaction_summary,
-                                              chinese_beijing_olfactory_interaction_summary,
-                                              chinese_cantonese_olfactory_interaction_summary,
-                                              chinese_taiwanese_olfactory_interaction_summary,
-                                              croatian_olfactory_interaction_summary,
-                                              czech_olfactory_interaction_summary,
-                                              english_american_olfactory_interaction_summary,
-                                              english_australian_olfactory_interaction_summary,
-                                              english_british_olfactory_interaction_summary,
-                                              english_irish_olfactory_interaction_summary,
-                                              danish_olfactory_interaction_summary,
-                                              dutch_olfactory_interaction_summary,
-                                              italian_olfactory_interaction_summary,
-                                              finnish_olfactory_interaction_summary,
-                                              french_european_olfactory_interaction_summary,
-                                              french_quebecois_olfactory_interaction_summary,
-                                              german_olfactory_interaction_summary,
-                                              greek_olfactory_interaction_summary,
-                                              hebrew_olfactory_interaction_summary,
-                                              hungarian_olfactory_interaction_summary,
-                                              irish_olfactory_interaction_summary,
-                                              kiswahili_olfactory_interaction_summary,
-                                              korean_olfactory_interaction_summary,
-                                              latvian_olfactory_interaction_summary,
-                                              norwegian_olfactory_interaction_summary,
-                                              persian_olfactory_interaction_summary,
-                                              russian_olfactory_interaction_summary,
-                                              slovak_olfactory_interaction_summary,
-                                              spanish_argentinian_olfactory_interaction_summary,
-                                              spanish_chilean_olfactory_interaction_summary,
-                                              spanish_european_olfactory_interaction_summary,
-                                              spanish_mexican_olfactory_interaction_summary,
-                                              spanish_peruvian_olfactory_interaction_summary,
-                                              swedish_olfactory_interaction_summary,
-                                              arabic_olfactory_interaction_summary,
-                                              catalan_olfactory_interaction_summary,
-                                              estonian_olfactory_interaction_summary,
-                                              japanese_olfactory_interaction_summary
-                                              # , turkish_olfactory_summary
+                                                    bsl_olfactory_interaction_summary,
+                                                    chinese_beijing_olfactory_interaction_summary,
+                                                    chinese_cantonese_olfactory_interaction_summary,
+                                                    chinese_taiwanese_olfactory_interaction_summary,
+                                                    croatian_olfactory_interaction_summary,
+                                                    czech_olfactory_interaction_summary,
+                                                    english_american_olfactory_interaction_summary,
+                                                    english_australian_olfactory_interaction_summary,
+                                                    english_british_olfactory_interaction_summary,
+                                                    english_irish_olfactory_interaction_summary,
+                                                    danish_olfactory_interaction_summary,
+                                                    dutch_olfactory_interaction_summary,
+                                                    italian_olfactory_interaction_summary,
+                                                    finnish_olfactory_interaction_summary,
+                                                    french_european_olfactory_interaction_summary,
+                                                    french_quebecois_olfactory_interaction_summary,
+                                                    german_olfactory_interaction_summary,
+                                                    greek_olfactory_interaction_summary,
+                                                    hebrew_olfactory_interaction_summary,
+                                                    hungarian_olfactory_interaction_summary,
+                                                    irish_olfactory_interaction_summary,
+                                                    kigiriama_olfactory_interaction_summary,
+                                                    kiswahili_olfactory_interaction_summary,
+                                                    korean_olfactory_interaction_summary,
+                                                    latvian_olfactory_interaction_summary,
+                                                    norwegian_olfactory_interaction_summary,
+                                                    persian_olfactory_interaction_summary,
+                                                    portuguese_olfactory_interaction_summary,
+                                                    russian_olfactory_interaction_summary,
+                                                    slovak_olfactory_interaction_summary,
+                                                    spanish_argentinian_olfactory_interaction_summary,
+                                                    spanish_chilean_olfactory_interaction_summary,
+                                                    spanish_european_olfactory_interaction_summary,
+                                                    spanish_mexican_olfactory_interaction_summary,
+                                                    spanish_peruvian_olfactory_interaction_summary,
+                                                    swedish_olfactory_interaction_summary,
+                                                    arabic_olfactory_interaction_summary,
+                                                    catalan_olfactory_interaction_summary,
+                                                    estonian_olfactory_interaction_summary,
+                                                    japanese_olfactory_interaction_summary, 
+                                                    turkish_olfactory_summary
 ) %>%
   mutate(variable = "olfactory",
          significant = case_when(`Pr(>|z|)` < .05 ~ "significant",

@@ -14,6 +14,8 @@ all_interoceptive_summaries <- read_rds("models/effects/all_interoceptive_summar
 all_olfactory_summaries <- read_rds("models/effects/all_olfactory_summaries.rds") 
 all_socialness_summaries <- read_rds("models/effects/all_socialness_summaries.rds")
 all_visual_summaries <- read_rds("models/effects/all_visual_summaries.rds") 
+all_maxperceptual_summaries <- read_rds("models/effects/all_maxperceptual_summaries.rds") 
+all_avperceptual_summaries <- read_rds("models/effects/all_avperceptual_summaries.rds") 
 
 all_summaries <- bind_rows(all_auditory_summaries,
                          all_boi_summaries,
@@ -29,9 +31,11 @@ all_summaries <- bind_rows(all_auditory_summaries,
                          all_interoceptive_summaries,
                          all_olfactory_summaries,
                          all_socialness_summaries,
-                         all_visual_summaries
+                         all_visual_summaries,
+                         all_maxperceptual_summaries,
+                         all_avperceptual_summaries
                          ) %>%
-  mutate(variable_category = case_when(variable %in% c("auditory", "Body Object Interaction", "Concreteness", "gustatory", "haptic", "imageability", "olfactory", "visual") ~ "sensorimotor",
+  mutate(variable_category = case_when(variable %in% c("auditory", "Body Object Interaction", "Concreteness", "gustatory", "haptic", "imageability", "olfactory", "visual", "Max Perceptual", "Average Perceptual") ~ "sensorimotor",
                                        variable %in% c("Emotional Arousal", "socialness","interoceptive", "Cognitiveness", "Emotional valence") ~ "social-emotional",
                                        variable == "iconicity" ~ "form-meaning relationship",
                                        variable == "contextdiversity" ~ "word usage"),
@@ -70,7 +74,7 @@ summary_of_maineffects <- ggplot(all_summaries, aes(y=reorder(variable, Estimate
   )
   
 summary_of_maineffects
-ggsave(plot=summary_of_maineffects,filename="models/plots/summary_of_maineffects.png", device="png")
+ggsave(plot=summary_of_maineffects,filename="models/plots/summary_of_maineffects.png", device="png", width = 9, height = 7)
 
 
 summaries_summary <- all_summaries %>%
@@ -101,6 +105,9 @@ all_interoceptive_interaction_summaries <- read_rds("models/effects/all_interoce
 all_olfactory_interaction_summaries <- read_rds("models/effects/all_olfactory_interaction_summaries.rds") 
 all_socialness_interaction_summaries <- read_rds("models/effects/all_socialness_interaction_summaries.rds")
 all_visual_interaction_summaries <- read_rds("models/effects/all_visual_interaction_summaries.rds") 
+all_maxperceptual_interaction_summaries <- read_rds("models/effects/all_maxperceptual_interaction_summaries.rds") 
+all_avperceptual_interaction_summaries <- read_rds("models/effects/all_avperceptual_interaction_summaries.rds") 
+
 
 all_interaction_summaries <- bind_rows(all_auditory_interaction_summaries,
                            all_boi_interaction_summaries,
@@ -116,10 +123,12 @@ all_interaction_summaries <- bind_rows(all_auditory_interaction_summaries,
                            all_interoceptive_interaction_summaries,
                            all_olfactory_interaction_summaries,
                            all_socialness_interaction_summaries,
-                           all_visual_interaction_summaries
+                           all_visual_interaction_summaries,
+                           all_maxperceptual_interaction_summaries,
+                           all_avperceptual_interaction_summaries
 ) %>%
   mutate(variable = str_remove_all(variable, "age_"),
-    variable_category = case_when(variable %in% c("auditory", "Body Object Interaction", "Concreteness", "gustatory", "haptic", "imageability", "olfactory", "visual") ~ "sensorimotor",
+    variable_category = case_when(variable %in% c("auditory", "Body Object Interaction", "Concreteness", "gustatory", "haptic", "imageability", "olfactory", "visual", "Max Perceptual", "Average Perceptual") ~ "sensorimotor",
                                        variable %in% c("Emotional Arousal", "socialness", "interoceptive", "Cognitiveness", "Emotional valence") ~ "social-emotional",
                                        variable == "iconicity" ~ "form-meaning relationship",
                                        variable == "contextdiversity" ~ "word usage"),
