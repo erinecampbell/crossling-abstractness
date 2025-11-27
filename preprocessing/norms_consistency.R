@@ -769,7 +769,16 @@ CDI_mega_word_list_with_averageratings <- CDI_mega_dictionary %>%
          average_emotionalvalence_rating = mean(c_across(matches("^.*_emotionalvalence_rating$")), na.rm = TRUE),
          average_socialness_rating = mean(c_across(matches("^.*_socialness_rating$")), na.rm = TRUE),
          average_cognitiveness_rating = mean(c_across(matches("^.*_cognitiveness_rating$")), na.rm = TRUE)) %>%
-  ungroup()
+  ungroup() %>%
+  mutate(average_maxperceptual_rating = pmax(
+    average_visual_rating,
+    average_olfactory_rating,
+    average_haptic_rating,
+    average_gustatory_rating,
+    average_auditory_rating,
+    na.rm = TRUE
+  ),
+  average_avperceptual_rating = (average_visual_rating + average_olfactory_rating + average_haptic_rating + average_gustatory_rating + average_auditory_rating)/5) 
 write_rds(CDI_mega_word_list_with_averageratings, "norms/CDI_mega_word_list_with_averageratings.rds")
 
 

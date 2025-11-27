@@ -5,16 +5,19 @@
 \documentclass[
   man,floatsintext]{apa6}
 \usepackage{amsmath,amssymb}
-\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -33,27 +36,19 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\usepackage{longtable,booktabs,array}
-\usepackage{calc} % for calculating minipage widths
-% Correct order of tables after \paragraph or \subparagraph
-\usepackage{etoolbox}
-\makeatletter
-\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
-\makeatother
-% Allow footnotes in longtable head/foot
-\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
-\makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
 % Set default figure placement to htbp
-\makeatletter
 \def\fps@figure{htbp}
 \makeatother
 \setlength{\emergencystretch}{3em} % prevent overfull lines
@@ -61,36 +56,60 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
+\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\makeatother
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
 \newlength{\csllabelwidth}
 \setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
   % turn on hanging indent if param 1 is 1
   \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
   \fi
   % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
 \usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 \ifLuaTeX
 \usepackage[bidi=basic]{babel}
@@ -101,6 +120,9 @@
 % get rid of language-specific shorthands (see #6817):
 \let\LanguageShortHands\languageshorthands
 \def\languageshorthands#1{}
+\ifLuaTeX
+  \usepackage[english]{selnolig} % disable illegal ligatures
+\fi
 % Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -161,29 +183,27 @@
 \makeatletter
 \xapptocmd\appendix
   {\xapptocmd\section
-    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi\\: #1}}
+    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi: #1}}
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
+\makeatother
 \usepackage{lineno}
 
 \linenumbers
 \usepackage{csquotes}
-\ifLuaTeX
-  \usepackage{selnolig}  % disable illegal ligatures
-\fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
 \hypersetup{
-  pdftitle={Untitled},
-  pdfauthor={Erin Campbell1, Charles P. Davis2, \& Naomi Caselli1},
+  pdftitle={Different Aspects of Abstractness Predict Vocabulary Acquisition Across Languages},
+  pdfauthor={Erin Campbell1, Charles P. Davis2, Amy Lieberman1, \& Naomi Caselli1},
   pdflang={en-EN},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\title{Untitled}
-\author{Erin Campbell\textsuperscript{1}, Charles P. Davis\textsuperscript{2}, \& Naomi Caselli\textsuperscript{1}}
+\title{Different Aspects of Abstractness Predict Vocabulary Acquisition Across Languages}
+\author{Erin Campbell\textsuperscript{1}, Charles P. Davis\textsuperscript{2}, Amy Lieberman\textsuperscript{1}, \& Naomi Caselli\textsuperscript{1}}
 \date{}
 
 
@@ -191,7 +211,7 @@
 
 \authornote{
 
-Correspondence concerning this article should be addressed to Erin Campbell, 2 Silber Way, Boston, MA xxxxx. E-mail: \href{mailto:eecamp@bu.edu}{\nolinkurl{eecamp@bu.edu}}
+Correspondence concerning this article should be addressed to Erin Campbell, 2 Silber Way, Boston, MA 02215. E-mail: \href{mailto:eecamp@bu.edu}{\nolinkurl{eecamp@bu.edu}}
 
 }
 
@@ -200,97 +220,85 @@ Correspondence concerning this article should be addressed to Erin Campbell, 2 S
 \begin{document}
 \maketitle
 
-\begin{verbatim}
-## Warning: package 'readr' was built under R version 4.0.5
-\end{verbatim}
-
-\begin{verbatim}
-## Warning: package 'glue' was built under R version 4.0.5
-\end{verbatim}
-
-\includegraphics{crossling_abstractness_manuscript_files/figure-latex/source-and-load-1.pdf} \includegraphics{crossling_abstractness_manuscript_files/figure-latex/source-and-load-2.pdf}
-
-\hypertarget{abstract}{%
-\section{Abstract}\label{abstract}}
+\section{Abstract}\label{abstract}
 
 of vocabulary data from 87507 children
 
-\hypertarget{where-to-send-this}{%
-\section{where to send this?}\label{where-to-send-this}}
+\section{Introduction}\label{introduction}
 
-Open Mind, CogSci (the journal, not the conference), Cognition, DevSci, Language and Cognition
+Young children rapidly learn new words, but some words are slower to enter children's vocabularies than others. For example, infrequent words are challenging for children to learn {[}CITE{]}, as the child has few exposures from which to draw a robust mapping between the word and the referent {[}CITE{]}. Abstract words are the quintessential ``hard words'' (Gleitman, Cassidy, Nappa, Papafragou, \& Trueswell, 2005), but the explanatory mechanism is murkier, in part because abstractness encompasses several interrelated lexical properties. In a recent consensus paper, abstractness was defined as:
+\textgreater{} ``(1) (historical): Referring to the quality of a concept (or word meaning) that has no sensory or motor salience (in opposition to concrete) in that it cannot be seen, heard, touched, felt, smelled, tasted or acted upon. (2) (contemporary): The quality of a concept (or word) whose meaning is understood primarily on the basis of language, but also draws from interoceptive experiences, including emotion, introspection, and metacognition. Abstract concepts are often exemplified by perceptually dissimilar associated actions and events.'' (Reilly et al., 2023).
 
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+Within this single definition, we have multiple, non-exclusive, potential challenges for word learning.
+1) Abstract words can be characterized by an absence of sensory or motor experience with the referent (e.g., want, Paivio, 1971, 1991).
+2) Abstract words afford fewer opportunities for iconic mappings, leaving their phonological forms less informative.
+3) Abstract words may involve interoception, emotion, introspection, metacognition, or the characterization of relationships between entities.
+4) Abstract words may be less contextually specific (Davis, Altmann, \& Yee, 2020; Hoffman, Lambon Ralph, \& Rogers, 2013; e.g., problem, Schwanenflugel \& Shoben, 1983), and so are exemplified by '' perceptually dissimilar associated actions and events.'' (Reilly et al., 2023). For example, unlike words like ``ball'' or ``dog'', there is no single situation that clearly teaches what ``thing'' means\footnote{Philadelphian readers who have tried to explain ``jawn'' to an out-of-towner are likely familiar with this particular challenge.}.
 
-Young children rapidly learn new words, but some words are easier to learn than others. There are many reasons why a word might be challenging to learn---it is hard to pronounce (e.g., ``sixth''), it is syntactically complex (e.g., ``inedible''), or it is relative abstract, i.e., its referent is not readily observable in the environment (e.g., ``problem''). Here we focus on abstractness as a predictor of when words are learned. Why might words referring to abstract things be challenging to learn? Consider this: you are attempting to teach alien visitors some important words. What properties of words might make your job relatively easy or difficult? Words like ``snake'' would be easy to teach---snakes have a readily identifiable shape and make characteristic sounds---they are strongly associated with particular sensory and perceptual experiences (Lynott, Connell, Brysbaert, Brand, \& Carney, 2020)---and while they vary in size and color, these differences aren't terribly important in determining whether something is a snake or not (whether it is dangerous is another question entirely). Words like ``moo'' might also be readily teachable, as the motivated mapping between the sound of the word and the sound it refers to eases the learning process (e.g., {[}imai2013{]}. Finally, {[}some example illustrating the ``Abstract from specific circumstance'' bit{]} \ldots{}
+It is fairly uncontroversial to state that children learn abstract words later (Bergelson \& Swingley, 2013; Della Rosa, Catricalà, Vigliocco, \& Cappa, 2010; Muraki, Reggin, Feddema, \& Pexman, 2025; Ponari, Norbury, Rotaru, Lenci, \& Vigliocco, 2018), but why exactly they learn abstract words later is open to debate. The most oft-cited reason why children tend to acquire abstract words later than concrete ones is because abstract words lack a clear sensory-perceptual referent, and thus are characterized by referential uncertainty (e.g., Bergelson \& Swingley, 2013). However, this explanation rests on a negative definition of abstract words---namely, whereas concrete words refer to things that can be experienced directly through the senses, abstract words refer to things that cannot, and must be instead defined by other words (Brysbaert, Warriner, \& Kuperman, 2014). This view on abstract words is increasingly coming into question, with a growing literature pointing to the richness of experiences associated with abstract words, emphasizing not only that understanding abstract words tends to rely more on language associations (Borghi et al., 2019; Paivio, 1991) and that they tend to be more ambiguous and deployed in diverse lexical and situational contexts (Barsalou, Dutriaux, \& Scheepers, 2018; Davis et al., 2020; Hoffman et al., 2013; Schwanenflugel \& Shoben, 1983) but also that they tend to be highly associated with emotional experience (Kousta, Vigliocco, Vinson, Andrews, \& Del Campo, 2011) and social knowledge (Wilson-Mendenhall, Simmons, Martin, \& Barsalou, 2013). There are also differences between abstract and concrete words in iconicity (i.e., the degree to which a word's meaning is reflected in its form (Hinojosa, Haro, Magallares, Duñabeitia, \& Ferré, 2021; Winter, Lupyan, Perry, Dingemanse, \& Perlman, 2023), such that abstract words counterintuitively tend to be rated as more iconic. Taking a multidimensional perspective on abstract words enables a more precise question: which specific properties of abstractness actually make a word harder to learn?
 
-Each of these three examples highlights different ways we might conceive of abstractness: abstract words can be characterized by an absence of sensory and perceptual features (e.g., want; (\textbf{paivio1971?}; \textbf{paivio1991?})), they may have a less stable mapping between word form and meaning (though cf.~CITE), and they tend to be applicable in a wide range of linguistic contexts (e.g., problem, (\textbf{schwanenflugel1983?}; \textbf{hoffman2013?}; \textbf{davis2020?})). However, research on word learning has typically collapsed these construals into the more general problem of abstract words lacking a stable referent. In the following, we unpack existing research on acquisition of abstract (vs.~concrete) words, before elaborating on each of the proposed construals of abstractness and how each construal might make unique predictions about the effects of abstractness on word learning.
+In the following sections, we consider four different ways in which a word meaning might be abstract: 1) a lack of associated perceptual experience, 2) social-emotional, cognitive, or interoceptive meaning, 3) iconic vs.~arbitrary mappings between word form and meaning, and 4) broad contextual diversity. These dimensions are theoretically separable, differentially distributed across the lexica of various languages, and potentially associated with distinct learning mechanisms.
 
-\hypertarget{abstractness-in-acquisition}{%
-\subsection{Abstractness in Acquisition}\label{abstractness-in-acquisition}}
+\subsection{Different Constructions of Abstractness}\label{different-constructions-of-abstractness}
 
-children learn abstract words later (\textbf{bergelson2013?})
+\subsubsection{Abstractness as absent of sensorimotor experience}\label{abstractness-as-absent-of-sensorimotor-experience}
 
-\hypertarget{different-constructions-of-abstractness}{%
-\subsection{Different Constructions of Abstractness}\label{different-constructions-of-abstractness}}
+Embodied theories propose that sensorimotor processes are essential for learning the meanings of words {[}e.g., CITE{]}. Under this view, children should learn words more easily when their referents afford rich, distinctive sensorimotor experiences. Developmental evidence is consistent with the idea that children's early vocabularies reflect their perceptual experiences. For example, English-speaking sighted children, but not blind children, were more likely to produce words when the words are more strongly associated with visual experience (Campbell, Casillas, \& Bergelson, 2024). Richer sensory experience generally supports earlier word learning; Seidl, Indarjit, and Borovsky (2023) observed that English words tend to be learned earlier when their semantic associations span multiple senses. In related experimental work, Seidl et al. (2023) observed that 2-year-olds learn words more readily when they are able to interact with the referents than when they are only able to see the referents. These behavioral findings align with neuroimaging work showing that relative to concrete words, abstract words elicit reduced actiovation in cortical regions supporting sensory perception (Wang, Conder, Blitzer, \& Shinkareva, 2010), consistent with the idea that perceptual grounding facilitates processing.
 
-The most oft-cited reason why children tend to acquire abstract words later than concrete ones is because abstract words lack a clear sensory-perceptual referent, and thus are characterized by referential uncertainty (\textbf{bergelson2013?}). However, this explanation rests on a negative definition of abstract words---namely, whereas concrete words refer to things that can be experienced directly through the senses, abstract words refer to things that cannot, and must be instead defined by other words (Brysbaert, Warriner, \& Kuperman, 2014). This view on abstract words is increasingly coming into question, with a growing literature pointing to the richness of experiences associated with abstract words, emphasizing not only that understanding abstract words tends to rely more on language associations (\textbf{paivio1991?}; \textbf{borghi2019?}) and that they tend to be more ambiguous and deployed in diverse lexical and situational contexts (\textbf{schwanenflugel1983?}; \textbf{hoffman2013?}; \textbf{davis2020?}; \textbf{barsalou2018?}) but also that they tend to be highly associated with emotional experience (\textbf{vigliocco2013?}) and social knowledge (\textbf{wilson-mendenhall2013?}). There are also differences between abstract and concrete words in iconicity (i.e., the degree to which a word's meaning is reflected in its form (J. A. Hinojosa, Haro, Magallares, Duñabeitia, \& Ferré, 2021; \textbf{winter2023?}), such that abstract words counterintuitively tend to be rated as more iconic. Assuming a multidimensional perspective on abstract words---that is, that they have a range of experiential properties beyond just a lack of sensory referents---allows us to unpack what properties of abstractness lead to differences in word learning. In the following sections, we consider three different ways in which a word meaning might be abstract: a lack of associated perceptual experience, arbitrary mappings between word form and meaning, and the ability to use a word in a variety of distinct contexts.
+Motor experience may provide an additional source of grounding beyond sensory associations: Words that afford rich opportunities for physical engagement {[}e.g., xxx,xxx, as captured by body--object-interaction \hyperref[boi]{BOI} ratings; cite; cite{]} are acquired earlier and processed more efficiently in English (Inkster, Wellsby, Lloyd, \& Pexman, 2016; Pexman, 2019; Suggate \& Stoeger, 2017; Thill \& Twomey, 2016; Wellsby \& Pexman, 2014). These effects also relate to children's own motor development: the processing speed of high-BOI words, but not low-BOI words, is linked to children's fine motor skills (Suggate \& Stoeger, 2017), suggesting that developing motor abilities may support access to action-related meanings. Converging evidence from adults shows that adults learn novel words better when the words are with relevant actions (Casasanto \& de Bruin, 2019; Vukovic \& Shtyrov, 2019), and that motor cortical regions are engaged during the acquisition of motor-relevant vocabulary (Liuzzi et al., 2010; Vukovic \& Shtyrov, 2019). Because infants and toddlers across cultures differ substantially in the timing and opportunities for motor exploration (Lohaus et al., 2014), the contribution of motor grounding to word learning may also vary across languages and developmental contexts.
 
-\hypertarget{word-meaning-abstract-from-perceptual-experience}{%
-\subsubsection{Word Meaning Abstract from Perceptual Experience}\label{word-meaning-abstract-from-perceptual-experience}}
+Effects of sensorimotor grounding may differ across sensorimotor modalities and across development. Visual, tactile, auditory, and motor experiences provide distinct types of information about a referent, and some modalities may offer more reliable cues for early learners than others (San Roque, Norcliffe, \& Majid, 2024). These contributions may also shift with age: sensorimotor experience may be especially important before infants can infer meanings from language alone. On the other hand, effects of sensorimotor associations could grow stronger across age, as infants are increasingly mobile and able to explore their environments.
 
-Embodied theories propose that sensorimotor processes are essential for learning the meanings of words (e.g., CITE). Under such hypotheses, words with referents that afford greater sensorimotor experience should be easier to acquire. Greater sensorimotor experience can be thought of both in terms of the saliency of the experience and in terms of the multisensoriness of the experience. English-speaking sighted children, but not blind children, were more likely to produce words when the words are more strongly associated with visual experience (\textbf{campbell2023?}). Seidl, Indarjit, and Borovsky (2023) observed that English words tend to be learned earlier when their semantic associations span multiple senses. In related experimental work, Seidl et al. (2023) observed that 2-year-olds learn words more readily when they are able to interact with the referents than when they are only able to see the referents.
+\subsubsection{Abstractness as wordform arbitrariness}\label{abstractness-as-wordform-arbitrariness}
 
-\hypertarget{imageability}{%
-\paragraph{Imageability}\label{imageability}}
+A second source of difficulty for abstract words involves the limited opportunities they afford for transparent, non-arbitrary mappings between a word's phonological form and its meaning. Iconicity refers to a perceptually-motivated resemblance between form and meaning (e.g., the English word \emph{moo} resembles the sound a cow makes). Work on onomatopoeias, ideophones, and systematicity show that iconicity is a more prevalent phenomenon than previously recognized {[}cite{]}, but languages vary widely in the prevalence and strength of iconicity in their lexicons (with iconicity especially prevalent in sign languages and in many spoken languages, including several Niger-Congo languages, Quechua, Japanese, Korean, Turkish, and Basque, Akita \& Pardeshi, 2019). Sensorimotor aspects of word meaning afford different kinds of iconic mappings across languages: in spoken languages, auditory meanings are more likely to be expressed iconically, whereas in sign languages, visual and tactile meanings are more likely to be expressed iconically (B. Thompson, Perlman, Lupyan, Sehyr, \& Emmorey, 2020; Winter et al., 2023). Because abstract words lack strong sensorimotor grounding, they typically afford fewer opportunities for such motivated mappings, and their phonological forms may therefore provide learners with less information about word meaning (though c.f., Hinojosa et al., 2021; Winter et al., 2023).
 
-The property of being something perceptible has traditionally been quantified using two closely related measures: imageability and concreteness. Imageability seeks to capture to what extent a word gives rise to a mental image (\textbf{paivio1968?}), whereas concreteness seeks to identify the degree to which a word is associated with any of the senses, reflecting the totality of subjective sensory experience with a word (Brysbaert et al., 2014). Imageability and concreteness correlate strongly with one another (Rofes et al., 2018), and while they are often used interchangeably, these two constructs tend to diverge based on frequency (e.g., chair and protuberance are similarly concrete, but protuberance is more challenging to summon a mental image for) and specificity (e.g., chair and furniture are similarly imageable, but the more specific word ``chair'' is rated as more concrete). Like concreteness, words rated higher in imageability tend to be processed more quickly {[}cite cite{]} and learned earlier {[}cite cite cite{]}. {[}describe the possible mechanism{]}
+Across languages, words that are higher in iconicity tend to be learned earlier (Laing, 2019; Massaro \& Perlman, 2017; Perry, Perlman, \& Lupyan, 2015; Sidhu, Williamson, Slavova, \& Pexman, 2021). One account attributes this advantage to easier referential mapping between the referent and the wordform (Perniss, Özyürek, \& Morgan, 2015; R. L. Thompson, Vinson, Woll, \& Vigliocco, 2012). Indeed, computational and experimental evidence from preschoolers and adults suggest that iconic words are easier to acquire than non-iconic words (Imai, Kita, Nagumo, \& Okada, 2008; K. F. Kantartzis, 2011; K. Kantartzis, Imai, Evans, \& Kita, 2019; Miyazaki, Imai, Kantartzis, Kita, \& Kita, 2013; Nygaard, Cook, \& Namy, 2009; Yoshida, 2003, 2012), and it has been theorized that acquiring iconic words early scaffolds the later acquisition of non-iconic words (Imai \& Kita, 2014; Imai et al., 2008; R. L. Thompson, 2011; though c.f., Nielsen \& Dingemanse, 2021). Other accounts, however, challenge the assumption that young children possess the world knowledge necessary to detect and abstract perceptual resemblance. Perhaps instead, effects of iconicity are actually driven by frequency or salience in child-directed speech (Laing, Keren-Portnoy, Khattab, \& Sloggett, n.d.; Perry, Perlman, Winter, Massaro, \& Lupyan, 2018), types of meanings typically encoded by iconic words (B. Thompson et al., 2020; Winter et al., 2023), or systematicity (Campbell et al., 2025). Studying effects of iconicity across languages allows us to start to disentangle iconicity from its lexical covariates.
 
-\hypertarget{perceptual-strength-and-perceptual-exclusivity}{%
-\paragraph{Perceptual Strength and Perceptual Exclusivity}\label{perceptual-strength-and-perceptual-exclusivity}}
+\subsubsection{Abstractness as internal or relational meanings}\label{abstractness-as-internal-or-relational-meanings}
 
-More recently, researchers have developed more specific measures of words' perceptual associations. Beyond general perceptibility, these norms separate associations by modality (visual, tactile, auditory, haptic, gustatory, interoceptive), yielding the modality specific ratings, an overall strength rating, and a measure of the spread of ratings across modalities (Lynott et al., 2020). Such specificity allows researchers to test whether information from certain senses, like vision or touch, may be privileged over others {[}cite{]}, as well as whether receiving sensory information from multiple modalities may support acquisition (e.g., Seidl et al. (2023)).
+Many abstract words are associated with emotional/affective (Kousta et al., 2011; Troche, Crutch, \& Reilly, 2017; Troche, Crutch, \& Reilly, 2014; Villani, Lugli, Liuzza, \& Borghi, 2019), interoceptive (Connell, Lynott, \& Banks, 2018; Harpaintner, Trumpp, \& Kiefer, 2018; Lynott, Connell, Brysbaert, Brand, \& Carney, 2020), social/relational (Harpaintner et al., 2018; Troche et al., 2017; Villani et al., 2019; Wiemer-Hastings \& Xu, 2005), and/or unobservable cognitive states (Harpaintner et al., 2018; Troche et al., 2017, 2014). We group these facts of abstractness together here based on vibes (our conceptual intuition) and on the principal component analysis of abstract words by Troche et al. (2017).
 
-\hypertarget{boi}{%
-\paragraph{BOI}\label{boi}}
+Abstract words tend to relate more strongly to emotional experience than concrete words (Lenci, Lebani, \& Passaro, 2018; Newcombe, Campbell, Siakaluk, \& Pexman, 2012; Villani et al., 2019; Winter, 2022) According to the Affective Embodiment Account {[}cite cite{]}, for words without consistent perceptual mappings, emotional relevance may support processing and acquisition (Desai, Reilly, \& van Dam, 2018; Goriachun, Strijkers, Gala, \& Ziegler, 2025; Kousta et al., 2011; Newcombe et al., 2012; Ponari, Norbury, \& Vigliocco, 2017; Wild \& Kuperman, 2024). Developmental and psycholinguistic evidence supports this proposal. In English, emotionally valenced words (both positive and negatively valenced) tend to be acquired earlier than neutral words (Muraki et al., 2025; Ponari et al., 2018, 2017; Reggin, Muraki, \& Pexman, 2021; Wild \& Kuperman, 2024), and this effect is especially strong for abstract concepts. For concrete concepts, by contrast, only positively valenced meanings show an early-acquisition advantage (Ponari et al., 2017). Children also show an advantage of valence in novel word learning tasks (Ponari, Norbury, \& Vigliocco, 2020). In adults, strong emotional associations facilitate faster lexical processing across a variety of tasks (Pauligk, Kotz, \& Kanske, 2019; Yao et al., 2018; Yao, Scott, Bruce, Monteith-Hodge, \& Sereno, 2025), suggesting that emotional information may increase support the retrieval of word meanings. On the other hand, emotion words themselves are learned relatively late overall, and older children learn new emotion terms more readily than younger children (Shablack, Becker, \& Lindquist, 2020). From the perspective of the Affective Embodiment Account, this suggests a nuanced picture: emotional experience can ground abstract meanings broadly and early, even though the lexicon of dedicated emotion labels only becomes richly differentiated later in childhood.
 
-In English, body-object-interaction ratings predict words' AoA (\textbf{thill2016?}; \textbf{pexman2019?}) and children's lexical processing (\textbf{suggate2017?}; \textbf{wellsby2014?}; \textbf{inkster2016?}), such that words with high sensorimotor interaction ratings are acquired earlier and processed faster. The motor aspect of this relationship may offer additional explanatory power beyond the sensory association effects described in previous paragraphs: the processing speed of high body-object-interaction words (but not low-BOI words) is linked to children's fine motor skills (\textbf{suggate2017?}). Work with adults finds that pairing novel words with motor actions related to their meaning improves learning (\textbf{casasanto2019?}; \textbf{vukovic2019?}), and that activation of the motor cortex is involved in the acquisition of novel words {[}(\textbf{luizzi2010?}); vukovic2019{]}. This effect may be particularly subject to cross-linguistic variation, given the wide cross-cultural variation in infant's motor development (\textbf{cintas2009?}; \textbf{lohaus2014?}).
+Interoception is a perceptual domain which relates to internal sensations (e.g., \emph{hungry}, \emph{sleepy}, \emph{anxious}). Unlike other perceptual domains, however, interoception is more strongly associated with abstract concepts than concrete concepts (Connell et al., 2018). There is a strong link between interoceptive and emotional experience (Connell et al., 2018; Critchley \& Harrison, 2013; Wiens, 2005), such that interoceptive signals shape both the phenomenological ``feel'' of an emotion and the conscious awareness of that feeling, with individual differences in interoception predicting variation in both (Schandry, 1981; Wiens, 2005). Accordingly, interoception is a defining feature of emotion concepts, particularly those tied to fear and sadness (Connell et al., 2018). Interoception could be part of the grounding mechanism for emotion concepts, set forth by the Affective Embodiment Account (Kousta et al., 2011). This prominence of interoceptive experience in emotion concepts is consistent with the Affective Embodiment Account (Borghi et al., 2017; Kousta et al., 2011; Ponari et al., 2018), which argues that emotional connotations help ground abstract meanings because many abstract words refer to internal, physiological states that reflect and reconstruct emotion. Interoceptive strength is likewise associated with earlier age of acquisition (Reggin et al., 2021).
 
-\hypertarget{word-form-abstract-from-word-meaning}{%
-\subsubsection{Word Form Abstract from Word Meaning}\label{word-form-abstract-from-word-meaning}}
+Social relevance may also support abstract word processing and acquisition (Diveica, Muraki, Binney, \& Pexman, 2024; Mahmood et al., 2025; though c.f., Goriachun et al., 2025, who find mixed effects of socialness on processing tasks across languages). Following Diveica, Pexman, and Binney (2022), we use socialness to refer to the degree to which a word's meaning encompasses socially relevant content, including social characteristics of a person or group (\emph{friendly}), social behaviors or interactions (\emph{share}), and social institutions (\emph{school}). Words from infants early social routines (\emph{hi}, \emph{mommy}, \emph{thank-you}, \emph{byebye}) are among the earliest learned (C. Caselli, Casadio, \& Bates, 1999; M. C. Caselli et al., 1995; Frank, Braginsky, Yurovsky, \& Marchman, 2017; Gleason \& Weintraub, 1976; Gopnik, 1988; Schults, Tulviste, \& Konstabel, 2012; Tardif et al., 2008), and across languages, these early social-routine words represent roughly a quarter of children's first 10 words (Casey, Potter, Lew-Williams, \& Wojcik, 2023; Frank, Braginsky, Yurovsky, \& Marchman, 2021).These social words are frequent in language input to children, yet unlike concrete nouns (which refer to the same referent \textasciitilde80\% of the time, Bergelson \& Swingley, 2013; Custode \& Tamis-LeMonda, 2020), words like \emph{``bye''} only refer to the same situation \textasciitilde48\% of the time (Casey et al., 2023). This substantial variability in the perceptual information available accompanying these words (Casey et al., 2023; Clerkin, Hart, Rehg, Yu, \& Smith, 2017) could make it challenging for children to grasp word meaning. However, their appearance in predictable, high-frequency social routines may offer some compensatory stability that facilitates learning (Gleason, Perlmann, \& Greif, 1984; Gleason \& Weintraub, 1976). According to the Words as Social Tools framework, abstract meanings may especially benefit from social interaction, which allows learners to negotiate shared meaning through verbal interactions (Borghi \& Binkofski, 2014; Borghi, Mazzuca, \& Tummolini, 2025). In this way, even with substantial referential ambiguity, social words may gain an advantage from the predictable, socially structured interactions in which they are used (Pexman, Diveica, \& Binney, 2023).
 
-Arbitrariness to be a requisite property of language. Language is language because words are abstract symbols of their meaning. Words with an iconic (or motivated) mapping between form and meaning have originally been relegated to the fringes of linguistic discussion. Work on onomatopoeias, ideophones, and systematicity show that iconicity is a more prevalent phenomenon than previously recognized. Across languages, words that are higher in iconicity tend to be learned earlier {[}cite{]}. Some speculate that this is due to easier mapping between the referent and the wordform. Others, however, find this explanation unsatisfying: do young children, who have limited experience, have the world knowledge necessary to recognize these perceptual mappings? It could be that effects of iconicity on acquisition are related to phonological constraints on the meaning of highly-iconic words: highly-iconic words are likely to be concrete {[}cite{]} and carry perceptual information that aligns with the modality of the language (e.g., iconic spoken language words often pertain to auditory referents; iconic sign language words often depict auditory or tactile information; cite)
+Cognitive and mental-state terms could pose a distinct challenge for learners because they refer to unobservable internal states that require the representation of others' beliefs, desires, or intentions. Mental-state words (e.g., \emph{think}, \emph{know}, \emph{pretend}) typically enter children's speech between 2.5 and 5 years of age (Mulder, 2015; Pascual, Aguado, Sotillo, \& Masdeu, 2008; Shatz, Wellman, \& Silber, 1983; Wellman \& Estes, 1987), a period during which many children already produce 250--600 words (Frank et al., 2017). One possible explanation for these difficulties is that the concepts underlying these words are hard to grasp, and therefore their acquisition must await relevant conceptual development. Although infants show early sensitivity to agents' goals and preferences (with some emergent sensitivity as early as 3 months, Sommerville, Woodward, \& Needham, 2005; Woodward, 2009), these capacities continue to mature throughout the preschool years (Rakoczy, 2022; Yott \& Poulin-Dubois, 2016), and many children do not reliably pass false-belief tasks until around age four (Liu, Wellman, Tardif, \& Sabbagh, 2008; Wellman, Cross, \& Watson, 2001) (which itself is strongly correlated with children's language skills, Milligan, Astington, \& Dack, 2007). Mental-state information is not inherently salient for mapping onto words; even adults typically attend to actions rather than to agents' internal states unless cued that a word refers to cognitive / mental states, and children are less sensitive to these cues than adults (Papafragou, Cassidy, \& Gleitman, 2007). Across languages, at least in the domain of evidential morphology, children seem to be able to perform \emph{non}-linguistic mental state reasoning tasks before they can understand / produce the corresponding mental state language, suggesting that the conceptual foundations precede language (Ozturk \& Papafragou, 2016; Papafragou, Li, Choi, \& Han, 2007). Pyers and Senghas (2009) studied a group of deaf learners of an emerging sign language in Nicaragua, and found that success on false-belief theory-of-mind task corresponded to the acquisition and production of mental state terms. Another explanation is that (at least, in the case of English mental state verbs) these words appear in are syntactically complex, and perhaps this structure is difficult for children to acquire. Yet, even controlling for the frequency and the syntactic contexts in which these words tend to appear, words referring to cognition or mental states are acquired later {[}cite cite{]}. Wellman \& Silber (1983) suggest that the earliest uses of mental state verbs tend to be idiomatic or rote learned, with phrases like \emph{I don't know}, which may not require representation of mental states, just knowledge of the context in which those phrase appear. Similarly, children will produce markers of knowledge states before they show robust comprehension of knowledge states (Ünal \& Papafragou, 2016), so production of cognitive words (or morphemes, as was tested by Ünal \& Papafragou, 2016) may not wait for conceptual understanding. Ultimately, however, across the preschool years, children's uses of mental-state words become increasingly diverse and sophisticated across age\footnote{Although rare, even children's youngest uses can show evidence of mental state representation: ``I \emph{thought} is was an alligator. Now I \emph{know} it's a crocodile.'' (Wellman \& Estes, 1987)} (Booth, Hall, Robison, \& Kim, 1997; Pascual et al., 2008; Shatz et al., 1983; Wellman \& Estes, 1987).
 
-\hypertarget{word-meaning-abstract-from-specific-circumstance}{%
-\subsubsection{Word Meaning Abstract from Specific Circumstance}\label{word-meaning-abstract-from-specific-circumstance}}
+By hypothesis, then, the most difficult abstract words to acquire should be those that lack all of these potential grounding resources: words with limited sensorimotor experience, weak emotional arousal, and minimal social relevance (e.g., \emph{category}, \emph{quantity}, \emph{reason}).
 
-\hypertarget{context-diversity-availability}{%
-\paragraph{Context Diversity / Availability}\label{context-diversity-availability}}
+\subsubsection{Word Meaning Abstract from Specific Circumstance}\label{word-meaning-abstract-from-specific-circumstance}
 
-The diversity of contexts a word appears in predicts word learning in both children (Hills, Maouene, Riordan, \& Smith, 2010; Kachergis, Yu, \& Shiffrin, 2009; Rosa, Salom, \& Perea, 2022) and adults (\textbf{johns2015?}). These effects have been interpreted in line with two processes in early word learning: the lure of the associates, which suggests that words learned earlier tend to be better connected with a range of other known words; and preferential acquisition, where words learned earlier tend to be used in a range of distinct contexts (Hills et al., 2010). The direction of these context diversity effects are variable; in some contexts, verbs(?), are more likely to be learned when the context is more consistent, whereas nouns(?) with diverse contexts are more likely to be learned. More contextually diverse words also tend to be more abstract (\textbf{hoffman2013?}), as abstract words like \emph{idea} have more flexible meanings that can be deployed in a range of contexts, as compared to concrete words like \emph{spaceship}.
+According to the Dual Coding Theory (Dove, 2009; Paivio, 1986, 1991, 2010), while concrete words have sensorimotor associations, abstract words are more reliant on their linguistic associations, and indeed, neuroimaging evidence points to a heightened role of the verbal systems for abstract words relative to concrete words (Jeffrey R. Binder, Desai, Graves, \& Conant, 2009; J. R. Binder, Westbury, McKiernan, Possing, \& Medler, 2005; Wang et al., 2010). While adults can readily learn abstract words from linguistic context (Mkrtychian et al., 2021), children's ability to do this may depend on their nascent language skills (T. C. Lund, Sidhu, \& Pexman, 2019). As children build language skill, they can more readily extract meaning from syntactic structure (Babineau, de Carvalho, Trueswell, \& Christophe, 2021; Babineau, Havron, Dautriche, de Carvalho, \& Christophe, 2022; Gleitman, 1990) or from word's co-occurrence with other words (Huebner \& Willits, 2018; Lany \& Saffran, 2010; Lenci et al., 2018; K. Lund \& Burgess, 1996; Syrett \& Lidz, 2010; Wojcik \& Saffran, 2013).
 
-Multiple theories: preferential attachment--A word is more likely to enter the lexicon the more connected the known words to which it is related. more highly connected words at Time 1 are more likely to receive new links at Time 2. preferential acquisition---words enter the lexicon not because they are related to well-connected words, but because they connect well to other words in the learning environment (Hills, Maouene, Maouene, Sheya, \& Smith, 2009). Early-learned words may tend to be highly connected because words with greater connectivity in the learning environment are more noticeable and readily learned; that is, children may learn first the most well-connected words in the speech stream to which they are exposed. This is possible because the adult semantic network is both a product of learning and the input (the material to be learned) for the next generation of learners. We call this hypothesis preferential acquisition. lure of the associates---new words are favored in proportion to their connections with known words. (Hills et al., 2009) Unknown words may be highlighted by known words to which they are related and learned in proportion to those relations.
+Context Availability Theory likewise proposes that abstract words necessarily depend more on their connection to the context in which they are presented (Schwanenflugel, Akin, \& Luh, 1992), which can vary quite widely. Indeed, more contextually diverse words tend to be more abstract (Hoffman et al., 2013). Words like idea can occur in a broad range of situations, whereas concrete words such as spaceship appear in far narrower contextual ranges. This flexibility may help explain why contextual information plays a disproportionate role in abstract word learning and processing. A substantial body of work shows that the linguistic environments surrounding a word predict when that word is learned, but the direction of these effects is variable. Some studies find that contextual diversity impedes word learning: Words in distinctive linguistic contexts tend to be earlier learned in naturalistic work (Roy, Frank, Decamp, Miller, \& Roy, 2015) and easier learned in experimental work {[}cite cite{]}. The diversity of contexts a word appears in predicts word learning in both children (Hills, Maouene, Riordan, \& Smith, 2010; Kachergis, Yu, \& Shiffrin, 2009; Rosa, Salom, \& Perea, 2022) and adults (Johns, Dye, \& Jones, 2016). These effects have been interpreted in line with two processes in early word learning: the lure of the associates, which suggests that words learned earlier tend to be better connected with a range of other known words (Hills, Maouene, Maouene, Sheya, \& Smith, 2009); and preferential acquisition, where words learned earlier tend to be used in a range of distinct contexts (Hills et al., 2010). For example, in young adults contextual diversity facilitates different stages of learning, with low-diversity contexts aiding initial meaning formation and high-diversity contexts producing stronger, more context-independent representations (Mak, 2021).
 
-\hypertarget{the-present-study}{%
-\subsection{The Present Study}\label{the-present-study}}
+\subsection{Developmental Change in Mechanisms}\label{developmental-change-in-mechanisms}
+
+It's possible that the mechanisms supporting acquisition of abstract words change across development. As children mature, their growing cognitive, social, and linguistic skills may pave the way for increasingly sophisticated word learning (Babineau et al., 2021; Meylan \& Bergelson, 2022). Particularly if we conceptualize abstract words as acquired primarily through linguistic context, as children's linguistic comprehension continues to mature, we should expect to find that effects of linguistic context on AoA weaken across age. Similarly, if word learning is supported by sensorimotor experience with a word referent, as children's motor abilities advance, and children are increasingly able to manipulate objects and independently locomote, we would expect to find sensorimotor effects strengthen across toddlerhood.
+
+\subsection{Crosslinguistic Variability in Mechanisms}\label{crosslinguistic-variability-in-mechanisms}
+
+The age of acquisition of words is correlated to varying degrees across languages (Łuniewska et al., 2016, 2019).
+Studying patterns of language acquisition across languages is informative for understanding which acquisition mechanisms are persistent across languages and cultures, versus which mechanisms are specific to a particular developmental or linguistic context. For example, work with Mandarin learners called into question the universality of the \emph{noun bias} in children's early vocabulary (Bornstein et al., 2004; Hardegger et al., 2024; Kauschke, Lee, \& Pae, 2007; Tardif et al., 2008). The strength and direction of lexical effects on age of acquisition can vary across languages; for instance, while frequency and shorter word length consistently predict earlier word production across many languages, effects of emotional valence are more variable (Braginsky, Yurovsky, Marchman, \& Frank, 2019). Additionally, within a given language, there are commonly strong correlations between lexical properties; e.g., in English but not ASL, auditoriness is correlated with frequency (See Appendix 1). Thus, it can be difficult to interpret whether an early-learned word is early-learned because of \emph{Lexical Property X} or \emph{Lexical Property Y} (Reilly \& Kean, 2007). By looking across languages, we can utilize cross-linguistic variability in the distribution of lexical properties to achieve better power to isolate individual lexical properties.
+
+\subsection{The Present Study}\label{the-present-study}
 
 The present study examines the cross-linguistic stability of associations between lexical properties traditionally linked to abstractness and age of acquisition. In doing so, we hope to uncover, across many languages: what is it about abstractness that makes a word challenging to learn? This study is only possible due to massive effort from researchers around the world to document lexical properties and vocabulary. We leverage lexical ratings collected by hundreds of researchers from thousands of participants. The vocabulary data presented here span tens of thousands of young children. Today's backdrop of open science practices makes such an analysis feasible.
 
-\hypertarget{methods}{%
-\section{Methods}\label{methods}}
+\section{Methods}\label{methods}
 
-\hypertarget{cdi}{%
-\subsection{CDI}\label{cdi}}
+\subsection{CDI}\label{cdi}
 
-the MacArthur-Bates Communicative Development Inventory (CDI), a vocabulary measure in which parents are asked to indicate whether their child understands and/or produces each of several hundred words (\textbf{fenson1994?}). Since its conception, the CDI has been adapted into many languages, validated with many populations, and administered to many thousands of children.
+the MacArthur-Bates Communicative Development Inventory (CDI), a vocabulary measure in which parents are asked to indicate whether their child understands and/or produces each of several hundred words Fenson et al. (1994). Since its conception, the CDI has been adapted into many languages, validated with many populations, and administered to many thousands of children.
 
-adaptations of the CDI into other languages are not merely translations. Instead, researchers of each language tend to consult previous CDIs, parents, educators, and child development experts to curate a culturally-relevant set of early-learned words (Jarůšková, Smolík, Chládková, Oceláková, \& Paillereau, 2023). Thus, the CDIs contain partially-overlapping subsets of words (e.g., words for mother and father are ubiquitous across CDI forms, but acorn, magpie, and paprika appear on only the Latvian, Beijing Mandarin, and Hungarian forms, respectively).
+When the CDI is adapted into a new language, researchers of each language tend to consult previous CDIs, parents, educators, and child development experts to curate a culturally-relevant set of early-learned words (Jarůšková, Smolík, Chládková, Oceláková, \& Paillereau, 2023). Thus, the CDIs contain partially-overlapping subsets of words (e.g., words for mother and father are ubiquitous across CDI forms, but acorn, magpie, and paprika appear on only the Latvian, Beijing Mandarin, and Hungarian forms, respectively).
 
-We pull data from Wordbank, a large, open database of CDI data (\textbf{frank2017?}), using the wordbankr R package (\textbf{braginsky2024?}). For the present analyses, we take the full set of participants from Wordbank as of DATExxx. This results in a sample of N = 87507.
+We pull data from Wordbank, a large, open database of CDI data (Frank et al., 2017), using the wordbankr R package (Braginsky, 2024). For the present analyses, we take the full set of participants from Wordbank as of Wed Nov 26 20:56:43 2025. This results in a sample of N = 87507.
 
-\hypertarget{lexical-properties}{%
-\subsection{Lexical Properties}\label{lexical-properties}}
+\subsection{Lexical Properties}\label{lexical-properties}
 
 All lexical ratings are first re-scaled (within languages) to a 1 to 10 scale for better comparability across languages and lexical properties. For zipfian-distributed norms (e.g., corpus-based frequency), norms were first logged and then scaled.
 
@@ -308,9 +316,6 @@ To achieve maximum lexical rating coverage across words and languages, while rec
   \item
     If norms are not available for a specific word or its translation equivalent, then any words without norms will be excluded from the analysis.
   \end{itemize}
-\end{itemize}
-
-\begin{itemize}
 \item
   For norms pertaining to the wordform (e.g., frequency, iconicity, phonological properties):
 
@@ -326,112 +331,103 @@ To achieve maximum lexical rating coverage across words and languages, while rec
 
 \url{https://docs.google.com/spreadsheets/d/1fivS85qayBJtp_nXjVmAvwZn7u6F517RFur0UPTJcAw/edit\#gid=0}
 
-\hypertarget{imageability-1}{%
-\subsubsection{Imageability}\label{imageability-1}}
+\paragraph{Imageability}\label{imageability}
 
-\hypertarget{perceptual-properties}{%
-\subsubsection{Perceptual properties}\label{perceptual-properties}}
+\paragraph{Perceptual properties}\label{perceptual-properties}
 
-For example, the Lancaster Sensorimotor Norms, created for English , Using similar instructions, sensory norms have been created for other languages, including Chinese (Zhong, Wan, Ahrens, \& Huang, 2022), Spanish (\textbf{diezalamo2017?}), French (Miceli, Wauthia, Lefebvre, Ris, \& Simoes Loureiro, 2021), Russian (Miklashevsky, 2018), and Italian (Vergallito, Petilli, \& Marelli, 2020).
+More recently, researchers have developed more specific measures of words' perceptual associations. Beyond general perceptibility, these norms separate associations by modality (visual, tactile, auditory, haptic, gustatory, interoceptive), yielding the modality specific ratings, an overall strength rating, and a measure of the spread of ratings across modalities (Lynott et al., 2020). Such specificity allows researchers to test whether information from certain senses, like vision or touch, may be privileged over others {[}cite{]}, as well as whether receiving sensory information from multiple modalities may support acquisition (e.g., Seidl et al., 2023).For example, the Lancaster Sensorimotor Norms, created for English , Using similar instructions, sensory norms have been created for other languages, including Chinese (Zhong, Wan, Ahrens, \& Huang, 2022), Spanish (Díez-Álamo, Díez, Alonso, Vargas, \& Fernandez, 2017), French (Miceli, Wauthia, Lefebvre, Ris, \& Simoes Loureiro, 2021), Russian (Miklashevsky, 2018), and Italian (Vergallito, Petilli, \& Marelli, 2020).
 
-Body-object interaction (BOI) ratings measure the extent to which a human body can physically interact with a word's referent (\textbf{siakaluk2008?}), and in particular, seem to index ease of graspability (\textbf{heard2019?}). In neuroimaging studies, semantic processing of high BOI (vs low BOI) words is associated with neural regions involved in grasping (Hargreaves et al., 2012). In line with embodied theories of cognition, words' BOI ratings predict the speed of lexical processing in children and adults {[}CITE{]} as well as age of acquisition (Muraki, Siddiqui, \& Pexman, 2022; \textbf{thill2016?}; \textbf{pexman2019?}). Child-centered BOI ratings, gathered by asking parents of elementary-aged children ``how easily the average 6-year-old can physically interact (using the body: hands, mouth, etc.) with what each word represents'' (Muraki et al., 2022, p. pg.9), may capture this variability even better; though in English, child BOI ratings and adult BOI ratings correlate strongly (\emph{r} = 0.67) with each other (Muraki et al., 2022).
+\paragraph{BOI}\label{boi}
 
-\hypertarget{iconicity}{%
-\subsubsection{Iconicity}\label{iconicity}}
+Body-object interaction (BOI) ratings measure the extent to which a human body can physically interact with a word's referent (Siakaluk, Pexman, Aguilera, Owen, \& Sears, 2008), and in particular, seem to index ease of graspability (Heard, Madan, Protzner, \& Pexman, 2019). In neuroimaging studies, semantic processing of high BOI (vs low BOI) words is associated with neural regions involved in grasping (Hargreaves et al., 2012). In line with embodied theories of cognition, words' BOI ratings predict the speed of lexical processing in children and adults {[}CITE{]} as well as age of acquisition (Muraki, Siddiqui, \& Pexman, 2022; Pexman, 2019; Thill \& Twomey, 2016). Child-centered BOI ratings, gathered by asking parents of elementary-aged children ``how easily the average 6-year-old can physically interact (using the body: hands, mouth, etc.) with what each word represents'' (Muraki et al., 2022, p. pg.9), may capture this variability even better; though in English, child BOI ratings and adult BOI ratings correlate strongly (\emph{r} = 0.67) with each other (Muraki et al., 2022).
 
-At the time of publication, iconicity norms were only available for English (\textbf{winter2023?}), ASL (Sehyr, Caselli, Cohen-Goldberg, \& Emmorey, 2021; \textbf{caselli2017?}), BSL, and Spanish (J. A. Hinojosa et al., 2021). We did not attempt to interpolate values for this property given its intrinsic connection to phonological form, which varies cross-linguistically.
+\paragraph{Iconicity}\label{iconicity}
 
-\hypertarget{xxx}{%
-\subsubsection{xxx}\label{xxx}}
+At the time of publication, iconicity norms were only available for English (Winter et al., 2023), ASL (N. K. Caselli, Sehyr, Cohen-Goldberg, \& Emmorey, 2017; Sehyr, Caselli, Cohen-Goldberg, \& Emmorey, 2021), BSL, Japanese {[}CITE{]}, and Spanish (Hinojosa et al., 2021). We did not attempt to interpolate values for this property given its intrinsic connection to phonological form, which varies cross-linguistically.
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1370}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.5479}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1644}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1507}}@{}}
-\caption{Lexical property sources and example}\tabularnewline
-\toprule()
-\begin{minipage}[b]{\linewidth}\raggedright
-Property
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Source
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Highest Words
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Lowest Words
-\end{minipage} \\
-\midrule()
-\endfirsthead
-\toprule()
-\begin{minipage}[b]{\linewidth}\raggedright
-Property
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Source
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Highest Words
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Lowest Words
-\end{minipage} \\
-\midrule()
-\endhead
-Iconicity & English (Winter, Lupyan, Perry, Dingemanse, \& Perlman, 2023), Spanish (José Antonio Hinojosa, Haro, Magallares, Ferré, \& Duñabeitia, 2020), ASL (Caselli, Sehyr, Cohen-Goldberg, \& Emmorey, 2017), Japanese {[}CITE{]} & squeak, bang, buzz, vroom & if, how, are, very \\
-Visual & Dutch (Speed \& Brybaert, 2022), English (Lynott et al., 2020), Estonian {[}{]}, French (Miceli et al., 2021), Italian (Vergallito et al., 2020), Mandarin {[}CITE{]}, Russian (Miklashevsky, 2018), Spanish (Díez-Álamo, Díez, Alonso, Vargas, \& Fernandez, 2017), & orange, colors, see & hear, smell, fart \\
-Auditory & Estonian, French (Miceli et al., 2021), Italian (Vergallito et al., 2020), Mandarin, Russian (Miklashevsky, 2018), Spanish, & noise, moo, hair dryer & fog, picture, avocado \\
-Haptic & Estonian, French (Miceli et al., 2021), Italian (Vergallito et al., 2020), Mandarin, Russian (Miklashevsky, 2018), Spanish, & touch, pillow, scratch & listen, also, rainbow \\
-Olfactory & Estonian, French (Miceli et al., 2021), Italian (Vergallito et al., 2020), Mandarin, Russian (Miklashevsky, 2018), Spanish, & perfume, smell, fart, cigarette & chase, song, three \\
-Gustatory & Estonian, French (Miceli et al., 2021), Italian (Vergallito et al., 2020), Mandarin, Russian (Miklashevsky, 2018), Spanish, & spaghetti, honey, soy sauce & a, knock, dragonfly, fart \\
-Interoceptive & English (Lynott et al., 2020), French?? (Miceli et al., 2021), Mandarin & painful, fear, hungry & a, fish, jar \\
-Emotional Arousal & Dutch (Verheyen, De Deyne, Linsen, \& Storms, 2020), Estonian, French {[}cite{]}, Italian {[}{]}, Swedish (Blomberg \& Öberg, 2015), Turkish (Torkamani-Azar, Kanik, Vardan, Aydin, \& Cetin, 2019) & dog, kiss, tiger, hospital & corridor, basket, empty, tired \\
-Imageability & Croatian, Dutch (Verheyen et al., 2020), French (Desrocher, 2009), Italian, Norwegian, Portuguese (Soares, Costa, Machado, Comesana, \& Oliveira, 2017), Russian (Miklashevsky, 2018), Spanish, Swedish (Blomberg \& Öberg, 2015), & newspaper, spaghetti, fish, cowboy & if, from, little, which \\
-Concreteness & Croatian, Dutch (Verheyen et al., 2020), English (Brysbaert et al., 2014), Estonian {[}{]}, French (Bonin, Méot, \& Bugaiska, 2018), Italian, Portuguese (Soares et al., 2017), & snake, sand, comb, tv & little, could, for, enough \\
-Context Diversity & \emph{all} {[}wikipedia{]}, except ASL, BSL, xxx, and xxx & and, of, a, on & ballpit, achoo, pine cone, chocolate mousse \\
-Body Object Interaction & English (\textbf{body?}), French (Miceli et al., 2021), Spanish {[}{]}, & toothbrush, pajamas, bread, crayon & whose, crocodile, and, cloud \\
-\bottomrule()
+\paragraph{xxx}\label{xxx}
+
+\begingroup\fontsize{10}{12}\selectfont
+
+\begin{longtable}[t]{>{\raggedright\arraybackslash}p{1.9cm}|>{\raggedright\arraybackslash}p{7cm}|>{\raggedright\arraybackslash}p{2.25cm}|>{\raggedright\arraybackslash}p{2.25cm}|>{\raggedright\arraybackslash}p{2cm}}
+\caption{\label{tab:properties}Lexical properties. Examples of words that are high/low on each property.}\\
+\hline
+Property & Source & top\_3 & bottom\_3 & uni\_lemma\_coverage\\
+\hline
+Visual & Dutch [@speed2022], English [@lynott2020], Estonian [], French [@miceli2021], Italian [@vergallito2020], Mandarin [@zhong2022], Russian [@miklashevsky2018], Spanish [@diez-alamo2017] & orange (10), naked (9.8), video (9.8) & sound (1.9), smell (1.8), smelly (1.8) & 97\%\\
+\hline
+Auditory & Dutch [@speed2022], Estonian, French [@miceli2021], Italian [@vergallito2020], Mandarin [@zhong2022], Russian [@miklashevsky2018], Spanish & noise (9.6), speak (9.5), noisy (9.4) & purple (1.1), sweets (1), ribbon (1) & 96\%\\
+\hline
+Haptic & Dutch [@speed2022], Estonian, French [@miceli2021], Italian [@vergallito2020], Mandarin [@zhong2022], Russian [@miklashevsky2018], Spanish & touch (9.8), smooth (9.3), cuddle (9.3) & listen (1), wanna (1), speak (1) & 96\%\\
+\hline
+Olfactory & Dutch [@speed2022], Estonian, French [@miceli2021], Italian [@vergallito2020], Mandarin [@zhong2022], Russian [@miklashevsky2018], Spanish & smelly (9.7), pizza (8.8), smell (8.7) & flood (1), thump (1), divide (1) & 96\%\\
+\hline
+Gustatory & Dutch [@speed2022], Estonian, French [@miceli2021], Italian [@vergallito2020], Mandarin [@zhong2022], Russian [@miklashevsky2018], Spanish & pizza (9.7), donut (9.6), bagel (9.5) & thump (1), grasp (1), divide (1) & 96\%\\
+\hline
+Interoceptive & Dutch [@speed2022], English [@lynott2020], French?? [@miceli2021], Mandarin [@zhong2022] & hungry (9.2), sleepy (8.8), happy (8.6) & letter (1), skate (1), drain (1) & 96\%\\
+\hline
+Emotional Arousal & Dutch [@verheyen2020], English [@mohammad2018], Estonian, French [CITE], Italian [], Mandarin [@xu2022], Swedish [@blomberg2015], Turkish [@torkamani-azar2019; @conca2024] & shoot (9.3), shout (9.3), burst (9) & snail (2), asleep (1.9), cotton (1.6) & 88\%\\
+\hline
+Imageability & Croatian [@peti-stantic2021], Dutch [@verheyen2020], French [@desrocher2009], Italian, Mandarin [@su2023], Norwegian, Portuguese [@soares2017], Russian [@miklashevsky2018], Spanish, Swedish [@blomberg2015], Turkish [@conca2024] & jacket (9.8), bleed (9.8), aound (9.8) & which (3.6), gotta (3.6), leave (3.2) & 76\%\\
+\hline
+Concreteness & Croatian [@peti-stantic2021], Dutch [@verheyen2020], English [@brysbaert2014], Estonian [], French [@bonin2018], Italian, Portuguese [@soares2017] & boots (10), camera (10), bagel (10) & until (1.7), though (1.4), would (1.3) & 96\%\\
+\hline
+Context Diversity & *all* [Wikipedia], except ASL, BSL, etc. & NA & NA & NA\\
+\hline
+Body Object Interaction & English [@body], French [@miceli2021], Spanish [] & bread (9.9), boots (9.8), cereal (9.8) & alert (2.2), shame (2.1), whose (1.9) & 77\%\\
+\hline
+Iconicity & ASL [@caselli2017a], BSL [@ortega2025], English [@winter2023a], Spanish [@hinojosa2020], Japanese [CITE] & squeak (9.7), vroom (9.6), click (9.6) & below (2.2), could (2.1), really (1.8) & 84\%\\
+\hline
+Max Perceptual & xxx & orange (10), touch (9.8), naked (9.8) & which (2.3), rather (2.3), y'all (2.1) & 97\%\\
+\hline
+Average Perceptual & xxx & pizza (7.2), fruit (6.8), donut (6.8) & rather (1.8), wanna (1.7), don't (1.5) & 96\%\\
+\hline
+Word Frequency & *all* [Wikipedia], except ASL, BSL, etc. & NA & NA & NA\\
+\hline
+Socialness & diveica2024 & people (9.9), family (9.6), cuddle (9.2) & yogurt (1), light (1), cloud (1) & 52\%\\
+\hline
+Emotional Valence & need to fill in & happy (10.4), tiger (10.4), police (9.9) & punish (2.3), wrong (2.2), thief (2) & 41\%\\
+\hline
+Cognitiveness & corenblum2025 & smart (8.8), clever (8.8), brain (7.9) & eraser (1.1), donkey (1.1), cereal (1.1) & 38\%\\
+\hline
 \end{longtable}
+\endgroup{}
 
-\hypertarget{covariates}{%
-\subsubsection{Covariates}\label{covariates}}
+\subsubsection{Covariates}\label{covariates}
 
 All models included the following variables as covariates: age (from Wordbank, rounded to the nearest month), frequency (from Wikipedia, or from subjective native speaker ratings), phonological complexity (for spoken languages, word length; for sign languages, xxx), lexical category (from Wordbank; levels included: nouns, predicates, function words, other)
 
-\hypertarget{results}{%
-\section{Results}\label{results}}
+\section{Results}\label{results}
 
-\hypertarget{relationships-among-abstractness-variables}{%
-\subsection{Relationships among Abstractness Variables}\label{relationships-among-abstractness-variables}}
+\subsection{Relationships among Abstractness Variables}\label{relationships-among-abstractness-variables}
 
 First, we computed pairwise Pearson's correlation coefficients for all variables, displayed in Figure 2, together with histograms showing the distribution of each variable and scatterplots showing how variables relate to each other. Here, we summarize across languages, but the by-language plots can be found in Supplementals (possibly as confusion matrix). Also the correlations for a given property across languages in supplement
 
-\includegraphics{crossling_abstractness_manuscript_files/figure-latex/variable-relationships-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{crossling_abstractness_manuscript_files/figure-latex/variable-relationships-1.pdf}}
 
-\includegraphics{crossling_abstractness_manuscript_files/figure-latex/variable-relationships-dendro-1.pdf}
-
-\hypertarget{abstractness-effects-on-word-production}{%
-\subsection{Abstractness effects on word production}\label{abstractness-effects-on-word-production}}
+\subsection{Abstractness effects on word production}\label{abstractness-effects-on-word-production}
 
 First, we fit a baseline statistical models for each language where word production is modeled as a combination of age, frequency, and phonological complexity. We then added each of our target predictors. For each target predictor for each language, it is thus possible to extract an effect size estimate of the target predictor and its interaction with age on the likelihood of word production. To explore heterogeneity and to estimate central tendency and variation in the effects, we borrow from meta-analytic techniques, treating each language as a study, and creating a weighted average of the effect size.
 
-Figure \ref{fig:summary-of-maineffects} shows the coefficient estimate for each predictor in each language; see Table xxx for a full accounting of abstractness effect sizes. We find that iconicity is the strongest predictor of acquisition (mean across languages and measures: B = 0.12 (range: 0.07 - 0.35)). Many of the sensorimotor variables were relatively strong predictors of word production, including body-object-interaction (B = 0.1 (range: 0 - 0.4)), imageability (B = 0.1 (range: 0 - 0.21)), hapticness (B = 0.07 (range: -0.01 - 0.27)), and visualness (B = 0.05 (range: -0.05 - 0.17)). The effects of the social-emotional variables socialness (B = 0 (range: -0.2 - 0.15)) and emotional arousal ()--as well as several of the other sensorimotor variables (olfactoriness, interoceptiveness, auditoriness, and gustatoriness)--had much smaller mean effects on children's word production. Interestingly, concreteness was not reliably associated with word production across languages (B = -0.01 (range: -0.32 - 0.1)). Finally, the effect of context diversity was highly variable, with some languages showing large positive effects (e.g., ), while others showed large negative effects. Looking across languages, words which were used in more contexts were less likely to be produced (B = 0.01 (range: -0.21 - 0.14)).
+Figure \ref{fig:summary-of-maineffects} shows the coefficient estimate for each predictor in each language; see Table xxx for a full accounting of abstractness effect sizes. We find that iconicity is the strongest predictor of acquisition (mean across languages and measures: B = 0.13 (range: 0.03 - 0.43)). Many of the sensorimotor variables were relatively strong predictors of word production, including body-object-interaction (B = 0.14 (range: 0.06 - 0.43)), imageability (B = 0.18 (range: -0.25 - 0.46)), hapticness (B = 0.09 (range: 0 - 0.29)), and visualness (B = 0.05 (range: -0.06 - 0.37)). The effects of the social-emotional variables socialness (B = -0.01 (range: -0.41 - 0.12)) and emotional arousal ()--as well as several of the other sensorimotor variables (olfactoriness, interoceptiveness, auditoriness, and gustatoriness)--had much smaller mean effects on children's word production. Interestingly, concreteness was not reliably associated with word production across languages (B = 0.04 (range: -0.08 - 0.2)). Finally, the effect of context diversity was highly variable, with some languages showing large positive effects (e.g., ), while others showed large negative effects. Looking across languages, words which were used in more contexts were less likely to be produced (B = 0 (range: -0.24 - 0.17)).
 
 \begin{figure}
 \centering
-\includegraphics{crossling_abstractness_manuscript_files/figure-latex/summary-of-maineffects-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{crossling_abstractness_manuscript_files/figure-latex/summary-of-maineffects-1.pdf}}
 \caption{\label{fig:summary-of-maineffects}Effect size estimates (from logistic regression) of each of the abstractness variables studied. Each dot represents the effect size of one language, with filled-in dots showing significant effects and empty dots indicating that the effect was not significant in that language. Black dot and whiskers show mean effect size with standard error.}
 \end{figure}
 
-\hypertarget{developmental-change}{%
-\subsubsection{Developmental Change}\label{developmental-change}}
+\subsubsection{Developmental Change}\label{developmental-change}
 
 Positive age interactions can be seen in at least xxx out of xxx languages for visualness, hapticness, body-object-interaction, and imageability. Conversely, there are negative age interactions for auditoryiness and iconicity in at least xxx out of xxx languages. This suggests that certain sensorimotor properties (chiefly, children's ability to see and touch a word's referent) facilitate learning more so later in development, while iconicity and auditoriness\footnote{The interaction between auditoriness and age was near 0 for both American Sign Language (B = xxx) and British Sign Language (B = xxx).} facilitate learning earlier in development. This result is consistent with the speculation above that xxx.
 
 \begin{figure}
 \centering
-\includegraphics{crossling_abstractness_manuscript_files/figure-latex/summary-of-interactions-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{crossling_abstractness_manuscript_files/figure-latex/summary-of-interactions-1.pdf}}
 \caption{\label{fig:summary-of-interactions}Effect size estimates (from logistic regression) of the interaction between each of the abstractness variables and age. Each dot represents the effect size of one language, with filled-in dots showing significant interactions and empty dots indicating that the effect was not significant in that language. Black dot and whiskers show mean effect size with standard error. Positive values show that effects are stronger for older children, while negative values show that effects are larger for younger children.}
 \end{figure}
 
-\hypertarget{what-drives-abstractness-effects}{%
-\section{What drives abstractness effects?}\label{what-drives-abstractness-effects}}
+\section{What drives abstractness effects?}\label{what-drives-abstractness-effects}
 
 Finally, we conduct an exploratory analysis aimed at measuring which of these abstractness variables best accounts for variability in words' production. Because these variables are interrelated, as shown in Figure xxx, when adding them to the same model, there is a risk of collinearity (Tomaschek et al., 2018). To get around this issue, we compare the predictive strength of the abstractness variables using random forest regression, implemented with the ranger package in R (Wright \& Ziegler, 2017). Random Forest regression is a machine learning method based on decision trees and recursive partitioning. Each tree is fit to a subset of the data and only uses a subset of the predictors (a third of the available variables in our analyses). The predictions of many hundreds of trees can then be averaged, which helps avoid overfitting and increases accuracy. Because Random Factor regression does not need to estimate a coefficient for every predictor variable in every tree, this approach allows us to avoid issues of collinearity, but the relative importance of two highly correlated predictors can still be compared by assessing the trees in which they do not co-occur.
 
@@ -441,97 +437,496 @@ Importance plots from random forest regression
 
 We next explore the variability in ranking across languages. intra-class correlation of importance by variable across languages. we find an ICC of R = xxx, indicating xxx stability in relative importance of these predictors across languages.
 
-\hypertarget{multiple-behavioral-tasks---abstractness-effects}{%
-\subsection{Multiple behavioral tasks - abstractness effects}\label{multiple-behavioral-tasks---abstractness-effects}}
+\subsection{Multiple behavioral tasks - abstractness effects}\label{multiple-behavioral-tasks---abstractness-effects}
 
 picture naming lexical decision
 
-\hypertarget{discussion}{%
-\section{Discussion}\label{discussion}}
+\section{Discussion}\label{discussion}
 
-Parents may not have an accurate sense of their children's comprehension of emotion words (\textbf{roepstorff2024?}).
+Parents may not have an accurate sense of their children's comprehension of emotion words (Roepstorff, Mayor, Havighurst, \& Kartushina, 2024).
 
-\hypertarget{refs}{}
+An additional proposal is that abstract meanings are grounded through conceptual metaphors, such as affection is warmth, which map abstract ideas onto more concrete sensory experiences (Lakoff, 2012; Lakoff \& Johnson, 1980). Such metaphors may help children connect abstract words like love to tangible embodied experiences (e.g., the warmth of being held). However, metaphorical thinking develops relatively late---typically between 8 and 10 years of age (Dove, 2011; Winner, Rosenstiel, \& Gardner, 1976), well after children have acquired many early abstract adjectives such as yucky and pretty (Frank et al., 2017; Reggin et al., 2021). Thus, while metaphorical mappings may shape adult representations, they are unlikely to account for the earliest abstract words in children's vocabularies.
+
+\phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-blomberg2015}{}}%
-Blomberg, F., \& Öberg, C. (2015). Swedish and English word ratings of imageability, familiarity and age of acquisition are highly correlated. \emph{Nordic Journal of Linguistics}, \emph{38}(3), 351--364. \url{https://doi.org/10.1017/S0332586515000220}
+\bibitem[\citeproctext]{ref-akita2019}
+Akita, K., \& Pardeshi, P. (2019). Ideophones, {Mimetics} and {Expressives}. In \emph{ill.16}. John Benjamins Publishing Company.
 
-\leavevmode\vadjust pre{\hypertarget{ref-bonin2018}{}}%
-Bonin, P., Méot, A., \& Bugaiska, A. (2018). Concreteness norms for 1,659 {French} words: {Relationships} with other psycholinguistic variables and word recognition times. \emph{Behavior Research Methods}, \emph{50}(6), 2366--2387. \url{https://doi.org/10.3758/s13428-018-1014-y}
+\bibitem[\citeproctext]{ref-babineau2021}
+Babineau, M., de Carvalho, A., Trueswell, J., \& Christophe, A. (2021). Familiar words can serve as a semantic seed for syntactic bootstrapping. \emph{Developmental Science}, \emph{24}(1), e13010. \url{https://doi.org/10.1111/desc.13010}
 
-\leavevmode\vadjust pre{\hypertarget{ref-brysbaert2014}{}}%
+\bibitem[\citeproctext]{ref-babineau2022}
+Babineau, M., Havron, N., Dautriche, I., de Carvalho, A., \& Christophe, A. (2022). Learning to predict and predicting to learn: {Before} and beyond the syntactic bootstrapper. \emph{Language Acquisition}, \emph{0}(0), 1--24. \url{https://doi.org/10.1080/10489223.2022.2078211}
+
+\bibitem[\citeproctext]{ref-barsalou2018}
+Barsalou, L. W., Dutriaux, L., \& Scheepers, C. (2018). Moving beyond the distinction between concrete and abstract concepts. \emph{Philosophical Transactions of the Royal Society B: Biological Sciences}, \emph{373}(1752), 20170144. \url{https://doi.org/10.1098/rstb.2017.0144}
+
+\bibitem[\citeproctext]{ref-bergelson2013}
+Bergelson, E., \& Swingley, D. (2013). The acquisition of abstract words by young infants. \emph{Cognition}, \emph{127}(3), 391--397. \url{https://doi.org/10.1016/j.cognition.2013.02.011}
+
+\bibitem[\citeproctext]{ref-binder2009}
+Binder, Jeffrey R., Desai, R. H., Graves, W. W., \& Conant, L. L. (2009). Where {Is} the {Semantic System}? {A Critical Review} and {Meta-Analysis} of 120 {Functional Neuroimaging Studies}. \emph{Cerebral Cortex}, \emph{19}(12), 2767--2796. \url{https://doi.org/10.1093/cercor/bhp055}
+
+\bibitem[\citeproctext]{ref-binder2005}
+Binder, J. R., Westbury, C. F., McKiernan, K. A., Possing, E. T., \& Medler, D. A. (2005). Distinct {Brain Systems} for {Processing Concrete} and {Abstract Concepts}. \emph{Journal of Cognitive Neuroscience}, \emph{17}(6), 905--917. \url{https://doi.org/10.1162/0898929054021102}
+
+\bibitem[\citeproctext]{ref-booth1997}
+Booth, J. R., Hall, W. S., Robison, G. C., \& Kim, S. Y. (1997). Acquisition of the {Mental State Verb Know} by 2- to 5-{Year-Old Children}. \emph{Journal of Psycholinguistic Research}, \emph{26}(6), 581--603. \url{https://doi.org/10.1023/A:1025093906884}
+
+\bibitem[\citeproctext]{ref-borghi2019}
+Borghi, A. M., Barca, L., Binkofski, F., Castelfranchi, C., Pezzulo, G., \& Tummolini, L. (2019). Words as social tools: {Language}, sociality and inner grounding in abstract concepts. \emph{Physics of Life Reviews}, \emph{29}, 120--153. \url{https://doi.org/10.1016/j.plrev.2018.12.001}
+
+\bibitem[\citeproctext]{ref-borghi2014}
+Borghi, A. M., \& Binkofski, F. (2014). \emph{Words as social tools: {An} embodied view on abstract concepts} (1st ed.). New York, NY: Springer.
+
+\bibitem[\citeproctext]{ref-borghi2017}
+Borghi, A. M., Binkofski, F., Castelfranchi, C., Cimatti, F., Scorolli, C., \& Tummolini, L. (2017). The challenge of abstract concepts. \emph{Psychological Bulletin}, \emph{143}(3), 263--292. \url{https://doi.org/10.1037/bul0000089}
+
+\bibitem[\citeproctext]{ref-borghi2025}
+Borghi, A. M., Mazzuca, C., \& Tummolini, L. (2025). The role of social interaction in the formation and use of abstract concepts. \emph{Nature Reviews Psychology}, \emph{4}(7), 470--483. \url{https://doi.org/10.1038/s44159-025-00451-z}
+
+\bibitem[\citeproctext]{ref-bornstein2004}
+Bornstein, M. H., Cote, L. R., Maital, S., Painter, K., Park, S.-Y., Pascual, L., \ldots{} Vyt, A. (2004). Cross-{Linguistic Analysis} of {Vocabulary} in {Young Children}: {Spanish}, {Dutch}, {French}, {Hebrew}, {Italian}, {Korean}, and {American English}. \emph{Child Development}, \emph{75}(4), 1115--1139. \url{https://doi.org/10.1111/j.1467-8624.2004.00729.x}
+
+\bibitem[\citeproctext]{ref-braginsky2024}
+Braginsky, M. (2024). \emph{Wordbankr package - {RDocumentation}}.
+
+\bibitem[\citeproctext]{ref-braginsky2019}
+Braginsky, M., Yurovsky, D., Marchman, V. A., \& Frank, M. C. (2019). Consistency and {Variability} in {Children}'s {Word Learning Across Languages}. \emph{Open Mind}, \emph{3}, 52--67. \url{https://doi.org/10.1162/opmi_a_00026}
+
+\bibitem[\citeproctext]{ref-brysbaert2014}
 Brysbaert, M., Warriner, A. B., \& Kuperman, V. (2014). Concreteness ratings for 40 thousand generally known {English} word lemmas. \emph{Behavior Research Methods}, \emph{46}(3), 904--911. \url{https://doi.org/10.3758/s13428-013-0403-5}
 
-\leavevmode\vadjust pre{\hypertarget{ref-caselli2017a}{}}%
+\bibitem[\citeproctext]{ref-campbell2024}
+Campbell, E. E., Casillas, R., \& Bergelson, E. (2024). The role of vision in the acquisition of words: {Vocabulary} development in blind toddlers. \emph{Developmental Science}, \emph{27}(4). \url{https://doi.org/10.1111/desc.13475}
+
+\bibitem[\citeproctext]{ref-campbell2025}
+Campbell, E. E., Davis, C. P., Zettersten, M., Cooke, M., Houston, D., Caselli, N., \& Bergelson, E. (2025). Early {Production} of {Imperceptible Words} by {Infants} and {Toddlers Born Deaf} or {Blind}. \emph{Open Mind}, \emph{9}, 475--500. \url{https://doi.org/10.1162/opmi_a_00197}
+
+\bibitem[\citeproctext]{ref-casasanto2019}
+Casasanto, D., \& de Bruin, A. (2019). Metaphors we learn by: {Directed} motor action improves word learning. \emph{Cognition}, \emph{182}, 177--183. \url{https://doi.org/10.1016/j.cognition.2018.09.015}
+
+\bibitem[\citeproctext]{ref-caselli1999}
+Caselli, C., Casadio, P., \& Bates, E. (1999). A comparison of the transition from first words to grammar in {English} and {Italian}. \emph{Journal of Child Language}, \emph{26}(1), 69--111. \url{https://doi.org/10.1017/S0305000998003687}
+
+\bibitem[\citeproctext]{ref-caselli1995}
+Caselli, M. C., Bates, E., Casadio, P., Fenson, J., Fenson, L., Sanderl, L., \& Weir, J. (1995). A cross-linguistic study of early lexical development. \emph{Cognitive Development}, \emph{10}(2), 159--199. \url{https://doi.org/10.1016/0885-2014(95)90008-X}
+
+\bibitem[\citeproctext]{ref-caselli2017}
 Caselli, N. K., Sehyr, Z. S., Cohen-Goldberg, A. M., \& Emmorey, K. (2017). {ASL-LEX}: {A} lexical database of {American Sign Language}. \emph{Behavior Research Methods}, \emph{49}(2), 784--801. \url{https://doi.org/10.3758/s13428-016-0742-0}
 
-\leavevmode\vadjust pre{\hypertarget{ref-desrocher2009}{}}%
-Desrocher. (2009). \emph{Subjective frequency and imageability ratings for 3,600 {French} nouns {\textbar} {SpringerLink}}.
+\bibitem[\citeproctext]{ref-casey2023}
+Casey, K., Potter, C. E., Lew-Williams, C., \& Wojcik, E. H. (2023). Moving beyond "nouns in the lab": {Using} naturalistic data to understand why infants' first words include uh-oh and hi. \emph{Developmental Psychology}, \emph{59}(11), 2162--2173. \url{https://doi.org/10.1037/dev0001630}
 
-\leavevmode\vadjust pre{\hypertarget{ref-diez-alamo2017}{}}%
+\bibitem[\citeproctext]{ref-clerkin2017}
+Clerkin, E. M., Hart, E., Rehg, J. M., Yu, C., \& Smith, L. B. (2017). Real-world visual statistics and infants' first-learned object names. \emph{Philosophical Transactions of the Royal Society B: Biological Sciences}, \emph{372}(1711), 20160055. \url{https://doi.org/10.1098/rstb.2016.0055}
+
+\bibitem[\citeproctext]{ref-connell2018}
+Connell, L., Lynott, D., \& Banks, B. (2018). Interoception: The forgotten modality in perceptual grounding of abstract and concrete concepts. \emph{Philosophical Transactions of the Royal Society B: Biological Sciences}, \emph{373}(1752), 20170143. \url{https://doi.org/10.1098/rstb.2017.0143}
+
+\bibitem[\citeproctext]{ref-critchley2013}
+Critchley, H. D., \& Harrison, N. A. (2013). Visceral {Influences} on {Brain} and {Behavior}. \emph{Neuron}, \emph{77}(4), 624--638. \url{https://doi.org/10.1016/j.neuron.2013.02.008}
+
+\bibitem[\citeproctext]{ref-custode2020}
+Custode, S. A., \& Tamis-LeMonda, C. (2020). Cracking the code: {Social} and contextual cues to language input in the home environment. \emph{Infancy}, \emph{25}(6), 809--826. \url{https://doi.org/10.1111/infa.12361}
+
+\bibitem[\citeproctext]{ref-davis2020}
+Davis, C. P., Altmann, G. T. M., \& Yee, E. (2020). Situational systematicity: {A} role for schema in understanding the differences between abstract and concrete concepts. \emph{Cognitive Neuropsychology}, \emph{37}(1-2), 142--153. \url{https://doi.org/10.1080/02643294.2019.1710124}
+
+\bibitem[\citeproctext]{ref-dellarosa2010}
+Della Rosa, P. A., Catricalà, E., Vigliocco, G., \& Cappa, S. F. (2010). Beyond the abstract-concrete dichotomy: Mode of acquisition, concreteness, imageability, familiarity, age of acquisition, context availability, and abstractness norms for a set of 417 {Italian} words. \emph{Behavior Research Methods}, \emph{42}(4), 1042--1048. \url{https://doi.org/10.3758/BRM.42.4.1042}
+
+\bibitem[\citeproctext]{ref-desai2018}
+Desai, R. H., Reilly, M., \& van Dam, W. (2018). The multifaceted abstract brain. \emph{Philosophical Transactions of the Royal Society B: Biological Sciences}, \emph{373}(1752), 20170122. \url{https://doi.org/10.1098/rstb.2017.0122}
+
+\bibitem[\citeproctext]{ref-diez-alamo2017}
 Díez-Álamo, A. M., Díez, E., Alonso, M. A., Vargas, C. A., \& Fernandez, A. (2017). \emph{Normative ratings for perceptual and motor attributes of 750 object concepts in {Spanish}}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-hills2010}{}}%
+\bibitem[\citeproctext]{ref-diveica2024}
+Diveica, V., Muraki, E. J., Binney, R. J., \& Pexman, P. M. (2024). Socialness effects in lexical--semantic processing. \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition}, \emph{50}(8), 1329--1343. \url{https://doi.org/10.1037/xlm0001328}
+
+\bibitem[\citeproctext]{ref-diveica2022}
+Diveica, V., Pexman, P. M., \& Binney, R. J. (2022). Quantifying social semantics: {An} inclusive definition of socialness and ratings for 8388 {English} words. \emph{Behavior Research Methods}, \emph{55}(2), 461--473. \url{https://doi.org/10.3758/s13428-022-01810-x}
+
+\bibitem[\citeproctext]{ref-dove2009}
+Dove, G. (2009). Beyond perceptual symbols: {A} call for representational pluralism. \emph{Cognition}, \emph{110}(3), 412--431. \url{https://doi.org/10.1016/j.cognition.2008.11.016}
+
+\bibitem[\citeproctext]{ref-dove2011}
+Dove, G. (2011). On the need for {Embodied} and {Dis-Embodied Cognition}. \emph{Frontiers in Psychology}, \emph{1}, 242. \url{https://doi.org/10.3389/fpsyg.2010.00242}
+
+\bibitem[\citeproctext]{ref-fenson1994}
+Fenson, L., Dale, P. S., Reznick, J. S., Bates, E., Thal, D. J., Pethick, S. J., \ldots{} Stiles, J. (1994). Variability in {Early Communicative Development}. \emph{Monographs of the Society for Research in Child Development}, \emph{59}(5), i. \url{https://doi.org/10.2307/1166093}
+
+\bibitem[\citeproctext]{ref-frank2017}
+Frank, M. C., Braginsky, M., Yurovsky, D., \& Marchman, V. A. (2017). Wordbank: An open repository for developmental vocabulary data. \emph{Journal of Child Language}, \emph{44}(3), 677--694. \url{https://doi.org/10.1017/S0305000916000209}
+
+\bibitem[\citeproctext]{ref-frank2021}
+Frank, M. C., Braginsky, M., Yurovsky, D., \& Marchman, V. A. (2021). \emph{Variability and {Consistency} in {Early Language Learning}: {The Wordbank Project}}. Cambridge: The MIT Press.
+
+\bibitem[\citeproctext]{ref-gleason1984}
+Gleason, J. B., Perlmann, R. Y., \& Greif, E. B. (1984). What's the magic word: {Learning} language through politeness routines{\(\ast\)}. \emph{Discourse Processes}, \emph{7}(4), 493--502. \url{https://doi.org/10.1080/01638538409544603}
+
+\bibitem[\citeproctext]{ref-gleason1976}
+Gleason, J. B., \& Weintraub, S. (1976). The acquisition of routines in child language. \emph{Language in Society}, \emph{5}(2), 129--136. \url{https://doi.org/10.1017/S0047404500006977}
+
+\bibitem[\citeproctext]{ref-gleitman1990}
+Gleitman, L. R. (1990). The {Structural Sources} of {Verb Meanings}. \emph{Language Acquisition}, \emph{1}(1), 3--55. Retrieved from \url{https://www.jstor.org/stable/20011341}
+
+\bibitem[\citeproctext]{ref-gleitman2005}
+Gleitman, L. R., Cassidy, K., Nappa, R., Papafragou, A., \& Trueswell, J. C. (2005). Hard {Words}. \emph{Language Learning and Development}, \emph{1}(1), 23--64. \url{https://doi.org/10.1207/s15473341lld0101_4}
+
+\bibitem[\citeproctext]{ref-gopnik1988}
+Gopnik, A. (1988). Three types of early word: The emergence of social words, names and cognitive-relational words in the one-word stage and their relation to cognitive development. \emph{First Language}, \emph{8}(22), 49--69. \url{https://doi.org/10.1177/014272378800802204}
+
+\bibitem[\citeproctext]{ref-goriachun2025}
+Goriachun, D., Strijkers, K., Gala, N., \& Ziegler, J. C. (2025). The role of social and emotional experience in representing abstract words. \emph{Journal of Experimental Psychology: General}, \emph{154}(8), 2076--2104. \url{https://doi.org/10.1037/xge0001771}
+
+\bibitem[\citeproctext]{ref-hardegger2024}
+Hardegger, S., Mazara, J., Küntay, A. C., Hellwig, B., Pfeiler, B., \& Stoll, S. (2024). \emph{Verbs or {Nouns}? {A} cross-linguistic study examining the effect of morphological complexity and input on children's early lexical development}. \url{https://doi.org/10.5167/UZH-261025}
+
+\bibitem[\citeproctext]{ref-harpaintner2018}
+Harpaintner, M., Trumpp, N. M., \& Kiefer, M. (2018). The {Semantic Content} of {Abstract Concepts}: {A Property Listing Study} of 296 {Abstract Words}. \emph{Frontiers in Psychology}, \emph{9}, 1748. \url{https://doi.org/10.3389/fpsyg.2018.01748}
+
+\bibitem[\citeproctext]{ref-heard2019}
+Heard, A., Madan, C. R., Protzner, A. B., \& Pexman, P. M. (2019). Getting a grip on sensorimotor effects in lexical--semantic processing. \emph{Behavior Research Methods}, \emph{51}(1), 1--13. \url{https://doi.org/10.3758/s13428-018-1072-1}
+
+\bibitem[\citeproctext]{ref-hills2010}
 Hills, T. T., Maouene, J., Riordan, B., \& Smith, L. B. (2010). The associative structure of language: {Contextual} diversity in early word learning. \emph{Journal of Memory and Language}, \emph{63}(3), 259--273. \url{https://doi.org/10.1016/j.jml.2010.06.002}
 
-\leavevmode\vadjust pre{\hypertarget{ref-hills2009}{}}%
+\bibitem[\citeproctext]{ref-hills2009}
 Hills, T. T., Maouene, M., Maouene, J., Sheya, A., \& Smith, L. (2009). Longitudinal {Analysis} of {Early Semantic Networks Preferential Attachment} or {Preferential Acquisition}? \emph{Psychological Science}, \emph{20}(6), 729--739. \url{https://doi.org/10.1111/j.1467-9280.2009.02365.x}
 
-\leavevmode\vadjust pre{\hypertarget{ref-hinojosa2021}{}}%
+\bibitem[\citeproctext]{ref-hinojosa2021}
 Hinojosa, J. A., Haro, J., Magallares, S., Duñabeitia, J. A., \& Ferré, P. (2021). Iconicity ratings for 10,995 {Spanish} words and their relationship with psycholinguistic variables. \emph{Behavior Research Methods}, \emph{53}(3), 1262--1275. \url{https://doi.org/10.3758/s13428-020-01496-z}
 
-\leavevmode\vadjust pre{\hypertarget{ref-hinojosa2020}{}}%
-Hinojosa, José Antonio, Haro, J., Magallares, S., Ferré, P., \& Duñabeitia, J. A. (2020). \emph{Iconicity ratings for 10,995 {Spanish} words}. \url{https://doi.org/10.17605/OSF.IO/V5ER3}
+\bibitem[\citeproctext]{ref-hoffman2013}
+Hoffman, P., Lambon Ralph, M. A., \& Rogers, T. T. (2013). Semantic diversity: {A} measure of semantic ambiguity based on variability in the contextual usage of words. \emph{Behavior Research Methods}, \emph{45}(3), 718--730. \url{https://doi.org/10.3758/s13428-012-0278-x}
 
-\leavevmode\vadjust pre{\hypertarget{ref-jaruskova2023}{}}%
+\bibitem[\citeproctext]{ref-huebner2018}
+Huebner, P. A., \& Willits, J. A. (2018). Structured {Semantic Knowledge Can Emerge Automatically} from {Predicting Word Sequences} in {Child-Directed Speech}. \emph{Frontiers in Psychology}, \emph{9}. \url{https://doi.org/10.3389/fpsyg.2018.00133}
+
+\bibitem[\citeproctext]{ref-imai2014}
+Imai, M., \& Kita, S. (2014). The sound symbolism bootstrapping hypothesis for language acquisition and language evolution. \emph{Philosophical Transactions of the Royal Society B: Biological Sciences}, \emph{369}(1651), 20130298. \url{https://doi.org/10.1098/rstb.2013.0298}
+
+\bibitem[\citeproctext]{ref-imai2008}
+Imai, M., Kita, S., Nagumo, M., \& Okada, H. (2008). Sound symbolism facilitates early verb learning. \emph{Cognition}, \emph{109}(1), 54--65. \url{https://doi.org/10.1016/j.cognition.2008.07.015}
+
+\bibitem[\citeproctext]{ref-inkster2016}
+Inkster, M., Wellsby, M., Lloyd, E., \& Pexman, P. M. (2016). Development of {Embodied Word Meanings}: {Sensorimotor Effects} in {Children}'s {Lexical Processing}. \emph{Frontiers in Psychology}, \emph{7}.
+
+\bibitem[\citeproctext]{ref-jaruskova2023}
 Jarůšková, L., Smolík, F., Chládková, K., Oceláková, Z., \& Paillereau, N. (2023). How to {Build} a {Communicative Development Inventory}: {Insights From} 43 {Adaptations}. \emph{Journal of Speech, Language, and Hearing Research}, \emph{66}(6), 2095--2117. \url{https://doi.org/10.1044/2023_JSLHR-22-00591}
 
-\leavevmode\vadjust pre{\hypertarget{ref-kachergis2009}{}}%
+\bibitem[\citeproctext]{ref-johns2016}
+Johns, B. T., Dye, M., \& Jones, M. N. (2016). The influence of contextual diversity on word learning. \emph{Psychonomic Bulletin \& Review}, \emph{23}(4), 1214--1220. \url{https://doi.org/10.3758/s13423-015-0980-7}
+
+\bibitem[\citeproctext]{ref-kachergis2009}
 Kachergis, G., Yu, C., \& Shiffrin, R. M. (2009). \emph{Frequency and {Contextual Diversity Effects} in {Cross-Situational Word Learning}}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-lynott2020}{}}%
+\bibitem[\citeproctext]{ref-kantartzis2011}
+Kantartzis, K. F. (2011). \emph{Children and adults' understanding and use of sound-symbolism in novel words} (D\textbackslash\_ph). University of Birmingham.
+
+\bibitem[\citeproctext]{ref-kantartzis2019}
+Kantartzis, K., Imai, M., Evans, D., \& Kita, S. (2019). Sound {Symbolism Facilitates Long-Term Retention} of the {Semantic Representation} of {Novel Verbs} in {Three-Year-Olds}. \emph{Languages}, \emph{4}(2), 21. \url{https://doi.org/10.3390/languages4020021}
+
+\bibitem[\citeproctext]{ref-kauschke2007}
+Kauschke, C., Lee, H.-W., \& Pae, S. (2007). Similarities and variation in noun and verb acquisition: {A} crosslinguistic study of children learning {German}, {Korean}, and {Turkish}. \emph{Language and Cognitive Processes}, \emph{22}(7), 1045--1072. \url{https://doi.org/10.1080/01690960701307348}
+
+\bibitem[\citeproctext]{ref-kousta2011}
+Kousta, S.-T., Vigliocco, G., Vinson, D. P., Andrews, M., \& Del Campo, E. (2011). The representation of abstract words: {Why} emotion matters. \emph{Journal of Experimental Psychology: General}, \emph{140}(1), 14--34. \url{https://doi.org/10.1037/a0021446}
+
+\bibitem[\citeproctext]{ref-laing2019}
+Laing, C. (2019). A role for onomatopoeia in early language: Evidence from phonological development. \emph{Language and Cognition}, \emph{11}(2), 173--187. \url{https://doi.org/10.1017/langcog.2018.23}
+
+\bibitem[\citeproctext]{ref-laing}
+Laing, C., Keren-Portnoy, T., Khattab, G., \& Sloggett, S. (n.d.). \emph{Size {Sound Symbolism} in {Mothers}' {Speech} to their {Infants}.}
+
+\bibitem[\citeproctext]{ref-lakoff2012}
+Lakoff, G. (2012). Explaining embodied cognition results. \emph{Topics in Cognitive Science}, \emph{4}(4), 773--785. \url{https://doi.org/10.1111/j.1756-8765.2012.01222.x}
+
+\bibitem[\citeproctext]{ref-lakoff1980}
+Lakoff, G., \& Johnson, M. (1980). The {Metaphorical Structure} of the {Human Conceptual System}. \emph{Cognitive Science}, \emph{4}, 195--208.
+
+\bibitem[\citeproctext]{ref-lany2010}
+Lany, J., \& Saffran, J. R. (2010). From {Statistics} to {Meaning}: {Infants}' {Acquisition} of {Lexical Categories}. \emph{Psychological Science}, \emph{21}(2), 284--291. \url{https://doi.org/10.1177/0956797609358570}
+
+\bibitem[\citeproctext]{ref-lenci2018}
+Lenci, A., Lebani, G. E., \& Passaro, L. C. (2018). The {Emotions} of {Abstract Words}: {A Distributional Semantic Analysis}. \emph{Topics in Cognitive Science}, \emph{10}(3), 550--572. \url{https://doi.org/10.1111/tops.12335}
+
+\bibitem[\citeproctext]{ref-liu2008}
+Liu, D., Wellman, H. M., Tardif, T., \& Sabbagh, M. A. (2008). Theory of mind development in {Chinese} children: {A} meta-analysis of false-belief understanding across cultures and languages. \emph{Developmental Psychology}, \emph{44}(2), 523--531. \url{https://doi.org/10.1037/0012-1649.44.2.523}
+
+\bibitem[\citeproctext]{ref-liuzzi2010}
+Liuzzi, G., Freundlieb, N., Ridder, V., Hoppe, J., Heise, K., Zimerman, M., \ldots{} Hummel, F. C. (2010). The {Involvement} of the {Left Motor Cortex} in {Learning} of a {Novel Action Word Lexicon}. \emph{Current Biology}, \emph{20}(19), 1745--1751. \url{https://doi.org/10.1016/j.cub.2010.08.034}
+
+\bibitem[\citeproctext]{ref-lohaus2014}
+Lohaus, A., Lamm, B., Keller, H., Teubert, M., Fassbender, I., Glüer, M., \ldots{} Schwarzer, G. (2014). Gross and {Fine Motor Differences Between Cameroonian} and {German Children Aged} 3 to 40 {Months}: {Results} of a {Cross-Cultural Longitudinal Study}. \emph{Journal of Cross-Cultural Psychology}, \emph{45}(8), 1328--1341. \url{https://doi.org/10.1177/0022022114537703}
+
+\bibitem[\citeproctext]{ref-lund1996}
+Lund, K., \& Burgess, C. (1996). Producing high-dimensional semantic spaces from lexical co-occurrence. \emph{Behavior Research Methods, Instruments, \& Computers}, \emph{28}(2), 203--208. \url{https://doi.org/10.3758/BF03204766}
+
+\bibitem[\citeproctext]{ref-lund2019}
+Lund, T. C., Sidhu, D. M., \& Pexman, P. M. (2019). Sensitivity to emotion information in children's lexical processing. \emph{Cognition}, \emph{190}, 61--71. \url{https://doi.org/10.1016/j.cognition.2019.04.017}
+
+\bibitem[\citeproctext]{ref-luniewska2016}
+Łuniewska, M., Haman, E., Armon-Lotem, S., Etenkowski, B., Southwood, F., Anelković, D., \ldots{} Ünal-Logacev, Ö. (2016). Ratings of age of acquisition of 299 words across 25 languages: {Is} there a cross-linguistic order of words? \emph{Behavior Research Methods}, \emph{48}(3), 1154--1177. \url{https://doi.org/10.3758/s13428-015-0636-6}
+
+\bibitem[\citeproctext]{ref-luniewska2019}
+Łuniewska, M., Wodniecka, Z., Miller, C. A., Smolík, F., Butcher, M., Chondrogianni, V., \ldots{} Haman, E. (2019). Age of acquisition of 299 words in seven languages: {American English}, {Czech}, {Gaelic}, {Lebanese Arabic}, {Malay}, {Persian} and {Western Armenian}. \emph{PLOS ONE}, \emph{14}(8), e0220611. \url{https://doi.org/10.1371/journal.pone.0220611}
+
+\bibitem[\citeproctext]{ref-lynott2020}
 Lynott, D., Connell, L., Brysbaert, M., Brand, J., \& Carney, J. (2020). The {Lancaster Sensorimotor Norms}: Multidimensional measures of perceptual and action strength for 40,000 {English} words. \emph{Behavior Research Methods}, \emph{52}(3), 1271--1291. \url{https://doi.org/10.3758/s13428-019-01316-z}
 
-\leavevmode\vadjust pre{\hypertarget{ref-miceli2021}{}}%
+\bibitem[\citeproctext]{ref-mahmood2025}
+Mahmood, F., Muraki, E. J., Diveica, V., Binney, R. J., Protzner, A. B., \& Pexman, P. M. (2025). Abstract words are hard to acquire; {Does} social relevance help? \emph{Psychonomic Bulletin \& Review}, \emph{32}(6), 2926--2938. \url{https://doi.org/10.3758/s13423-025-02719-0}
+
+\bibitem[\citeproctext]{ref-mak2021}
+Mak, M. H. C. (2021). \emph{Learning new words via reading: The influence of context and diversity} (\{\{Http://purl.org/dc/dcmitype/Text\}\}). University of Oxford.
+
+\bibitem[\citeproctext]{ref-massaro2017}
+Massaro, D. W., \& Perlman, M. (2017). Quantifying {Iconicity}'s {Contribution} during {Language Acquisition}: {Implications} for {Vocabulary Learning}. \emph{Frontiers in Communication}, \emph{2}. \url{https://doi.org/10.3389/fcomm.2017.00004}
+
+\bibitem[\citeproctext]{ref-meylan2022}
+Meylan, S. C., \& Bergelson, E. (2022). Learning {Through Processing}: {Toward} an {Integrated Approach} to {Early Word Learning}. \emph{Annual Review of Linguistics}, \emph{8}(1), 77--99. \url{https://doi.org/10.1146/annurev-linguistics-031220-011146}
+
+\bibitem[\citeproctext]{ref-miceli2021}
 Miceli, A., Wauthia, E., Lefebvre, L., Ris, L., \& Simoes Loureiro, I. (2021). Perceptual and {Interoceptive Strength Norms} for 270 {French Words}. \emph{Frontiers in Psychology}, \emph{12}, 667271. \url{https://doi.org/10.3389/fpsyg.2021.667271}
 
-\leavevmode\vadjust pre{\hypertarget{ref-miklashevsky2018}{}}%
+\bibitem[\citeproctext]{ref-miklashevsky2018}
 Miklashevsky, A. (2018). Perceptual {Experience Norms} for 506 {Russian Nouns}: {Modality Rating}, {Spatial Localization}, {Manipulability}, {Imageability} and {Other Variables}. \emph{Journal of Psycholinguistic Research}, \emph{47}, 641--661. \url{https://doi.org/10.1007/s10936-017-9548-1}
 
-\leavevmode\vadjust pre{\hypertarget{ref-muraki2022}{}}%
+\bibitem[\citeproctext]{ref-milligan2007}
+Milligan, K., Astington, J. W., \& Dack, L. A. (2007). Language and {Theory} of {Mind}: {Meta-Analysis} of the {Relation Between Language Ability} and {False-belief Understanding}. \emph{Child Development}, \emph{78}(2), 622--646. \url{https://doi.org/10.1111/j.1467-8624.2007.01018.x}
+
+\bibitem[\citeproctext]{ref-miyazaki2013}
+Miyazaki, M., Imai, M., Kantartzis, K., Kita, S., \& Kita, S. (2013). The facilitatory role of sound symbolism in infant word learning. \emph{Proc. 35th {Annual Conf}. Of the {Cognitive Science Society}}. Berlin, Germany.
+
+\bibitem[\citeproctext]{ref-mkrtychian2021}
+Mkrtychian, N., Gnedykh, D., Blagovechtchenski, E., Tsvetova, D., Kostromina, S., \& Shtyrov, Y. (2021). Contextual {Acquisition} of {Concrete} and {Abstract Words}: {Behavioural} and {Electrophysiological Evidence}. \emph{Brain Sciences}, \emph{11}(7), 898. \url{https://doi.org/10.3390/brainsci11070898}
+
+\bibitem[\citeproctext]{ref-mulder2015}
+Mulder, H. D. (2015). Developing communicative competence: A longitudinal study of the acquisition of mental state terms and indirect requests. \emph{Journal of Child Language}, \emph{42}(5), 969--1005. \url{https://doi.org/10.1017/S0305000914000543}
+
+\bibitem[\citeproctext]{ref-muraki2025}
+Muraki, E. J., Reggin, L. D., Feddema, C. Y., \& Pexman, P. M. (2025). The {Development} of {Abstract Word Meanings}. \emph{Journal of Child Language}, \emph{52}(1), 195--207. \url{https://doi.org/10.1017/S0305000923000569}
+
+\bibitem[\citeproctext]{ref-muraki2022}
 Muraki, E. J., Siddiqui, I. A., \& Pexman, P. M. (2022). Quantifying children's sensorimotor experience: {Child} body-object interaction ratings for 3359 {English} words. \emph{Behavior Research Methods}, \emph{54}(6), 2864--2877. \url{https://doi.org/10.3758/s13428-022-01798-4}
 
-\leavevmode\vadjust pre{\hypertarget{ref-rofes2018}{}}%
-Rofes, A., Zakariás, L., Ceder, K., Lind, M., Johansson, M. B., de Aguiar, V., \ldots{} Howard, D. (2018). Imageability ratings across languages. \emph{Behavior Research Methods}, \emph{50}(3), 1187--1197. \url{https://doi.org/10.3758/s13428-017-0936-0}
+\bibitem[\citeproctext]{ref-newcombe2012}
+Newcombe, P. I., Campbell, C., Siakaluk, P. D., \& Pexman, P. M. (2012). Effects of {Emotional} and {Sensorimotor Knowledge} in {Semantic Processing} of {Concrete} and {Abstract Nouns}. \emph{Frontiers in Human Neuroscience}, \emph{6}. \url{https://doi.org/10.3389/fnhum.2012.00275}
 
-\leavevmode\vadjust pre{\hypertarget{ref-rosa2022}{}}%
+\bibitem[\citeproctext]{ref-nielsen2021}
+Nielsen, A. K., \& Dingemanse, M. (2021). Iconicity in {Word Learning} and {Beyond}: {A Critical Review}. \emph{Language and Speech}, \emph{64}(1), 52--72. \url{https://doi.org/10.1177/0023830920914339}
+
+\bibitem[\citeproctext]{ref-nygaard2009}
+Nygaard, L. C., Cook, A. E., \& Namy, L. L. (2009). Sound to meaning correspondences facilitate word learning. \emph{Cognition}, \emph{112}(1), 181--186. \url{https://doi.org/10.1016/j.cognition.2009.04.001}
+
+\bibitem[\citeproctext]{ref-ozturk2016}
+Ozturk, O., \& Papafragou, A. (2016). The {Acquisition} of {Evidentiality} and {Source Monitoring}. \emph{Language Learning and Development}, \emph{12}(2), 199--230. \url{https://doi.org/10.1080/15475441.2015.1024834}
+
+\bibitem[\citeproctext]{ref-paivio1971}
+Paivio, A. (1971). Imagery and {Language}. In \emph{Imagery} (pp. 7--32). Academic Press. \url{https://doi.org/10.1016/B978-0-12-635450-8.50008-X}
+
+\bibitem[\citeproctext]{ref-paivio1986}
+Paivio, A. (1986). \emph{Mental {Representations}: {A Dual Coding Approach}}. Oxford University Press.
+
+\bibitem[\citeproctext]{ref-paivio1991}
+Paivio, A. (1991). Dual coding theory: {Retrospect} and current status. \emph{Canadian Journal of Psychology / Revue Canadienne de Psychologie}, \emph{45}(3), 255--287. \url{https://doi.org/10.1037/h0084295}
+
+\bibitem[\citeproctext]{ref-paivio2010}
+Paivio, A. (2010). Dual coding theory and the mental lexicon. \emph{The Mental Lexicon}, \emph{5}(2), 205--230. \url{https://doi.org/10.1075/ml.5.2.04pai}
+
+\bibitem[\citeproctext]{ref-papafragou2007}
+Papafragou, A., Cassidy, K., \& Gleitman, L. (2007). When we think about thinking: {The} acquisition of belief verbs. \emph{Cognition}, \emph{105}(1), 125--165. \url{https://doi.org/10.1016/j.cognition.2006.09.008}
+
+\bibitem[\citeproctext]{ref-papafragou2007a}
+Papafragou, A., Li, P., Choi, Y., \& Han, C. (2007). Evidentiality in {Language} and {Cognition}. \emph{Cognition}, \emph{103}(2), 253--299. \url{https://doi.org/10.1016/j.cognition.2006.04.001}
+
+\bibitem[\citeproctext]{ref-pascual2008}
+Pascual, B., Aguado, G., Sotillo, M., \& Masdeu, J. C. (2008). Acquisition of mental state language in {Spanish} children: A longitudinal study of the relationship between the production of mental verbs and linguistic development. \emph{Developmental Science}, \emph{11}(4), 454--466. \url{https://doi.org/10.1111/j.1467-7687.2008.00691.x}
+
+\bibitem[\citeproctext]{ref-pauligk2019}
+Pauligk, S., Kotz, S. A., \& Kanske, P. (2019). Differential {Impact} of {Emotion} on {Semantic Processing} of {Abstract} and {Concrete Words}: {ERP} and {fMRI Evidence}. \emph{Scientific Reports}, \emph{9}(1), 14439. \url{https://doi.org/10.1038/s41598-019-50755-3}
+
+\bibitem[\citeproctext]{ref-perniss2015}
+Perniss, P., Özyürek, A., \& Morgan, G. (2015). The {Influence} of the {Visual Modality} on {Language Structure} and {Conventionalization}: {Insights From Sign Language} and {Gesture}. \emph{Topics in Cognitive Science}, \emph{7}(1), 2--11. \url{https://doi.org/10.1111/tops.12127}
+
+\bibitem[\citeproctext]{ref-perry2015}
+Perry, L. K., Perlman, M., \& Lupyan, G. (2015). Iconicity in {English} and {Spanish} and {Its Relation} to {Lexical Category} and {Age} of {Acquisition}. \emph{PLOS ONE}, \emph{10}(9), e0137147. \url{https://doi.org/10.1371/journal.pone.0137147}
+
+\bibitem[\citeproctext]{ref-perry2018}
+Perry, L. K., Perlman, M., Winter, B., Massaro, D. W., \& Lupyan, G. (2018). Iconicity in the speech of children and adults. \emph{Developmental Science}, \emph{21}(3), e12572. \url{https://doi.org/10.1111/desc.12572}
+
+\bibitem[\citeproctext]{ref-pexman2019}
+Pexman, P. M. (2019). The role of embodiment in conceptual development. \emph{Language, Cognition and Neuroscience}, \emph{34}(10), 1274--1283. \url{https://doi.org/10.1080/23273798.2017.1303522}
+
+\bibitem[\citeproctext]{ref-pexman2023}
+Pexman, P. M., Diveica, V., \& Binney, R. J. (2023). Social semantics: The organization and grounding of abstract concepts. \emph{Philosophical Transactions of the Royal Society B: Biological Sciences}, \emph{378}(1870), 20210363. \url{https://doi.org/10.1098/rstb.2021.0363}
+
+\bibitem[\citeproctext]{ref-ponari2018}
+Ponari, M., Norbury, C. F., Rotaru, A., Lenci, A., \& Vigliocco, G. (2018). Learning abstract words and concepts: Insights from developmental language disorder. \emph{Philosophical Transactions of the Royal Society B: Biological Sciences}, \emph{373}(1752), 20170140. \url{https://doi.org/10.1098/rstb.2017.0140}
+
+\bibitem[\citeproctext]{ref-ponari2017}
+Ponari, M., Norbury, C. F., \& Vigliocco, G. (2017). Acquisition of abstract concepts is influenced by emotional valence. \emph{Developmental Science}, \emph{21}(2). \href{https://doi.org/DOI:\%2010.1111/desc.12549}{https://doi.org/DOI: 10.1111/desc.12549}
+
+\bibitem[\citeproctext]{ref-ponari2020}
+Ponari, M., Norbury, C. F., \& Vigliocco, G. (2020). The role of emotional valence in learning novel abstract concepts - {PubMed}. \emph{Developmental Psychology}, \emph{56}(10), 1855--1865. \href{https://doi.org/doi:\%2010.1037/dev0001091}{https://doi.org/doi: 10.1037/dev0001091}
+
+\bibitem[\citeproctext]{ref-pyers2009}
+Pyers, J. E., \& Senghas, A. (2009). Language {Promotes False-Belief Understanding}. \emph{Psychological Science}, \emph{20}(7), 805--812. \url{https://doi.org/10.1111/j.1467-9280.2009.02377.x}
+
+\bibitem[\citeproctext]{ref-rakoczy2022}
+Rakoczy, H. (2022). Foundations of theory of mind and its development in early childhood. \emph{Nature Reviews Psychology}, \emph{1}(4), 223--235. \url{https://doi.org/10.1038/s44159-022-00037-z}
+
+\bibitem[\citeproctext]{ref-reggin2021}
+Reggin, L. D., Muraki, E. J., \& Pexman, P. M. (2021). Development of {Abstract Word Knowledge}. \emph{Frontiers in Psychology}, \emph{12}.
+
+\bibitem[\citeproctext]{ref-reilly2007}
+Reilly, J., \& Kean, J. (2007). Formal {Distinctiveness} of {High-} and {Low-Imageability Nouns}: {Analyses} and {Theoretical Implications}. \emph{Cognitive Science}, \emph{31}(1), 157--168. \url{https://doi.org/10.1080/03640210709336988}
+
+\bibitem[\citeproctext]{ref-reilly2023}
+Reilly, J., Kuhnke, P., Vigliocco, G., Peelle, J., Mahon, B., Buxbaum, L., \ldots{} Jackson, R. (2023). \emph{What {We Mean When We Say Semantic}: {A Consensus Statement} on the {Nomenclature} of {Semantic Memory}}. \url{https://doi.org/10.31234/osf.io/xrnb2}
+
+\bibitem[\citeproctext]{ref-roepstorff2024}
+Roepstorff, I. T., Mayor, J., Havighurst, S. S., \& Kartushina, N. (2024). Same name, different representational levels? {Misalignment} of indirect parent-reported and direct alternative forced choice measures of emotion word comprehension in preschool children. \emph{Journal of Child Language}, 1--16. \url{https://doi.org/10.1017/S0305000923000727}
+
+\bibitem[\citeproctext]{ref-rosa2022}
 Rosa, E., Salom, R., \& Perea, M. (2022). Contextual diversity favors the learning of new words in children regardless of their comprehension skills. \emph{Journal of Experimental Child Psychology}, \emph{214}, 105312. \url{https://doi.org/10.1016/j.jecp.2021.105312}
 
-\leavevmode\vadjust pre{\hypertarget{ref-sehyr2021}{}}%
+\bibitem[\citeproctext]{ref-roy2015}
+Roy, B. C., Frank, M. C., Decamp, P., Miller, M., \& Roy, D. (2015). \emph{Predicting the birth of a spoken word}. \emph{13}(41), 12663--12668. \url{https://doi.org/10.1073/pnas.1419773112}
+
+\bibitem[\citeproctext]{ref-sanroque2024}
+San Roque, L., Norcliffe, E., \& Majid, A. (2024). Vision {Verbs Emerge First} in {English Acquisition} but {Touch}, not {Audition}, {Follows Second}. \emph{Cognitive Science}, \emph{48}(6), e13469. \url{https://doi.org/10.1111/cogs.13469}
+
+\bibitem[\citeproctext]{ref-schandry1981}
+Schandry, R. (1981). Heart {Beat Perception} and {Emotional Experience}. \emph{Psychophysiology}, \emph{18}(4), 483--488. \url{https://doi.org/10.1111/j.1469-8986.1981.tb02486.x}
+
+\bibitem[\citeproctext]{ref-schults2012}
+Schults, A., Tulviste, T., \& Konstabel, K. (2012). Early vocabulary and gestures in {Estonian} children. \emph{Journal of Child Language}, \emph{39}(3), 664--686. \url{https://doi.org/10.1017/S0305000911000225}
+
+\bibitem[\citeproctext]{ref-schwanenflugel1992}
+Schwanenflugel, P. J., Akin, C., \& Luh, W.-M. (1992). Context availability and the recall of abstract and concrete words. \emph{Memory \& Cognition}, \emph{20}(1), 96--104. \url{https://doi.org/10.3758/BF03208259}
+
+\bibitem[\citeproctext]{ref-schwanenflugel1983}
+Schwanenflugel, P. J., \& Shoben, E. J. (1983). Differential context effects in the comprehension of abstract and concrete verbal materials. \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition}, \emph{9}, 82--102. \url{https://doi.org/10.1037/0278-7393.9.1.82}
+
+\bibitem[\citeproctext]{ref-sehyr2021}
 Sehyr, Z. S., Caselli, N. K., Cohen-Goldberg, A. M., \& Emmorey, K. (2021). The {ASL-LEX} 2.0 {Project}: {A Database} of {Lexical} and {Phonological Properties} for 2,723 {Signs} in {American Sign Language}. \emph{The Journal of Deaf Studies and Deaf Education}, \emph{26}(2), 263--277. \url{https://doi.org/10.1093/deafed/enaa038}
 
-\leavevmode\vadjust pre{\hypertarget{ref-seidl2023}{}}%
+\bibitem[\citeproctext]{ref-seidl2023}
 Seidl, A. H., Indarjit, M., \& Borovsky, A. (2023). Touch to learn: {Multisensory} input supports word learning and processing. \emph{Developmental Science}. \url{https://doi.org/10.1111/desc.13419}
 
-\leavevmode\vadjust pre{\hypertarget{ref-soares2017}{}}%
-Soares, A. P., Costa, A. S., Machado, J., Comesana, M., \& Oliveira, H. M. (2017). The {Minho Word Pool}: {Norms} for imageability, concreteness, and subjective frequency for 3,800 {Portuguese} words {\textbar} {SpringerLink}. \emph{Behavior Research Methods}, \emph{49}, 1065--1081. \url{https://doi.org/10.3758/s13428-016-0767-4}
+\bibitem[\citeproctext]{ref-shablack2020}
+Shablack, H., Becker, M., \& Lindquist, K. A. (2020). How do children learn novel emotion words? {A} study of emotion concept acquisition in preschoolers. \emph{Journal of Experimental Psychology: General}, \emph{149}(8), 1537--1553. \url{https://doi.org/10.1037/xge0000727}
 
-\leavevmode\vadjust pre{\hypertarget{ref-speed2022}{}}%
-Speed, L. J., \& Brybaert, M. (2022). Dutch sensory modality norms. \emph{Behavior Research Methods}, \emph{54}(3), 1306--1318. \url{https://doi.org/10.3758/s13428-021-01656-9}
+\bibitem[\citeproctext]{ref-shatz1983}
+Shatz, M., Wellman, H. M., \& Silber, S. (1983). The acquisition of mental verbs: {A} systematic investigation of the first reference to mental state. \emph{Cognition}, \emph{14}(3), 301--321. \url{https://doi.org/10.1016/0010-0277(83)90008-2}
 
-\leavevmode\vadjust pre{\hypertarget{ref-torkamani-azar2019}{}}%
-Torkamani-Azar, M., Kanik, S. D., Vardan, A. T., Aydin, C., \& Cetin, M. (2019). Emotionality of {Turkish} language and primary adaptation of affective {English} norms for {Turkish}. \emph{Current Psychology}, \emph{38}(2), 273--294. \url{https://doi.org/10.1007/s12144-018-0119-x}
+\bibitem[\citeproctext]{ref-siakaluk2008}
+Siakaluk, P. D., Pexman, P. M., Aguilera, L., Owen, W. J., \& Sears, C. R. (2008). Evidence for the activation of sensorimotor information during visual word recognition: {The} body--object interaction effect. \emph{Cognition}, \emph{106}(1), 433--443. \url{https://doi.org/10.1016/j.cognition.2006.12.011}
 
-\leavevmode\vadjust pre{\hypertarget{ref-vergallito2020}{}}%
+\bibitem[\citeproctext]{ref-sidhu2021}
+Sidhu, D., Williamson, J., Slavova, V., \& Pexman, P. (2021). An investigation of iconic language development in four datasets. \emph{Journal of Child Language}, \emph{49}. \url{https://doi.org/10.1017/S0305000921000040}
+
+\bibitem[\citeproctext]{ref-sommerville2005}
+Sommerville, J. A., Woodward, A. L., \& Needham, A. (2005). Action experience alters 3-month-old infants' perception of others' actions. \emph{Cognition}, \emph{96}(1), B1--B11. \url{https://doi.org/10.1016/j.cognition.2004.07.004}
+
+\bibitem[\citeproctext]{ref-suggate2017}
+Suggate, S., \& Stoeger, H. (2017). Fine motor skills enhance lexical processing of embodied vocabulary: {A} test of the nimble-hands, nimble-minds hypothesis. \emph{Quarterly Journal of Experimental Psychology (2006)}, \emph{70}(10), 2169--2187. \url{https://doi.org/10.1080/17470218.2016.1227344}
+
+\bibitem[\citeproctext]{ref-syrett2010}
+Syrett, K., \& Lidz, J. (2010). 30-{Month-Olds Use} the {Distribution} and {Meaning} of {Adverbs} to {Interpret Novel Adjectives}. \emph{Language Learning and Development}, \emph{6}(4), 258--282. \url{https://doi.org/10.1080/15475440903507905}
+
+\bibitem[\citeproctext]{ref-tardif2008}
+Tardif, T., Fletcher, P., Liang, W., Zhang, Z., Kaciroti, N., \& Marchman, V. A. (2008). Baby's first 10 words. \emph{Developmental Psychology}, \emph{44}(4), 929--938. \url{https://doi.org/10.1037/0012-1649.44.4.929}
+
+\bibitem[\citeproctext]{ref-thill2016}
+Thill, S., \& Twomey, K. E. (2016). What's on the {Inside Counts}: {A Grounded Account} of {Concept Acquisition} and {Development}. \emph{Frontiers in Psychology}, \emph{7}. \url{https://doi.org/10.3389/fpsyg.2016.00402}
+
+\bibitem[\citeproctext]{ref-thompson2020}
+Thompson, B., Perlman, M., Lupyan, G., Sehyr, Z. S., \& Emmorey, K. (2020). A data-driven approach to the semantics of iconicity in {American Sign Language} and {English}. \emph{Language and Cognition}, \emph{12}(1), 182--202. \url{https://doi.org/10.1017/langcog.2019.52}
+
+\bibitem[\citeproctext]{ref-thompson2011a}
+Thompson, R. L. (2011). Iconicity in {Language Processing} and {Acquisition}: {What Signed Languages Reveal}. \emph{Language and Linguistics Compass}, \emph{5}(9), 603--616. \url{https://doi.org/10.1111/j.1749-818X.2011.00301.x}
+
+\bibitem[\citeproctext]{ref-thompson2012}
+Thompson, R. L., Vinson, D. P., Woll, B., \& Vigliocco, G. (2012). The {Road} to {Language Learning Is Iconic}: {Evidence From British Sign Language}. \emph{Psychological Science}, \emph{23}(12), 1443--1448. \url{https://doi.org/10.1177/0956797612459763}
+
+\bibitem[\citeproctext]{ref-troche2017}
+Troche, J., Crutch, S. J., \& Reilly, J. (2017). Defining a {Conceptual Topography} of {Word Concreteness}: {Clustering Properties} of {Emotion}, {Sensation}, and {Magnitude} among 750 {English Words}. \emph{Frontiers in Psychology}, \emph{8}, 1787. \url{https://doi.org/10.3389/fpsyg.2017.01787}
+
+\bibitem[\citeproctext]{ref-troche2014}
+Troche, J., Crutch, S., \& Reilly, J. (2014). Clustering, hierarchical organization, and the topography of abstract and concrete nouns. \emph{Frontiers in Psychology}, \emph{5}. \url{https://doi.org/10.3389/fpsyg.2014.00360}
+
+\bibitem[\citeproctext]{ref-unal2016}
+Ünal, E., \& Papafragou, A. (2016). Production--comprehension asymmetries and the acquisition of evidential morphology. \emph{Journal of Memory and Language}, \emph{89}, 179--199. \url{https://doi.org/10.1016/j.jml.2015.12.001}
+
+\bibitem[\citeproctext]{ref-vergallito2020}
 Vergallito, A., Petilli, M. A., \& Marelli, M. (2020). Perceptual modality norms for 1,121 {Italian} words: {A} comparison with concreteness and imageability scores and an analysis of their impact in word processing tasks. \emph{Behavior Research Methods}, \emph{52}(4), 1599--1616. \url{https://doi.org/10.3758/s13428-019-01337-8}
 
-\leavevmode\vadjust pre{\hypertarget{ref-verheyen2020}{}}%
-Verheyen, S., De Deyne, S., Linsen, S., \& Storms, G. (2020). Lexicosemantic, affective, and distributional norms for 1,000 {Dutch} adjectives. \emph{Behavior Research Methods}, \emph{52}(3), 1108--1121. \url{https://doi.org/10.3758/s13428-019-01303-4}
+\bibitem[\citeproctext]{ref-villani2019}
+Villani, C., Lugli, L., Liuzza, M. T., \& Borghi, A. M. (2019). Varieties of abstract concepts and their multiple dimensions. \emph{Language and Cognition}, \emph{11}(3), 403--430. \url{https://doi.org/10.1017/langcog.2019.23}
 
-\leavevmode\vadjust pre{\hypertarget{ref-winter2023a}{}}%
+\bibitem[\citeproctext]{ref-vukovic2019}
+Vukovic, N., \& Shtyrov, Y. (2019). Learning with the wave of the hand: {Kinematic} and {TMS} evidence of primary motor cortex role in category-specific encoding of word meaning. \emph{NeuroImage}, \emph{202}, 116179. \url{https://doi.org/10.1016/j.neuroimage.2019.116179}
+
+\bibitem[\citeproctext]{ref-wang2010}
+Wang, J., Conder, J. A., Blitzer, D. N., \& Shinkareva, S. V. (2010). Neural representation of abstract and concrete concepts: {A} meta-analysis of neuroimaging studies. \emph{Human Brain Mapping}, \emph{31}(10), 1459--1468. \url{https://doi.org/10.1002/hbm.20950}
+
+\bibitem[\citeproctext]{ref-wellman2001}
+Wellman, H. M., Cross, D., \& Watson, J. (2001). Meta-{Analysis} of {Theory}-of-{Mind Development}: {The Truth} about {False Belief}. \emph{Child Development}, \emph{72}(3), 655--684. \url{https://doi.org/10.1111/1467-8624.00304}
+
+\bibitem[\citeproctext]{ref-wellman1987}
+Wellman, H. M., \& Estes, D. (1987). Children's early use of mental verbs and what they mean. \emph{Discourse Processes}, \emph{10}(2), 141--156. \url{https://doi.org/10.1080/01638538709544666}
+
+\bibitem[\citeproctext]{ref-wellsby2014}
+Wellsby, M., \& Pexman, P. M. (2014). Developing embodied cognition: Insights from children's concepts and language processing. \emph{Frontiers in Psychology}, \emph{5}.
+
+\bibitem[\citeproctext]{ref-wiemer-hastings2005}
+Wiemer-Hastings, K., \& Xu, X. (2005). Content {Differences} for {Abstract} and {Concrete Concepts}. \emph{Cognitive Science}, \emph{29}(5), 719--736. \url{https://doi.org/10.1207/s15516709cog0000_33}
+
+\bibitem[\citeproctext]{ref-wiens2005}
+Wiens, S. (2005). Interoception in emotional experience. \emph{Current Opinion in Neurology}, \emph{18}(4), 442. \url{https://doi.org/10.1097/01.wco.0000168079.92106.99}
+
+\bibitem[\citeproctext]{ref-wild2024}
+Wild, H. A., \& Kuperman, V. (2024). Word learning in the wild: {App-based} evidence for valence and concreteness effects. \emph{Applied Psycholinguistics}, \emph{45}(5), 786--810. \url{https://doi.org/10.1017/S0142716424000304}
+
+\bibitem[\citeproctext]{ref-wilson-mendenhall2013}
+Wilson-Mendenhall, C. D., Simmons, W. K., Martin, A., \& Barsalou, L. W. (2013). Contextual {Processing} of {Abstract Concepts Reveals Neural Representations} of {Nonlinguistic Semantic Content}. \emph{Journal of Cognitive Neuroscience}, \emph{25}(6), 920--935. \url{https://doi.org/10.1162/jocn_a_00361}
+
+\bibitem[\citeproctext]{ref-winner1976}
+Winner, E., Rosenstiel, A. K., \& Gardner, H. (1976). The development of metaphoric understanding. \emph{Developmental Psychology}, \emph{12}(4), 289--297. \url{https://doi.org/10.1037/0012-1649.12.4.289}
+
+\bibitem[\citeproctext]{ref-winter2022}
+Winter, B. (2022). Abstract concepts and emotion: Cross-linguistic evidence and arguments against affective embodiment. \emph{Philosophical Transactions of the Royal Society B: Biological Sciences}, \emph{378}(1870), 20210368. \url{https://doi.org/10.1098/rstb.2021.0368}
+
+\bibitem[\citeproctext]{ref-winter2023}
 Winter, B., Lupyan, G., Perry, L. K., Dingemanse, M., \& Perlman, M. (2023). Iconicity ratings for 14,000+ {English} words. \emph{Behavior Research Methods}. \url{https://doi.org/10.3758/s13428-023-02112-6}
 
-\leavevmode\vadjust pre{\hypertarget{ref-zhong2022}{}}%
+\bibitem[\citeproctext]{ref-wojcik2013}
+Wojcik, E. H., \& Saffran, J. R. (2013). The {Ontogeny} of {Lexical Networks}: {Toddlers Encode} the {Relationships Among Referents When Learning Novel Words}. \emph{Psychological Science}, \emph{24}(10), 1898--1905. \url{https://doi.org/10.1177/0956797613478198}
+
+\bibitem[\citeproctext]{ref-woodward2009}
+Woodward, A. L. (2009). Infants' {Grasp} of {Others}' {Intentions}. \emph{Current Directions in Psychological Science}, \emph{18}(1), 53--57. \url{https://doi.org/10.1111/j.1467-8721.2009.01605.x}
+
+\bibitem[\citeproctext]{ref-yao2018}
+Yao, B., Keitel, A., Bruce, G., Scott, G. G., O'Donnell, P. J., \& Sereno, S. C. (2018). Differential emotional processing in concrete and abstract words. \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition}, \emph{44}(7), 1064--1074. \url{https://doi.org/10.1037/xlm0000464}
+
+\bibitem[\citeproctext]{ref-yao2025}
+Yao, B., Scott, G. G., Bruce, G., Monteith-Hodge, E., \& Sereno, S. C. (2025). Emotion processing in concrete and abstract words: Evidence from eye fixations during reading. \emph{Cognition and Emotion}, \emph{39}(7), 1625--1634. \url{https://doi.org/10.1080/02699931.2024.2367062}
+
+\bibitem[\citeproctext]{ref-yoshida2003}
+Yoshida, H. (2003). \emph{Iconicity in language learning: {The} role of mimetics in word learning tasks} (PhD thesis). Indiana University, United States -- Indiana.
+
+\bibitem[\citeproctext]{ref-yoshida2012}
+Yoshida, H. (2012). A {Cross-Linguistic Study} of {Sound Symbolism} in {Children}'s {Verb Learning}. \emph{Journal of Cognition and Development}, \emph{13}(2), 232--265. \url{https://doi.org/10.1080/15248372.2011.573515}
+
+\bibitem[\citeproctext]{ref-yott2016}
+Yott, J., \& Poulin-Dubois, D. (2016). Are {Infants}' {Theory-of-Mind Abilities Well Integrated}? {Implicit Understanding} of {Intentions}, {Desires}, and {Beliefs}. \emph{Journal of Cognition and Development}, \emph{17}(5), 683--698. \url{https://doi.org/10.1080/15248372.2015.1086771}
+
+\bibitem[\citeproctext]{ref-zhong2022}
 Zhong, Y., Wan, M., Ahrens, K., \& Huang, C.-R. (2022). Sensorimotor norms for {Chinese} nouns and their relationship with orthographic and semantic variables. \emph{Language, Cognition and Neuroscience}, \emph{37}, 1--23. \url{https://doi.org/10.1080/23273798.2022.2035416}
 
 \end{CSLReferences}

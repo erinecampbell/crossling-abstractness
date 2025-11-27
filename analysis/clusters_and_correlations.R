@@ -19,12 +19,12 @@ average_ratings <-CDI_mega_word_list_with_averageratings %>%
   rename_with(~str_remove(., '_rating')) 
 
 average_ratings_matrix <- cor(average_ratings, use = "pairwise.complete.obs") 
-corrplot(average_ratings_matrix, "color",type="upper", order = "alphabet",
-         tl.col="black", addCoef.col = "white", col=colorRampPalette(c("#CC0000","white","#3B9AB2"))(200))
+# corrplot(average_ratings_matrix, "color",type="upper", order = "alphabet",
+#          tl.col="black", addCoef.col = "white", col=colorRampPalette(c("#CC0000","white","#3B9AB2"))(200))
 
 
 hclustered_ratings <- hclust(as.dist(average_ratings_matrix), method = "ward.D2")
-plot(hclustered_ratings, hang= 1)
+# plot(hclustered_ratings, hang= 1)
 # using dendrogram objects
 # triangular dendrogram
 average_ratings_dendro <- ggdendrogram(hclustered_ratings, theme_dendro = TRUE, rotate = TRUE)
