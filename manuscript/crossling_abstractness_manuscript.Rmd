@@ -36,7 +36,7 @@ latex_engine      : xelatex
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE)
 
-# trackdown::update_file(file="crossling_abstractness_manuscript.Rmd",gpath="trackdown/CrosslingAbstractness",hide_code=TRUE)
+trackdown::upload_file(file="manuscript/crossling_abstractness_manuscript.Rmd",path_output = "manuscript/crossling_abstractness_manuscript.pdf", gpath="trackdown/CrosslingAbstractness",hide_code=TRUE)
 ```
 
 ```{r libraries}
@@ -147,19 +147,19 @@ The present study examines the cross-linguistic stability of associations betwee
 
 # Methods
 
+The primary analysis of this paper is to measure the strength and cross-linguistic consistency of associations between learning a word (as operationalized by word production on the Communicative Development Inventory [CDI]) and various dimensions of abstractness (as operationalized by human-rated and corpus-derived lexical properties). 
+
 ## CDI
 
-the MacArthur-Bates Communicative Development Inventory (CDI), a vocabulary measure in which parents are asked to indicate whether their child understands and/or produces each of several hundred words @fenson1994. Since its conception, the CDI has been adapted into many languages, validated with many populations, and administered to many thousands of children.
+The MacArthur-Bates CDI is a vocabulary measure in which parents are asked to indicate whether their toddler understands and/or produces each of several hundred words @fenson1994. Since its conception, the CDI has been adapted into many languages [@jaruskova2023], validated with many populations [e.g., CITE CITE], and administered to many thousands of children [@frank2017]. When the CDI is adapted into a new language, researchers of each language tend to consult previous CDIs, parents, educators, and child development experts to curate a culturally-relevant set of early-learned words [@jaruskova2023]. Thus, the CDIs contain partially-overlapping subsets of words (e.g., words for mother and father are ubiquitous across CDI forms, but acorn, magpie, and paprika appear on only the Latvian, Beijing Mandarin, and Hungarian forms, respectively). The CDI is the gold-standard approach for assessing vocabulary data in young children [typically 8-30 months, depending on the form, @jaruskova2023] because it is developmentally sensitive [cite], easy to administer at scale [cite], and strongly predictive of later language outcomes [cite].
 
-When the CDI is adapted into a new language, researchers of each language tend to consult previous CDIs, parents, educators, and child development experts to curate a culturally-relevant set of early-learned words [@jaruskova2023]. Thus, the CDIs contain partially-overlapping subsets of words (e.g., words for mother and father are ubiquitous across CDI forms, but acorn, magpie, and paprika appear on only the Latvian, Beijing Mandarin, and Hungarian forms, respectively).
-
-We pull data from Wordbank, a large, open database of CDI data [@frank2017], using the wordbankr R package [@braginsky2024]. For the present analyses, we take the full set of participants from Wordbank as of `r date()`. This results in a sample of N = `r n_participants`.
+We pull data from Wordbank, a large, open database of CDI data [@frank2017], using the wordbankr R package [@braginsky2024]. For the present analyses, we take the full set of participants from Wordbank as of `r date()`. This results in a sample of N = `r n_participants`. We focus our analyses on the production measure of the CDI, which has higher item-level reliability than CDI comprehension data [cite cite]. Placeholder items, such as “child’s own name,” were excluded. 
 
 ## Lexical Properties
 
-All lexical ratings are first re-scaled (within languages) to a 1 to 10 scale for better comparability across languages and lexical properties. For zipfian-distributed norms (e.g., corpus-based frequency), norms were first logged and then scaled.
+Lexical norms were obtained from many many sources, described below. Please see the OSF site for detailed instructions on how to access each of the norms used for this study. To achieve maximum lexical rating coverage across words and languages, while recognizing that language-specific ratings by native speakers are likely the best source of lexical data, we developed the following rules for imputation:
 
-To achieve maximum lexical rating coverage across words and languages, while recognizing that language-specific ratings by native speakers are likely the best source of lexical data, we developed the following rules for imputation:
+-   All lexical ratings are first re-scaled (within languages) to a 1 to 10 scale for better comparability across languages and lexical properties. For zipfian-distributed norms (e.g., corpus-based frequency), norms were first logged and then scaled.
 
 -   For norms pertaining to the underlying concept (e.g., concreteness, perceptual strength, emotional valence):
 
@@ -179,21 +179,44 @@ To achieve maximum lexical rating coverage across words and languages, while rec
 
 <https://docs.google.com/spreadsheets/d/1fivS85qayBJtp_nXjVmAvwZn7u6F517RFur0UPTJcAw/edit#gid=0>
 
+### Sensorimotor Ratings
+
 #### Imageability
 
 #### Perceptual properties
 
-More recently, researchers have developed more specific measures of words' perceptual associations. Beyond general perceptibility, these norms separate associations by modality (visual, tactile, auditory, haptic, gustatory, interoceptive), yielding the modality specific ratings, an overall strength rating, and a measure of the spread of ratings across modalities [@lynott2020]. Such specificity allows researchers to test whether information from certain senses, like vision or touch, may be privileged over others [cite], as well as whether receiving sensory information from multiple modalities may support acquisition [e.g., @seidl2023].For example, the Lancaster Sensorimotor Norms, created for English , Using similar instructions, sensory norms have been created for other languages, including Chinese [@zhong2022], Spanish [@diez-alamo2017], French [@miceli2021], Russian [@miklashevsky2018], and Italian [@vergallito2020].
+More recently, researchers have developed more specific measures of words' perceptual associations. Beyond general perceptibility, these norms separate associations by modality (visual, tactile, auditory, haptic, gustatory, interoceptive), yielding the modality specific ratings, an overall strength rating, and a measure of the spread of ratings across modalities [@lynott2020]. Such specificity allows researchers to test whether information from certain senses, like vision or touch, may be privileged over others [cite], as well as whether receiving sensory information from multiple modalities may support acquisition [e.g., @seidl2023].For example, the Lancaster Sensorimotor Norms, created for English , Using similar instructions, sensory norms have been created for other languages, including Chinese [@zhong2022], Spanish [@diez-alamo2017], French [@miceli2021], Russian [@miklashevsky2018], and Italian [@vergallito2020]. While interoceptive ratings are often collected as part of sensorimotor norms, we categorize interoceptive ratings under *Internal or Relational*. 
 
 #### BOI
 
 Body-object interaction (BOI) ratings measure the extent to which a human body can physically interact with a word's referent [@siakaluk2008], and in particular, seem to index ease of graspability [@heard2019]. In neuroimaging studies, semantic processing of high BOI (vs low BOI) words is associated with neural regions involved in grasping (Hargreaves et al., 2012). In line with embodied theories of cognition, words' BOI ratings predict the speed of lexical processing in children and adults [CITE] as well as age of acquisition [@thill2016; @pexman2019; @muraki2022]. Child-centered BOI ratings, gathered by asking parents of elementary-aged children "how easily the average 6-year-old can physically interact (using the body: hands, mouth, etc.) with what each word represents" [@muraki2022, pg.9], may capture this variability even better; though in English, child BOI ratings and adult BOI ratings correlate strongly (*r* = 0.67) with each other [@muraki2022].
 
+### Wordform Arbitrariness Ratings
+
 #### Iconicity
 
-At the time of publication, iconicity norms were only available for English [@winter2023], ASL [@caselli2017; @sehyr2021], BSL, Japanese [CITE], and Spanish [@hinojosa2021]. We did not attempt to interpolate values for this property given its intrinsic connection to phonological form, which varies cross-linguistically.
+Iconicity refers to the perceived physical resemblance between a word's phonological form its meaning CITE CITE. At the time of publication, iconicity norms were only available for English [@winter2023], ASL [@caselli2017; @sehyr2021], BSL, Japanese [CITE], and Spanish [@hinojosa2021]. We did not attempt to interpolate values for this property given its intrinsic connection to phonological form, which varies cross-linguistically.
 
-#### xxx
+### Internal or Relational Ratings
+
+#### Socialness
+
+Thus far, socialness ratings have only been collected by @diveica2022 and @wang2023.  
+
+#### Cognitiveness
+
+Thus far, cognitiveness ratings have only been collected by CITE.  
+
+
+#### Interoception
+
+#### Emotional Valence
+
+#### Emotional Arousal
+
+### Context Diversity
+
+#### Wikipedia
 
 ```{r properties, results='asis'}
 CDI_mega_word_list_with_averageratings <- read_rds("norms/CDI_mega_word_list_with_averageratings.rds")
@@ -325,6 +348,10 @@ Positive age interactions can be seen in at least xxx out of xxx languages for v
 ```{r summary-of-interactions, fig.cap="Effect size estimates (from logistic regression) of the interaction between each of the abstractness variables and age. Each dot represents the effect size of one language, with filled-in dots showing significant interactions and empty dots indicating that the effect was not significant in that language. Black dot and whiskers show mean effect size with standard error. Positive values show that effects are stronger for older children, while negative values show that effects are larger for younger children."}
 summary_of_interactions
 ```
+
+### Cross-linguistic Consistency
+
+braginsky figure 4 but for variable, rather than language
 
 # What drives abstractness effects?
 
