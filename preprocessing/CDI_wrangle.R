@@ -1,6 +1,7 @@
 library(tidyverse)
 library(wordbankr)
 library(rmeta)
+library(glue)
 
 cor_test_info <- function(listaoa, listproperty, language) {
   result <- cor.test(listaoa,listproperty)
@@ -11,6 +12,27 @@ cor_test_info <- function(listaoa, listproperty, language) {
              df = result$parameter,
              conf_int_lower = result$conf.int[1],
              conf_int_upper = result$conf.int[2])
+}
+
+summarize_cdi_participants <- function(instrument_data) {
+  
+  instrument_data %>%
+    summarise(
+      language = first(language),
+      
+      forms = paste(sort(unique(form)), collapse = ", "),
+      
+      ages = glue(
+        "{min(age, na.rm = TRUE)}–{max(age, na.rm = TRUE)} months",
+        " (M: {round(mean(age, na.rm = TRUE), 2)} months, ",
+        "SD: {round(sd(age, na.rm = TRUE), 2)}) "
+        
+      ),
+      
+      n = n_distinct(child_id),
+      
+      datasets = paste(sort(unique(dataset_name)), collapse = ", ")
+    )
 }
 
 # arabic
@@ -27,6 +49,8 @@ arabic_instrument_data <- bind_rows(arabic_instrument_data_WG,
 write_rds(arabic_instrument_data, "norms/arabic/arabic_instrument_data.rds")
 
 n_arabic <- (arabic_instrument_data %>% distinct(child_id) %>% nrow())
+arabic_participant_summary <- summarize_cdi_participants(arabic_instrument_data)
+  
 
 
 # asl ----
@@ -53,6 +77,8 @@ write_rds(asl_instrument_data, "norms/asl/asl_instrument_data.rds")
 
 
 n_asl <- (asl_instrument_data %>% distinct(child_id) %>% nrow()) # 139
+asl_participant_summary <- summarize_cdi_participants(asl_instrument_data)
+
 # bsl ----
 bsl_instrument_data_WG <- get_instrument_data("British Sign Language", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces) 
@@ -65,6 +91,8 @@ write_rds(bsl_instrument_data, "norms/bsl/bsl_instrument_data.rds")
 
 
 n_bsl <- (bsl_instrument_data %>% distinct(child_id) %>% nrow())
+bsl_participant_summary <- summarize_cdi_participants(bsl_instrument_data)
+
 
 # catalan ----
 catalan_instrument_data_WG <- get_instrument_data("Catalan", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
@@ -81,6 +109,8 @@ catalan_instrument_data <- bind_rows(catalan_instrument_data_WG,
 write_rds(catalan_instrument_data, "norms/catalan/catalan_instrument_data.rds")
 
 n_catalan <- (catalan_instrument_data %>% distinct(child_id) %>% nrow())
+catalan_participant_summary <- summarize_cdi_participants(catalan_instrument_data)
+
 
 
 # chinese ----
@@ -93,6 +123,8 @@ cantonese_instrument_data <- cantonese_instrument_data_WS%>%
   mutate(produces = as.factor(produces)) %>%
   distinct()
 write_rds(cantonese_instrument_data, "norms/chinese/cantonese_instrument_data.rds")
+cantonese_participant_summary <- summarize_cdi_participants(cantonese_instrument_data)
+
 
 
 mandarin_beijing_instrument_data_IC <- get_instrument_data("Mandarin (Beijing)", form = "IC", administration_info = TRUE,item_info = TRUE) %>%
@@ -109,6 +141,8 @@ mandarin_beijing_instrument_data <- bind_rows(mandarin_beijing_instrument_data_W
   distinct() %>%
   as.data.frame()
 write_rds(mandarin_beijing_instrument_data, "norms/chinese/mandarin_beijing_instrument_data.rds")
+mandarin_beijing_participant_summary <- summarize_cdi_participants(mandarin_beijing_instrument_data)
+
 
 
 
@@ -123,6 +157,8 @@ mandarin_taiwanese_instrument_data <- bind_rows(mandarin_taiwanese_instrument_da
   distinct() %>%
   as.data.frame()
 write_rds(mandarin_taiwanese_instrument_data, "norms/chinese/mandarin_taiwanese_instrument_data.rds")
+mandarin_taiwanese_participant_summary <- summarize_cdi_participants(mandarin_taiwanese_instrument_data)
+
 
 
 n_chinese <-  (cantonese_instrument_data %>% distinct(child_id) %>% nrow()) + # 1208
@@ -147,6 +183,8 @@ write_rds(croatian_instrument_data, "norms/croatian/croatian_instrument_data.rds
 
 
 n_croatian <- croatian_instrument_data %>% distinct(child_id) %>% nrow() #627
+croatian_participant_summary <- summarize_cdi_participants(croatian_instrument_data)
+
 # czech ----
 czech_instrument_data_WS <- get_instrument_data("Czech", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces) 
@@ -162,6 +200,8 @@ write_rds(czech_instrument_data, "norms/czech/czech_instrument_data.rds")
 
 
 n_czech <- czech_instrument_data %>% distinct(child_id) %>% nrow() #493
+czech_participant_summary <- summarize_cdi_participants(czech_instrument_data)
+
 # danish ---- 
 danish_ratings_subset <- readRDS("norms/danish/danish_ratings_subset.rds")
 
@@ -180,6 +220,8 @@ danish_instrument_data <- bind_rows(danish_instrument_data_WG,
 write_rds(danish_instrument_data, "norms/danish/danish_instrument_data.rds")
 
 n_danish <- danish_instrument_data %>% distinct(child_id) %>% nrow() #6112
+danish_participant_summary <- summarize_cdi_participants(danish_instrument_data)
+
 
 # dutch ----
 dutch_ratings_subset <- readRDS("norms/dutch/dutch_ratings_subset.rds")
@@ -219,6 +261,8 @@ write_rds(dutch_instrument_data, "norms/dutch/dutch_instrument_data.rds")
 
 
 n_dutch <- dutch_instrument_data %>% distinct(child_id) %>% nrow()
+dutch_participant_summary <- summarize_cdi_participants(dutch_instrument_data)
+
  #1936
 # english ---- 
 
@@ -241,6 +285,8 @@ american_english_instrument_data <- american_english_instrument_data_no_ratings 
   as.data.frame() %>%
   distinct()
 write_rds(american_english_instrument_data, "norms/english/american_english_instrument_data.rds")
+american_english_participant_summary <- summarize_cdi_participants(american_english_instrument_data)
+
 
 
 australian_english_instrument_data_WS <-  get_instrument_data("English (Australian)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
@@ -252,6 +298,8 @@ australian_english_instrument_data <- australian_english_instrument_data_WS %>%
   as.data.frame() %>%
   distinct()
 write_rds(australian_english_instrument_data, "norms/english/australian_english_instrument_data.rds")
+australian_english_participant_summary <- summarize_cdi_participants(australian_english_instrument_data)
+
 
 
 
@@ -274,6 +322,8 @@ british_english_instrument_data <- british_english_instrument_data_no_ratings%>%
   distinct() %>%
   as.data.frame()
 write_rds(british_english_instrument_data, "norms/english/british_english_instrument_data.rds")
+british_english_participant_summary <- summarize_cdi_participants(british_english_instrument_data)
+
 
 
 
@@ -286,6 +336,7 @@ irish_english_instrument_data <- irish_english_instrument_data_WS%>%
   distinct() %>%
   as.data.frame()
 write_rds(irish_english_instrument_data, "norms/english/irish_english_instrument_data.rds")
+irish_english_participant_summary <- summarize_cdi_participants(irish_english_instrument_data)
 
 
 
@@ -310,6 +361,8 @@ estonian_instrument_data <-estonian_instrument_data_WS %>%
 write_rds(estonian_instrument_data, "norms/estonian/estonian_instrument_data.rds")
 
 n_estonian <- (estonian_instrument_data %>% distinct(child_id) %>% nrow())
+estonian_participant_summary <- summarize_cdi_participants(estonian_instrument_data)
+
 #1235
 
 # finnish ----
@@ -336,6 +389,8 @@ write_rds(finnish_instrument_data, "norms/finnish/finnish_instrument_data.rds")
 
 
 n_finnish <- finnish_instrument_data %>% distinct(child_id) %>% nrow() #235
+finnish_participant_summary <- summarize_cdi_participants(finnish_instrument_data)
+
 
 # french ----
 french_european_instrument_data_WG <- get_instrument_data("French (French)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
@@ -350,6 +405,8 @@ french_european_instrument_data <- bind_rows(french_european_instrument_data_WG,
   distinct() %>%
   as.data.frame()
 write_rds(french_european_instrument_data, "norms/french/french_european_instrument_data.rds")
+french_european_participant_summary <- summarize_cdi_participants(french_european_instrument_data)
+
 
 
 french_quebecois_instrument_data_WG <- get_instrument_data("French (Quebecois)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
@@ -364,6 +421,8 @@ french_quebecois_instrument_data <- bind_rows(french_quebecois_instrument_data_W
   distinct() %>%
   as.data.frame()
 write_rds(french_quebecois_instrument_data, "norms/french/french_quebecois_instrument_data.rds")
+french_quebecois_participant_summary <- summarize_cdi_participants(french_quebecois_instrument_data)
+
 
 n_french<- (french_european_instrument_data %>% distinct(child_id) %>% nrow()) + #747
 (french_quebecois_instrument_data %>% distinct(child_id) %>% nrow())
@@ -382,6 +441,8 @@ write_rds(german_instrument_data, "norms/german/german_instrument_data.rds")
 
 
 n_german <- german_instrument_data %>% distinct(child_id) %>% nrow() # 1181
+german_participant_summary <- summarize_cdi_participants(german_instrument_data)
+
 
 # greek ----
 greek_instrument_data_WS <- get_instrument_data("Greek (Cypriot)", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
@@ -397,6 +458,8 @@ write_rds(greek_instrument_data, "norms/greek/greek_instrument_data.rds")
 
 
 n_greek <- greek_instrument_data %>% distinct(child_id) %>% nrow() # 176
+greek_participant_summary <- summarize_cdi_participants(greek_instrument_data)
+
 
 # hebrew ----
 hebrew_instrument_data_WG <- get_instrument_data("Hebrew", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
@@ -414,6 +477,8 @@ hebrew_instrument_data <- bind_rows(hebrew_instrument_data_WG,
 write_rds(hebrew_instrument_data, "norms/hebrew/hebrew_instrument_data.rds")
 
 n_hebrew <- hebrew_instrument_data %>% distinct(child_id) %>% nrow() # 559
+hebrew_participant_summary <- summarize_cdi_participants(hebrew_instrument_data)
+
 
 # hungarian ----
 hungarian_instrument_data_WS <- get_instrument_data("Hungarian", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
@@ -428,6 +493,8 @@ hungarian_instrument_data <- hungarian_instrument_data_WS %>%
 write_rds(hungarian_instrument_data, "norms/hungarian/hungarian_instrument_data.rds")
 
 n_hungarian <- hungarian_instrument_data %>% distinct(child_id) %>% nrow() # 363
+hungarian_participant_summary <- summarize_cdi_participants(hungarian_instrument_data)
+
 
 # irish ----
 irish_instrument_data <- get_instrument_data("Irish", form = "WS", administration_info = TRUE,item_info = TRUE) %>%
@@ -440,6 +507,8 @@ irish_instrument_data <- get_instrument_data("Irish", form = "WS", administratio
 write_rds(irish_instrument_data, "norms/irish/irish_instrument_data.rds")
 
 n_irish <- irish_instrument_data %>% distinct(child_id) %>% nrow() # 48
+irish_participant_summary <- summarize_cdi_participants(irish_instrument_data)
+
 
 # japanese----
 japanese_instrument_data_WG <- get_instrument_data("Japanese", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
@@ -456,6 +525,8 @@ japanese_instrument_data <- bind_rows(japanese_instrument_data_WG,
   as.data.frame()
 write_rds(japanese_instrument_data, "norms/japanese/japanese_instrument_data.rds")
 n_japanese <- japanese_instrument_data %>% distinct(child_id) %>% nrow() # 846
+japanese_participant_summary <- summarize_cdi_participants(japanese_instrument_data)
+
 
 
 # italian ----
@@ -474,6 +545,8 @@ italian_instrument_data <- bind_rows(italian_instrument_data_WG,
 write_rds(italian_instrument_data, "norms/italian/italian_instrument_data.rds")
 
 n_italian <- italian_instrument_data %>% distinct(child_id) %>% nrow() # 1400
+italian_participant_summary <- summarize_cdi_participants(italian_instrument_data)
+
 
 
 # kigiriama ----
@@ -492,6 +565,8 @@ kigiriama_instrument_data <- bind_rows(kigiriama_instrument_data_WG,
 write_rds(kigiriama_instrument_data, "norms/kigiriama/kigiriama_instrument_data.rds")
 
 n_kigiriama <- kigiriama_instrument_data %>% distinct(child_id) %>% nrow() # 207
+kigiriama_participant_summary <- summarize_cdi_participants(kigiriama_instrument_data)
+
 
 
 # kiswahili ----
@@ -509,6 +584,8 @@ kiswahili_instrument_data <- bind_rows(kiswahili_instrument_data_WG,
 write_rds(kiswahili_instrument_data, "norms/kiswahili/kiswahili_instrument_data.rds")
 
 n_kiswahili <- kiswahili_instrument_data %>% distinct(child_id) %>% nrow() # 130
+kiswahili_participant_summary <- summarize_cdi_participants(kiswahili_instrument_data)
+
 
 # korean ----
 korean_instrument_data_WG <- get_instrument_data("Korean", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
@@ -526,6 +603,8 @@ korean_instrument_data <- bind_rows(korean_instrument_data_WG,
 write_rds(korean_instrument_data, "norms/korean/korean_instrument_data.rds")
 
 n_korean <- korean_instrument_data %>% distinct(child_id) %>% nrow() # 2231
+korean_participant_summary <- summarize_cdi_participants(korean_instrument_data)
+
 
 # latvian ----
 latvian_instrument_data_WG <- get_instrument_data("Latvian", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
@@ -544,6 +623,8 @@ write_rds(latvian_instrument_data, "norms/latvian/latvian_instrument_data.rds")
 
 
 n_latvian <- latvian_instrument_data %>% distinct(child_id) %>% nrow() # 683
+latvian_participant_summary <- summarize_cdi_participants(latvian_instrument_data)
+
 
 # norwegian ----
 norwegian_instrument_data_WG <- get_instrument_data("Norwegian", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
@@ -565,6 +646,8 @@ write_rds(norwegian_instrument_data, "norms/norwegian/norwegian_instrument_data.
 
 
 n_norwegian <- norwegian_instrument_data %>% distinct(child_id) %>% nrow() # 7358
+norwegian_participant_summary <- summarize_cdi_participants(norwegian_instrument_data)
+
 
 
 # persian ----
@@ -583,6 +666,8 @@ persian_instrument_data <- bind_rows(persian_instrument_data_WG,
 write_rds(persian_instrument_data, "norms/persian/persian_instrument_data.rds")
 
 n_persian <- persian_instrument_data %>% distinct(child_id) %>% nrow() # 163
+persian_participant_summary <- summarize_cdi_participants(persian_instrument_data)
+
 
 
 # portuguese ----
@@ -603,6 +688,8 @@ write_rds(portuguese_instrument_data, "norms/portuguese/portuguese_instrument_da
 
 
 n_portuguese <- portuguese_instrument_data %>% distinct(child_id) %>% nrow() # 4326
+portuguese_participant_summary <- summarize_cdi_participants(portuguese_instrument_data)
+
 
 
 # russian ----
@@ -621,6 +708,8 @@ russian_instrument_data <- bind_rows(russian_instrument_data_WG,
 write_rds(russian_instrument_data, "norms/russian/russian_instrument_data.rds")
 
 n_russian <- russian_instrument_data %>% distinct(child_id) %>% nrow() # 1805
+russian_participant_summary <- summarize_cdi_participants(russian_instrument_data)
+
 
 # slovak ----
 slovak_instrument_data_WG <- get_instrument_data("Slovak", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
@@ -640,6 +729,8 @@ write_rds(slovak_instrument_data, "norms/slovak/slovak_instrument_data.rds")
 
 
 n_slovak <- slovak_instrument_data %>% distinct(child_id) %>% nrow() # 1712
+slovak_participant_summary <- summarize_cdi_participants(slovak_instrument_data)
+
 
 # spanish ----
 
@@ -653,6 +744,8 @@ spanish_argentinian_instrument_data <- spanish_argentinian_instrument_data_WS%>%
   as.data.frame() %>%
   distinct()
 write_rds(spanish_argentinian_instrument_data, "norms/spanish/spanish_argentinian_instrument_data.rds")
+spanish_argentinian_participant_summary <- summarize_cdi_participants(spanish_argentinian_instrument_data)
+
 
 
 spanish_chilean_instrument_data_WG <- get_instrument_data("Spanish (Chilean)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
@@ -665,6 +758,8 @@ spanish_chilean_instrument_data <- spanish_chilean_instrument_data_WG%>%
   as.data.frame() %>%
   distinct()
 write_rds(spanish_chilean_instrument_data, "norms/spanish/spanish_chilean_instrument_data.rds")
+spanish_chilean_participant_summary <- summarize_cdi_participants(spanish_chilean_instrument_data)
+
 
 
 spanish_european_instrument_data_WG <- get_instrument_data("Spanish (European)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
@@ -683,6 +778,8 @@ spanish_european_instrument_data <- spanish_european_instrument_data_no_ratings 
   as.data.frame() %>%
   distinct()
 write_rds(spanish_european_instrument_data, "norms/spanish/spanish_european_instrument_data.rds")
+spanish_european_participant_summary <- summarize_cdi_participants(spanish_european_instrument_data)
+
 
 
 spanish_mexican_instrument_data_WG <-  get_instrument_data("Spanish (Mexican)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
@@ -698,6 +795,8 @@ spanish_mexican_instrument_data<- spanish_mexican_instrument_data_no_ratings%>%
   as.data.frame() %>%
   distinct()
 write_rds(spanish_mexican_instrument_data, "norms/spanish/spanish_mexican_instrument_data.rds")
+spanish_mexican_participant_summary <- summarize_cdi_participants(spanish_mexican_instrument_data)
+
 
 spanish_peruvian_instrument_data_WG <-  get_instrument_data("Spanish (Peruvian)", form = "WG", administration_info = TRUE,item_info = TRUE) %>%
   drop_na(produces)
@@ -712,6 +811,8 @@ spanish_peruvian_instrument_data <- spanish_peruvian_instrument_data_no_ratings%
   as.data.frame() %>%
   distinct()
 write_rds(spanish_peruvian_instrument_data, "norms/spanish/spanish_peruvian_instrument_data.rds")
+spanish_peruvian_participant_summary <- summarize_cdi_participants(spanish_peruvian_instrument_data)
+
 
 n_spanish <- (spanish_argentinian_instrument_data %>% distinct(child_id) %>% nrow() ) + #783
   (spanish_chilean_instrument_data %>% distinct(child_id) %>% nrow() ) + #48
@@ -734,6 +835,8 @@ swedish_instrument_data <- bind_rows(swedish_instrument_data_WG,
   as.data.frame() %>%
   distinct()
 write_rds(swedish_instrument_data, "norms/swedish/swedish_instrument_data.rds")
+swedish_participant_summary <- summarize_cdi_participants(swedish_instrument_data)
+
 
 
 
@@ -757,6 +860,8 @@ write_rds(turkish_instrument_data, "norms/turkish/turkish_instrument_data.rds")
 
 
 n_turkish <- turkish_instrument_data %>% distinct(child_id) %>% nrow() # 3537
+turkish_participant_summary <- summarize_cdi_participants(turkish_instrument_data)
+
 
 
 # N participants ----
@@ -792,6 +897,51 @@ n_participants <- n_arabic+
   n_swedish +
   n_turkish
 write_rds(n_participants, "models/n_participants.rds")
+
+
+participant_summaries <- bind_rows(arabic_participant_summary,
+                                   asl_participant_summary,
+                                   bsl_participant_summary,
+                                   catalan_participant_summary,
+                                   croatian_participant_summary,
+                                   czech_participant_summary,
+                                   danish_participant_summary,
+                                   cantonese_participant_summary,
+                                   dutch_participant_summary,
+                                   american_english_participant_summary,
+                                   british_english_participant_summary,
+                                   australian_english_participant_summary,
+                                   irish_english_participant_summary,
+                                   estonian_participant_summary,
+                                   finnish_participant_summary,
+                                   french_european_participant_summary,
+                                   french_quebecois_participant_summary,
+                                   german_participant_summary,
+                                   greek_participant_summary,
+                                   hebrew_participant_summary,
+                                   hungarian_participant_summary,
+                                   irish_participant_summary,
+                                   japanese_participant_summary,
+                                   kigiriama_participant_summary,
+                                   kiswahili_participant_summary,
+                                   korean_participant_summary,
+                                   latvian_participant_summary,
+                                   mandarin_beijing_participant_summary,
+                                   mandarin_taiwanese_participant_summary,
+                                   norwegian_participant_summary,
+                                   persian_participant_summary,
+                                   portuguese_participant_summary,
+                                   russian_participant_summary,
+                                   slovak_participant_summary,
+                                   spanish_argentinian_participant_summary,
+                                   spanish_chilean_participant_summary,
+                                   spanish_european_participant_summary,
+                                   spanish_mexican_participant_summary,
+                                   spanish_peruvian_participant_summary,
+                                   swedish_participant_summary,
+                                   turkish_participant_summary)
+write_rds(participant_summaries, "norms/participant_summaries.rds")
+
 
 # all_instrument_data <- bind_rows(asl_instrument_data,
 #                       bsl_instrument_data,
